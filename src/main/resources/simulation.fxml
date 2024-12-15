@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            minHeight="550.0" minWidth="850.0"
+            fx:controller="agh.ics.oop.presenter.SimulationPresenter">
+    <center>
+        <GridPane fx:id = "mapGrid" gridLinesVisible="true" alignment="CENTER"/>
+    </center>
+    <bottom>
+        <VBox spacing="10" alignment="CENTER">
+            <TextField fx:id="textField" promptText="Moves: "/>
+            <Label fx:id="moveInfo" text="Waiting for move specs... " textAlignment="CENTER"/>
+            <Button text="Start" onAction="#initializeSim"/>
+        </VBox>
+    </bottom>
+</BorderPane>
