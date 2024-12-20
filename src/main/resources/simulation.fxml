@@ -2,18 +2,85 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
-
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
             fx:controller="agh.ics.oop.presenter.SimulationPresenter">
+    <!-- Top MenuBar -->
+    <top>
+        <MenuBar VBox.vgrow="NEVER">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="New" />
+                        <MenuItem mnemonicParsing="false" text="Open…" />
+                        <Menu mnemonicParsing="false" text="Open Recent" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem mnemonicParsing="false" text="Save" />
+                        <MenuItem mnemonicParsing="false" text="Save As…" />
+                        <MenuItem mnemonicParsing="false" text="Revert" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Preferences…" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Quit" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Undo" />
+                        <MenuItem mnemonicParsing="false" text="Redo" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Cut" />
+                        <MenuItem mnemonicParsing="false" text="Copy" />
+                        <MenuItem mnemonicParsing="false" text="Paste" />
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Select All" />
+                        <MenuItem mnemonicParsing="false" text="Unselect All" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+
+    <!-- Left Sidebar with Sliders -->
+    <left>
+        <VBox style="-fx-background-color: #f0f0f0;" minWidth="200.0" spacing="20">
+            <!-- Slider for Map Width -->
+            <Label text="Map Width"/>
+            <Slider fx:id="mapWidthSlider" min="5" max="30" value="10" blockIncrement="1" snapToTicks="true"/>
+            <Label fx:id="mapWidthValue" text="Current Value: 10"/>
+
+            <!-- Slider for Map Height -->
+            <Label text="Map Height"/>
+            <Slider fx:id="mapHeightSlider" min="5" max="30" value="10" blockIncrement="1" snapToTicks="true"/>
+            <Label fx:id="mapHeightValue" text="Current Value: 10"/>
+        </VBox>
+    </left>
+
+    <!-- Center - GridPane for map -->
     <center>
         <GridPane fx:id = "mapGrid" gridLinesVisible="true" alignment="CENTER"/>
     </center>
+
+    <!-- Bottom - Controls -->
     <bottom>
         <VBox spacing="10" alignment="CENTER">
             <TextField fx:id="textField" promptText="Moves: "/>

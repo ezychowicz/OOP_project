@@ -9,15 +9,22 @@ import java.util.Map;
 
 public class GrassField extends AbstractWorldMap{
     private final Map<Vector2d, Grass> grasses;
-    public GrassField(int grassCount) {
+    private final int width;
+    private final int height;
+    public GrassField(int grassCount, int width, int height) {
         this.grasses = new HashMap<Vector2d, Grass>();
         RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator((int) Math.sqrt(10 * grassCount), (int) Math.sqrt(10 * grassCount), grassCount);
         for (Vector2d grassPosition : randomPositionGenerator) {
             grasses.put(grassPosition, new Grass(grassPosition));
         }
+        this.width = width;
+        this.height = height;
 
     }
 
+    public GrassField (int grassCount){
+        this(grassCount, 10, 10);
+    }
 
     @Override
     public boolean canMoveTo(Vector2d position) { //inny validator
@@ -63,7 +70,7 @@ public class GrassField extends AbstractWorldMap{
 
     @Override
     public Boundary getCurrentBounds(){
-        return new Boundary(findLowerLeftBoundary(), findUpperRightBoundary());
+        return new Boundary(new Vector2d(0,0), new Vector2d(width, height));
     }
 
     @Override

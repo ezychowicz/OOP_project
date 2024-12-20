@@ -4,11 +4,14 @@ import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -29,6 +32,17 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private GridPane mapGrid;
 
+    @FXML
+    private Slider mapWidthSlider;
+
+    @FXML
+    private Slider mapHeightSlider;
+
+    @FXML
+    private Label mapWidthValue;
+
+    @FXML
+    private Label mapHeightValue;
 
     private Vector2d lowerLeft;
     private Vector2d upperRight;
@@ -37,12 +51,11 @@ public class SimulationPresenter implements MapChangeListener {
         this.worldMap = worldMap;
     }
 
-
     private int calculateColsCnt(){
-        return 2 + upperRight.getX() - lowerLeft.getX();
+        return 1 + upperRight.getX() - lowerLeft.getX();
     }
     private int calculateRowsCnt(){
-        return 2 + upperRight.getY() - lowerLeft.getY();
+        return 1 + upperRight.getY() - lowerLeft.getY();
     }
 
     private void constructAxes(){
@@ -74,12 +87,12 @@ public class SimulationPresenter implements MapChangeListener {
             cellR.setFont(Font.font("System", FontWeight.BOLD, 14));
             mapGrid.add(cellR, 0,  i);
         }
-        for (int i = 1; i < cols; i++) {
+        for (int i = 0; i < cols - 1; i++) {
             Label cellC = new Label("%d".formatted(i + lowerLeft.getX()));
             GridPane.setHalignment(cellC, HPos.CENTER); // Wyrównanie poziome
             GridPane.setValignment(cellC, VPos.CENTER); // Wyrównanie pionowe
             cellC.setFont(Font.font("System", FontWeight.BOLD, 14));
-            mapGrid.add(cellC, i, 0);
+            mapGrid.add(cellC, i+1, 0);
         }
     }
 
@@ -88,20 +101,19 @@ public class SimulationPresenter implements MapChangeListener {
         int rows = calculateRowsCnt();
         int minX = lowerLeft.getX();
         int minY = lowerLeft.getY();
-        for (int i = minX; i < minX + cols - 1; i++){
-            for (int j = minY; j < minY + rows - 1; j++){
+        for (int i = minX; i < minX + cols - 1; i++) {
+            for (int j = minY; j < minY + rows - 1; j++) {
                 Vector2d pos = new Vector2d(i, j);
                 if (worldMap.isOccupied(pos)){
                     Label cell = new Label(worldMap.objectAt(pos).toString());
                     GridPane.setHalignment(cell, HPos.CENTER); // Wyrównanie poziome
                     GridPane.setValignment(cell, VPos.CENTER); // Wyrównanie pionowe
                     cell.setFont(Font.font("System", FontWeight.BOLD, 30));
-                    mapGrid.add(cell, i - minX + 1,(rows - 1) - (j - minY));
+                    mapGrid.add(cell, i - minX + 1, (rows - 1) - (j - minY));
                 }
             }
         }
     }
-
 
     @FXML
     public void drawMap() {
@@ -115,12 +127,16 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     public void initializeSim() {
-        String directionsArgs = textField.getText();
-        List<MoveDirection> directions = OptionsParser.parse(directionsArgs.split("\\s+"));
-        java.util.List<Vector2d> positions = java.util.List.of(new Vector2d(2,2), new Vector2d(3,4));
-        AbstractWorldMap grassF = new GrassField(10);
+        int mapWidth = (int) mapWidthSlider.getValue();
+        int mapHeight = (int) mapHeightSlider.getValue();
+
+        lowerLeft = new Vector2d(0, 0);
+        upperRight = new Vector2d(mapWidth, mapHeight);
+        AbstractWorldMap grassF = new GrassField(10, mapWidth, mapHeight);
         grassF.addObserver(this);
-//        this.setWorldMap(worldMap);
+
+        List<MoveDirection> directions = OptionsParser.parse(textField.getText().split("\\s+"));
+        List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 4));
         Simulation sim = new Simulation(positions, directions, grassF);
         SimulationEngine simEngine = new SimulationEngine(List.of(sim));
         new Thread(simEngine::runSync).start();
@@ -138,8 +154,18 @@ public class SimulationPresenter implements MapChangeListener {
         Platform.runLater(() -> {
             drawMap();
             moveInfo.setText(message);
-            // ewentualny inny kod zmieniający kontrolki
+        });
+    }
+
+    @FXML
+    public void initialize() {
+        // Update label whenever slider value changes
+        mapWidthSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            mapWidthValue.setText("Current Value: " + newValue.intValue());
+        });
+
+        mapHeightSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            mapHeightValue.setText("Current Value: " + newValue.intValue());
         });
     }
 }
-
