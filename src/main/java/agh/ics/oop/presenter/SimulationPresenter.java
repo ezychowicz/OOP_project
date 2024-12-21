@@ -9,6 +9,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Slider;
@@ -33,16 +34,70 @@ public class SimulationPresenter implements MapChangeListener {
     private GridPane mapGrid;
 
     @FXML
-    private Slider mapWidthSlider;
+    private CheckBox sprawlingJungleCheckBox;
 
     @FXML
-    private Slider mapHeightSlider;
+    private CheckBox aPinchOfInsanityCheckBox;
+
+    @FXML
+    private Slider mapWidthSlider;
 
     @FXML
     private Label mapWidthValue;
 
     @FXML
+    private Slider mapHeightSlider;
+
+    @FXML
     private Label mapHeightValue;
+
+    @FXML
+    private Slider plantsSlider;
+
+    @FXML
+    private Label plantsSliderValue;
+
+    @FXML
+    private Slider energyOnConsumptionSlider;
+
+    @FXML
+    private Label energyOnConsumptionValue;
+
+    @FXML
+    private Slider plantGrowthEachDaySlider;
+
+    @FXML
+    private Label plantGrowthEachDayValue;
+
+    @FXML
+    private Slider animalsSlider;
+
+    @FXML
+    private Label animalsValue;
+
+    @FXML
+    private Slider initialAnimalEnergySlider;
+
+    @FXML
+    private Label initialAnimalEnergyValue;
+
+    @FXML
+    private Slider breedingThreshholdSlider;
+
+    @FXML
+    private Label breedingThreshholdValue;
+
+    @FXML
+    private Slider breedingCostSlider;
+
+    @FXML
+    private Label breedingCostValue;
+
+    @FXML
+    private Slider genomeLengthSlider;
+
+    @FXML
+    private Label genomeLengthValue;
 
     private Vector2d lowerLeft;
     private Vector2d upperRight;
@@ -158,14 +213,24 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     @FXML
-    public void initialize() {
-        // Update label whenever slider value changes
-        mapWidthSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            mapWidthValue.setText("Current Value: " + newValue.intValue());
+    private void setupSlider(Slider slider, Label valueLabel) {
+        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            int intValue = newValue.intValue();
+            valueLabel.setText("Current Value: " + intValue);
         });
+    }
 
-        mapHeightSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            mapHeightValue.setText("Current Value: " + newValue.intValue());
-        });
+    @FXML
+    private void initialize() {
+        setupSlider(mapWidthSlider, mapWidthValue);
+        setupSlider(mapHeightSlider, mapHeightValue);
+        setupSlider(plantsSlider, plantsSliderValue);
+        setupSlider(energyOnConsumptionSlider, energyOnConsumptionValue);
+        setupSlider(plantGrowthEachDaySlider, plantGrowthEachDayValue);
+        setupSlider(animalsSlider, animalsValue);
+        setupSlider(initialAnimalEnergySlider, initialAnimalEnergyValue);
+        setupSlider(breedingThreshholdSlider, breedingThreshholdValue);
+        setupSlider(breedingCostSlider, breedingCostValue);
+        setupSlider(genomeLengthSlider, genomeLengthValue);
     }
 }

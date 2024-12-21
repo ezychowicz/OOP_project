@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            minHeight="550.0" minWidth="850.0"
-            fx:controller="agh.ics.oop.presenter.SimulationPresenter">
+<BorderPane minHeight="550.0" minWidth="850.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.presenter.SimulationPresenter">
     <!-- Top MenuBar -->
     <top>
         <MenuBar VBox.vgrow="NEVER">
@@ -62,30 +61,204 @@
 
     <!-- Left Sidebar with Sliders -->
     <left>
-        <VBox style="-fx-background-color: #f0f0f0;" minWidth="200.0" spacing="20">
+        <VBox minWidth="163.0" prefHeight="538.0" prefWidth="163.0" spacing="20" style="-fx-background-color: #f0f0f0;">
+         <CheckBox fx:id="sprawlingJungleCheckBox" mnemonicParsing="false" text="Sprawling Jungle" />
+         <CheckBox fx:id="aPinchOfInsanityCheckBox" mnemonicParsing="false" text="A Pinch of Insanity">
+            <VBox.margin>
+               <Insets top="-15.0" />
+            </VBox.margin>
+         </CheckBox>
             <!-- Slider for Map Width -->
-            <Label text="Map Width"/>
-            <Slider fx:id="mapWidthSlider" min="5" max="30" value="10" blockIncrement="1" snapToTicks="true"/>
-            <Label fx:id="mapWidthValue" text="Current Value: 10"/>
+            <Label text="Map Width">
+            <VBox.margin>
+               <Insets top="-15.0" />
+            </VBox.margin></Label>
+            <Slider fx:id="mapWidthSlider" blockIncrement="1" majorTickUnit="10.0" min="10.0" minorTickCount="1" prefHeight="16.0" prefWidth="150.0" showTickMarks="true" snapToTicks="true" value="10">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin></Slider>
+            <Label fx:id="mapWidthValue" prefHeight="14.0" prefWidth="202.0" text="Current Value: 10" textAlignment="CENTER">
+            <font>
+               <Font size="11.0" />
+            </font>
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin></Label>
 
             <!-- Slider for Map Height -->
-            <Label text="Map Height"/>
-            <Slider fx:id="mapHeightSlider" min="5" max="30" value="10" blockIncrement="1" snapToTicks="true"/>
-            <Label fx:id="mapHeightValue" text="Current Value: 10"/>
+            <Label text="Map Height">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin></Label>
+            <Slider fx:id="mapHeightSlider" blockIncrement="1" majorTickUnit="10.0" min="10.0" minorTickCount="1" prefWidth="150.0" showTickMarks="true" snapToTicks="true" value="10">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin></Slider>
+            <Label fx:id="mapHeightValue" text="Current Value: 10" textAlignment="CENTER">
+            <font>
+               <Font size="11.0" />
+            </font>
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin></Label>
+         <Label layoutX="10.0" layoutY="117.0" text="Plants">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Label>
+         <Slider fx:id="plantsSlider" blockIncrement="1" layoutX="10.0" layoutY="154.0" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Slider>
+         <Label fx:id="plantsSliderValue" layoutX="10.0" layoutY="189.0" text="Current Value: 10" textAlignment="CENTER">
+            <font>
+               <Font size="11.0" />
+            </font>
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Label>
+         <Label text="Energy on Consumption">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Label>
+         <Slider fx:id="energyOnConsumptionSlider" blockIncrement="1" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Slider>
+         <Label fx:id="energyOnConsumptionValue" prefHeight="14.0" prefWidth="202.0" text="Current Value: 10" textAlignment="CENTER">
+            <font>
+               <Font size="11.0" />
+            </font>
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Label>
+         <Label text="Plant Growth Each Day">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Label>
+         <Slider fx:id="plantGrowthEachDaySlider" blockIncrement="1" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Slider>
+         <Label fx:id="plantGrowthEachDayValue" text="Current Value: 10" textAlignment="CENTER">
+            <font>
+               <Font size="11.0" />
+            </font>
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Label>
+         <Label text="Animals">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Label>
+         <Slider fx:id="animalsSlider" blockIncrement="1" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Slider>
+         <Label fx:id="animalsValue" text="Current Value: 10" textAlignment="CENTER">
+            <font>
+               <Font size="11.0" />
+            </font>
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Label>
+         <Label layoutX="10.0" layoutY="543.0" text="Initial Animal Energy">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Label>
+         <Slider fx:id="initialAnimalEnergySlider" blockIncrement="1" layoutX="10.0" layoutY="580.0" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Slider>
+         <Label fx:id="initialAnimalEnergyValue" layoutX="10.0" layoutY="615.0" text="Current Value: 10" textAlignment="CENTER">
+            <font>
+               <Font size="11.0" />
+            </font>
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Label>
+         <Label layoutX="10.0" layoutY="649.0" text="Breeding Threshhold">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Label>
+         <Slider fx:id="breedingThreshholdSlider" blockIncrement="1" layoutX="10.0" layoutY="686.0" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Slider>
+         <Label fx:id="breedingThreshholdValue" layoutX="10.0" layoutY="722.0" text="Current Value: 10" textAlignment="CENTER">
+            <font>
+               <Font size="11.0" />
+            </font>
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Label>
+         <Label layoutX="10.0" layoutY="756.0" text="Breeding Cost">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Label>
+         <Slider fx:id="breedingCostSlider" blockIncrement="1" layoutX="10.0" layoutY="793.0" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Slider>
+         <Label fx:id="breedingCostValue" layoutX="10.0" layoutY="828.0" text="Current Value: 10" textAlignment="CENTER">
+            <font>
+               <Font size="11.0" />
+            </font>
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Label>
+         <Label layoutX="10.0" layoutY="862.0" text="Genome Length">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Label>
+         <Slider fx:id="genomeLengthSlider" blockIncrement="1" layoutX="10.0" layoutY="899.0" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Slider>
+         <Label fx:id="genomeLengthValue" layoutX="10.0" layoutY="935.0" text="Current Value: 10" textAlignment="CENTER">
+            <font>
+               <Font size="11.0" />
+            </font>
+            <VBox.margin>
+               <Insets top="-17.5" />
+            </VBox.margin>
+         </Label>
         </VBox>
     </left>
 
     <!-- Center - GridPane for map -->
     <center>
-        <GridPane fx:id = "mapGrid" gridLinesVisible="true" alignment="CENTER"/>
+        <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true" />
     </center>
 
     <!-- Bottom - Controls -->
     <bottom>
-        <VBox spacing="10" alignment="CENTER">
-            <TextField fx:id="textField" promptText="Moves: "/>
-            <Label fx:id="moveInfo" text="Waiting for move specs... " textAlignment="CENTER"/>
-            <Button text="Start" onAction="#initializeSim"/>
+        <VBox alignment="CENTER" spacing="10">
+            <TextField fx:id="textField" promptText="Moves: " />
+            <Label fx:id="moveInfo" text="Waiting for move specs... " textAlignment="CENTER" />
+            <Button onAction="#initializeSim" text="Start" />
         </VBox>
     </bottom>
 </BorderPane>
