@@ -15,8 +15,8 @@ public class CumulativePreferations {
     public void incrementAdjacentTo(Vector2d position){
         for (Vector2d adj : ADJACENT){
             Vector2d checkedPos = position.add(adj);
-            if (preferences[checkedPos.getX()][checkedPos.getY()] == 0 && !grassField.getGrasses().containsKey(position)){
-                grassField.transferToPreferred(position);
+            if (preferences[checkedPos.getX()][checkedPos.getY()] == 0 && !grassField.getGrasses().containsKey(checkedPos)){
+                grassField.transferToPreferred(checkedPos);
             }
             preferences[checkedPos.getX()][checkedPos.getY()]++;
         }
@@ -25,8 +25,8 @@ public class CumulativePreferations {
     public void decrementAdjacentTo(Vector2d position){
         for (Vector2d adj : ADJACENT){
             Vector2d checkedPos = position.add(adj);
-            if (preferences[checkedPos.getX()][checkedPos.getY()] == 0 && !grassField.getGrasses().containsKey(position)) {
-                grassField.transferToUnpreferred(position);
+            if (preferences[checkedPos.getX()][checkedPos.getY()] == 0 && !grassField.getGrasses().containsKey(checkedPos)) {
+                grassField.transferToUnpreferred(checkedPos);
             }
             preferences[checkedPos.getX()][checkedPos.getY()]--;
             if (preferences[checkedPos.getX()][checkedPos.getY()] < 0) {
