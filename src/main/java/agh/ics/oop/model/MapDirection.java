@@ -9,6 +9,10 @@ public enum MapDirection {
     public static final Vector2d SOUTH_UNIT_VECTOR = new Vector2d(0, -1);
     public static final Vector2d EAST_UNIT_VECTOR = new Vector2d(1, 0);
     public static final Vector2d WEST_UNIT_VECTOR = new Vector2d(-1, 0);
+    public static final Vector2d NORTHWEST_UNIT_VECTOR = new Vector2d(-1, 1);
+    public static final Vector2d SOUTHWEST_UNIT_VECTOR = new Vector2d(-1, -1);
+    public static final Vector2d NORTHEAST_UNIT_VECTOR = new Vector2d(1, 1);
+    public static final Vector2d SOUTHEAST_UNIT_VECTOR = new Vector2d(1, -1);
     public static final String[] STRING_DIRECTIONS = { "NORTH", "SOUTH",  "WEST", "EAST"};
     public String toString() {
         return switch(this){
