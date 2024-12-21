@@ -53,9 +53,9 @@ public class GrassField extends AbstractWorldMap{
 
     private List<Vector2d> createPosList(){
         List<Vector2d> posList = new ArrayList<Vector2d>();
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                posList.add(new Vector2d(i, j));
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                posList.add(new Vector2d(j, i));
             }
         }
         return posList;
@@ -161,6 +161,8 @@ public class GrassField extends AbstractWorldMap{
         return currLowerLeft;
     }
 
+
+
     @Override
     public Boundary getCurrentBounds(){
         return new Boundary(new Vector2d(0,0), new Vector2d(width, height));
@@ -176,5 +178,11 @@ public class GrassField extends AbstractWorldMap{
         return grasses;
     }
 
+    public int getHeight(){
+        return height;
+    }
 
+    public int getWidth(){
+        return width;
+    }
 }
