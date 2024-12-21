@@ -2,52 +2,73 @@ package agh.ics.oop.model;
 
 import java.util.*;
 
+import static java.lang.Math.round;
+
 public class RandomPositionGenerator implements Iterable<Vector2d> {
     private final int maxWidth;
     private final int maxHeight;
     private final int grassCount;
     private int count;
-    private final List<Vector2d> posList;
     private final Random random;
-    private final List<Integer> availableIndices;
-    public RandomPositionGenerator(int maxWidth, int maxHeight, int grassCount) {
-        this.maxWidth = maxWidth;
-        this.maxHeight = maxHeight;
+//    private final List<Integer> availableIndices;
+    private final List<Integer> preferredIdxs;
+    private final List<Integer> unPreferredIdxs;
+    private final GrassField grassField;
+    public RandomPositionGenerator(GrassField grassField, int grassCount) {
+        if (grassCount > grassField.getAvailableIdxs().size()) {
+            throw new IllegalArgumentException("grassCount cannot be greater than the total number of available positions");
+        }
+        this.grassField = grassField;
+        this.maxWidth = grassField.getCurrentBounds().upperRightBound().getX();
+        this.maxHeight = grassField.getCurrentBounds().upperRightBound().getY();
         this.grassCount = grassCount;
-        this.posList = new ArrayList<Vector2d>(); //niezmieniana lista, generowana w generatePoints
-        this.availableIndices = generatePoints(); //przechowuje nieuzyte indeksy z posList
+        this.preferredIdxs = grassField.getAvailableIdxs().getFirst();
+        this.unPreferredIdxs = grassField.getAvailableIdxs().getLast();
         this.count = 0;
         this.random = new Random();
     }
 
-    private List<Integer> generatePoints() {
-        List<Integer> indices = new ArrayList<>();
-        for (int i = 0; i < maxWidth; i++) {
-            for (int j = 0; j < maxHeight; j++) {
-                posList.add(new Vector2d(i,j));
-                indices.add(i*maxHeight+j);
-            }
-        }
-        return indices;
-    }
 
+    private String nonClassicalProbabilityRandom(String value1, double prob1, String value2, double prob2){
+        if (prob1 + prob2 != 1){
+            throw new IllegalArgumentException();
+        }
+        int convertedProb1 = (int) Math.round(100*prob1);
+        int convertedProb2 = (int) Math.round(100*prob2);
+
+        if (convertedProb1 + convertedProb2 != 100){
+            throw new IllegalArgumentException("given probabilities are unmappable to 0-100 integers");
+        }
+
+//        Random random = new Random();
+        int randomNum = random.nextInt(100);
+        return randomNum < convertedProb1 ? value1 : value2;
+    }
     @Override
     public Iterator<Vector2d> iterator() {
         return new Iterator<Vector2d>(){
             @Override
             public boolean hasNext() {
-                return count < grassCount;
+                return count < grassCount && (!preferredIdxs.isEmpty() || !unPreferredIdxs.isEmpty());
             }
 
             @Override
             public Vector2d next() {
                 if (!hasNext()) {
-                    throw new NoSuchElementException("No grasses left to allocate");
+                    throw new NoSuchElementException("No grasses left to allocate/no positions available");
                 }
                 count++;
-                int randomInt = random.nextInt(availableIndices.size()); //losuje w zakresie dostepnych pozycji
-                Vector2d pos = posList.get(availableIndices.get(randomInt));
-                availableIndices.remove(randomInt);
+                List<Integer> idxsToChoose;
+                if (!preferredIdxs.isEmpty() && !unPreferredIdxs.isEmpty()) {
+                    idxsToChoose = nonClassicalProbabilityRandom("preferred", 0.8, "unpreferred", 0.2).equals("preferred") ? preferredIdxs : unPreferredIdxs;
+                } else if (!unPreferredIdxs.isEmpty()) {
+                    idxsToChoose = unPreferredIdxs;
+                } else {
+                    idxsToChoose = unPreferredIdxs;
+                }
+                int randomInt = random.nextInt(idxsToChoose.size()); //losuje w zakresie dostepnych pozycji
+                Vector2d pos = grassField.getPosList().get(idxsToChoose.get(randomInt));
+                idxsToChoose.remove(randomInt);
                 return pos;
             }
         };
