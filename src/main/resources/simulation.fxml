@@ -106,12 +106,12 @@
                <Insets top="-17.5" />
             </VBox.margin>
          </Label>
-         <Slider fx:id="plantsAmountSlider" blockIncrement="1" layoutX="10.0" layoutY="154.0" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+         <Slider fx:id="grassesAmountSlider" blockIncrement="1" layoutX="10.0" layoutY="154.0" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin>
          </Slider>
-         <Label fx:id="plantsAmountSliderValue" layoutX="10.0" layoutY="189.0" text="Current Value: 10" textAlignment="CENTER">
+         <Label fx:id="grassesAmountValue" layoutX="10.0" layoutY="189.0" text="Current Value: 10" textAlignment="CENTER">
             <font>
                <Font size="11.0" />
             </font>
@@ -142,12 +142,12 @@
                <Insets top="-17.5" />
             </VBox.margin>
          </Label>
-         <Slider fx:id="plantGrowthEachDaySlider" blockIncrement="1" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+         <Slider fx:id="grassGrowthEachDaySlider" blockIncrement="1" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin>
          </Slider>
-         <Label fx:id="plantGrowthEachDayValue" text="Current Value: 10" textAlignment="CENTER">
+         <Label fx:id="grassGrowthEachDayValue" text="Current Value: 10" textAlignment="CENTER">
             <font>
                <Font size="11.0" />
             </font>
@@ -191,17 +191,17 @@
                <Insets top="-17.5" />
             </VBox.margin>
          </Label>
-         <Label layoutX="10.0" layoutY="649.0" text="Breeding Threshhold">
+         <Label layoutX="10.0" layoutY="649.0" text="Breeding Threshold">
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin>
          </Label>
-         <Slider fx:id="breedingThreshholdSlider" blockIncrement="1" layoutX="10.0" layoutY="686.0" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+         <Slider fx:id="breedingThresholdSlider" blockIncrement="1" layoutX="10.0" layoutY="686.0" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin>
          </Slider>
-         <Label fx:id="breedingThreshholdValue" layoutX="10.0" layoutY="722.0" text="Current Value: 10" textAlignment="CENTER">
+         <Label fx:id="breedingThresholdValue" layoutX="10.0" layoutY="722.0" text="Current Value: 10" textAlignment="CENTER">
             <font>
                <Font size="11.0" />
             </font>
