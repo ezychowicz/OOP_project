@@ -31,7 +31,8 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private GridPane mapGrid;
 
-    private static SimulationPresenter instance; // Static reference to the controller instance
+    private static SimulationPresenter instance;
+    // Static reference to the controller instance
 
     @FXML
     public Slider mapWidthSlider;
@@ -44,9 +45,9 @@ public class SimulationPresenter implements MapChangeListener {
     private Label mapHeightValue;
 
     @FXML
-    public Slider plantsAmountSlider;
+    public Slider grassesAmountSlider;
     @FXML
-    private Label plantsAmountSliderValue;
+    private Label grassesAmountValue;
 
     @FXML
     public Slider energyOnConsumptionSlider;
@@ -54,9 +55,9 @@ public class SimulationPresenter implements MapChangeListener {
     private Label energyOnConsumptionValue;
 
     @FXML
-    public Slider plantGrowthEachDaySlider;
+    public Slider grassGrowthEachDaySlider;
     @FXML
-    private Label plantGrowthEachDayValue;
+    private Label grassGrowthEachDayValue;
 
     @FXML
     public Slider animalsAmountSlider;
@@ -69,9 +70,9 @@ public class SimulationPresenter implements MapChangeListener {
     private Label initialAnimalEnergyValue;
 
     @FXML
-    public Slider breedingThreshholdSlider;
+    public Slider breedingThresholdSlider;
     @FXML
-    private Label breedingThreshholdValue;
+    private Label breedingThresholdValue;
 
     @FXML
     public Slider breedingCostSlider;
@@ -84,7 +85,7 @@ public class SimulationPresenter implements MapChangeListener {
     private Label genomeLengthValue;
 
     @FXML
-    public CheckBox aPinchOfInsaniityCheckBox;
+    public CheckBox aPinchOfInsanityCheckBox;
 
     @FXML
     public CheckBox sprawlingJungleCheckBox;
@@ -101,12 +102,12 @@ public class SimulationPresenter implements MapChangeListener {
         // Set up the sliders
         setupSlider(mapWidthSlider, mapWidthValue);
         setupSlider(mapHeightSlider, mapHeightValue);
-        setupSlider(plantsAmountSlider, plantsAmountSliderValue);
+        setupSlider(grassesAmountSlider,grassesAmountValue);
         setupSlider(energyOnConsumptionSlider, energyOnConsumptionValue);
-        setupSlider(plantGrowthEachDaySlider, plantGrowthEachDayValue);
+        setupSlider(grassGrowthEachDaySlider, grassGrowthEachDayValue);
         setupSlider(animalsAmountSlider, animalsAmountValue);
         setupSlider(initialAnimalEnergySlider, initialAnimalEnergyValue);
-        setupSlider(breedingThreshholdSlider, breedingThreshholdValue);
+        setupSlider(breedingThresholdSlider, breedingThresholdValue);
         setupSlider(breedingCostSlider, breedingCostValue);
         setupSlider(genomeLengthSlider, genomeLengthValue);
     }
