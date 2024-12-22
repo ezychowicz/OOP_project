@@ -141,7 +141,7 @@ public class Animal implements WorldElement{
         /*
         obroc zwierzaka odpowiednia liczbe razy; srednio efektywne
          */
-        int numOfRotations = direction.directionToGene(MoveDirection direction);
+        int numOfRotations = direction.directionToGene(direction);
         MapDirection newDirection = this.direction;
         while (numOfRotations-- > 0) {
             newDirection = newDirection.next();

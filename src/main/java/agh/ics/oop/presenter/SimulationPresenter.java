@@ -4,8 +4,6 @@ import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -33,71 +31,102 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private GridPane mapGrid;
 
-    @FXML
-    private CheckBox sprawlingJungleCheckBox;
+    private static SimulationPresenter instance; // Static reference to the controller instance
 
     @FXML
-    private CheckBox aPinchOfInsanityCheckBox;
-
-    @FXML
-    private Slider mapWidthSlider;
-
+    public Slider mapWidthSlider;
     @FXML
     private Label mapWidthValue;
 
     @FXML
-    private Slider mapHeightSlider;
-
+    public Slider mapHeightSlider;
     @FXML
     private Label mapHeightValue;
 
     @FXML
-    private Slider plantsSlider;
+    public Slider plantsAmountSlider;
+    @FXML
+    private Label plantsAmountSliderValue;
 
     @FXML
-    private Label plantsSliderValue;
-
-    @FXML
-    private Slider energyOnConsumptionSlider;
-
+    public Slider energyOnConsumptionSlider;
     @FXML
     private Label energyOnConsumptionValue;
 
     @FXML
-    private Slider plantGrowthEachDaySlider;
-
+    public Slider plantGrowthEachDaySlider;
     @FXML
     private Label plantGrowthEachDayValue;
 
     @FXML
-    private Slider animalsSlider;
+    public Slider animalsAmountSlider;
+    @FXML
+    private Label animalsAmountValue;
 
     @FXML
-    private Label animalsValue;
-
-    @FXML
-    private Slider initialAnimalEnergySlider;
-
+    public Slider initialAnimalEnergySlider;
     @FXML
     private Label initialAnimalEnergyValue;
 
     @FXML
-    private Slider breedingThreshholdSlider;
-
+    public Slider breedingThreshholdSlider;
     @FXML
     private Label breedingThreshholdValue;
 
     @FXML
-    private Slider breedingCostSlider;
-
+    public Slider breedingCostSlider;
     @FXML
     private Label breedingCostValue;
 
     @FXML
-    private Slider genomeLengthSlider;
-
+    public Slider genomeLengthSlider;
     @FXML
     private Label genomeLengthValue;
+
+    @FXML
+    public CheckBox aPinchOfInsaniityCheckBox;
+
+    @FXML
+    public CheckBox sprawlingJungleCheckBox;
+
+    // Getter for the instance
+    public static SimulationPresenter getInstance() {
+        return instance;
+    }
+
+    @FXML
+    private void initialize() {
+        instance = this; // Assign the current instance to the static field
+
+        // Set up the sliders
+        setupSlider(mapWidthSlider, mapWidthValue);
+        setupSlider(mapHeightSlider, mapHeightValue);
+        setupSlider(plantsAmountSlider, plantsAmountSliderValue);
+        setupSlider(energyOnConsumptionSlider, energyOnConsumptionValue);
+        setupSlider(plantGrowthEachDaySlider, plantGrowthEachDayValue);
+        setupSlider(animalsAmountSlider, animalsAmountValue);
+        setupSlider(initialAnimalEnergySlider, initialAnimalEnergyValue);
+        setupSlider(breedingThreshholdSlider, breedingThreshholdValue);
+        setupSlider(breedingCostSlider, breedingCostValue);
+        setupSlider(genomeLengthSlider, genomeLengthValue);
+    }
+
+    @FXML
+    private void setupSlider(Slider slider, Label valueLabel) {
+        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            int intValue = newValue.intValue();
+            valueLabel.setText("Current Value: " + intValue);
+        });
+    }
+
+    @Override
+    public void mapChanged(WorldMap map, String message) {
+        this.setWorldMap(map);
+        Platform.runLater(() -> {
+            drawMap();
+            moveInfo.setText(message);
+        });
+    }
 
     private Vector2d lowerLeft;
     private Vector2d upperRight;
@@ -201,36 +230,5 @@ public class SimulationPresenter implements MapChangeListener {
         mapGrid.getChildren().retainAll(mapGrid.getChildren().get(0)); // hack to retain visible grid lines
         mapGrid.getColumnConstraints().clear();
         mapGrid.getRowConstraints().clear();
-    }
-
-    @Override
-    public void mapChanged(WorldMap map, String message) {
-        this.setWorldMap(map);
-        Platform.runLater(() -> {
-            drawMap();
-            moveInfo.setText(message);
-        });
-    }
-
-    @FXML
-    private void setupSlider(Slider slider, Label valueLabel) {
-        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            int intValue = newValue.intValue();
-            valueLabel.setText("Current Value: " + intValue);
-        });
-    }
-
-    @FXML
-    private void initialize() {
-        setupSlider(mapWidthSlider, mapWidthValue);
-        setupSlider(mapHeightSlider, mapHeightValue);
-        setupSlider(plantsSlider, plantsSliderValue);
-        setupSlider(energyOnConsumptionSlider, energyOnConsumptionValue);
-        setupSlider(plantGrowthEachDaySlider, plantGrowthEachDayValue);
-        setupSlider(animalsSlider, animalsValue);
-        setupSlider(initialAnimalEnergySlider, initialAnimalEnergyValue);
-        setupSlider(breedingThreshholdSlider, breedingThreshholdValue);
-        setupSlider(breedingCostSlider, breedingCostValue);
-        setupSlider(genomeLengthSlider, genomeLengthValue);
     }
 }

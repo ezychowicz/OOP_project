@@ -6,7 +6,7 @@ import java.util.List;
 import static agh.ics.oop.model.GrassField.ADJACENT;
 import static agh.ics.oop.model.MapDirection.*;
 
-public class CumulativePreferations {
+public class CumulativePreferences{
     private final GrassField grassField;
     private final int[][] preferences;
     public static final List<Vector2d> ADJACENT_NORTH;
@@ -22,7 +22,7 @@ public class CumulativePreferations {
         ADJACENT_SOUTH.remove(SOUTHWEST_UNIT_VECTOR);
         ADJACENT_SOUTH.remove(SOUTHEAST_UNIT_VECTOR);
     }
-    public CumulativePreferations(GrassField grassField) {
+    public CumulativePreferences(GrassField grassField) {
         this.grassField = grassField;
         this.preferences = new int[grassField.getCurrentBounds().upperRightBound().getX()][grassField.getCurrentBounds().upperRightBound().getY()];
 
