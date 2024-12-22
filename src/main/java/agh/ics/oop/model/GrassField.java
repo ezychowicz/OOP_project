@@ -17,7 +17,7 @@ public class GrassField extends AbstractWorldMap{
     private final List<Vector2d> posList;
     private final List<List<Integer>> availableIdxs;
     public static final List<Vector2d> ADJACENT = Arrays.asList(NORTH_UNIT_VECTOR, SOUTH_UNIT_VECTOR, WEST_UNIT_VECTOR, EAST_UNIT_VECTOR, SOUTHEAST_UNIT_VECTOR, SOUTHWEST_UNIT_VECTOR, NORTHWEST_UNIT_VECTOR, NORTHEAST_UNIT_VECTOR);
-    private final CumulativePreferations cumulativePrefs;
+    private final CumulativePreferences cumulativePrefs;
 
     public GrassField(int grassCount, int width, int height) {
         this.grasses = new HashMap<Vector2d, Grass>();
@@ -25,7 +25,7 @@ public class GrassField extends AbstractWorldMap{
         this.width = width;
         this.height = height;
         this.posList = this.createPosList();
-        this.cumulativePrefs = new CumulativePreferations(this);
+        this.cumulativePrefs = new CumulativePreferences(this);
         initializeEquator();
         this.availableIdxs = new ArrayList<List<Integer>>(); //lista list: preferred, unpreferred. pomocnicze - tylko dla randomPositionGenerator
         availableIdxs.add(0, new ArrayList<Integer> (preferredSet));
@@ -45,10 +45,6 @@ public class GrassField extends AbstractWorldMap{
                 }
             }
         }
-    }
-
-    public GrassField (int grassCount){
-        this(grassCount, 10, 10);
     }
 
     private List<Vector2d> createPosList(){

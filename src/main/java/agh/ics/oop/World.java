@@ -21,7 +21,7 @@ public class World {
         List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,4));
         List<Simulation> simulations = new ArrayList<>();
         for (int i = 0; i < 1000;i++){
-            AbstractWorldMap grassF = new GrassField(10);
+            AbstractWorldMap grassF = new GrassField(10,10,10);
             grassF.addObserver(new ConsoleMapDisplay());
             AbstractWorldMap rectangularF = new RectangularMap(5,5);
             rectangularF.addObserver(new ConsoleMapDisplay());
