@@ -66,12 +66,14 @@ public class GrassField extends AbstractWorldMap{
     }
 
 
-    public void eatenGrass(Vector2d position){
+    public void eatenGrassProcedure(Vector2d position){
         /*
-        * metoda obslugujaca dodawanie do preferred i unpreferred na polach na ktorych dopiero zjedzono rosline (nowo zwolnionych)
-        * uruchamiana dopiero po wykonaniu dekrementacji dla sasiadow wszystkich usuwanych traw danego dnia
-        * bo musi byc aktualny stan cumulativePrefs
-        */
+         * metoda obslugujaca dodawanie do preferred i unpreferred na polach na ktorych dopiero zjedzono rosline (nowo zwolnionych)
+         * uruchamiana dopiero po wykonaniu dekrementacji dla sasiadow wszystkich usuwanych traw danego dnia
+         * bo musi byc aktualny stan cumulativePrefs
+         */
+        grasses.remove(position);
+
         int idx = Converter.convertToIdx(position, width);
         if (cumulativePrefs.getPreferenceScoreAtPos(position) == 0){
             unpreferredSet.add(idx);
