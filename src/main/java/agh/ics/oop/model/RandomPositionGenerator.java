@@ -1,5 +1,7 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.util.MathUtils;
+
 import java.util.*;
 
 import static java.lang.Math.round;
@@ -30,21 +32,20 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
     }
 
 
-    private String nonClassicalProbabilityRandom(String value1, double prob1, String value2, double prob2){
-        if (prob1 + prob2 != 1){
-            throw new IllegalArgumentException();
-        }
-        int convertedProb1 = (int) Math.round(100*prob1);
-        int convertedProb2 = (int) Math.round(100*prob2);
-
-        if (convertedProb1 + convertedProb2 != 100){
-            throw new IllegalArgumentException("given probabilities are unmappable to 0-100 integers");
-        }
-
-//        Random random = new Random();
-        int randomNum = random.nextInt(100);
-        return randomNum < convertedProb1 ? value1 : value2;
-    }
+//    private String nonClassicalProbabilityRandom(String value1, double prob1, String value2, double prob2){
+//        if (prob1 + prob2 != 1){
+//            throw new IllegalArgumentException();
+//        }
+//        int convertedProb1 = (int) Math.round(100*prob1);
+//        int convertedProb2 = (int) Math.round(100*prob2);
+//
+//        if (convertedProb1 + convertedProb2 != 100){
+//            throw new IllegalArgumentException("given probabilities are unmappable to 0-100 integers");
+//        }
+//
+//        int randomNum = random.nextInt(100);
+//        return randomNum < convertedProb1 ? value1 : value2;
+//    }
     @Override
     public Iterator<Vector2d> iterator() {
         return new Iterator<Vector2d>(){
@@ -61,7 +62,7 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
                 count++;
                 List<Integer> idxsToChoose;
                 if (!preferredIdxs.isEmpty() && !unPreferredIdxs.isEmpty()) {
-                    idxsToChoose = nonClassicalProbabilityRandom("preferred", 0.8, "unpreferred", 0.2).equals("preferred") ? preferredIdxs : unPreferredIdxs;
+                    idxsToChoose = MathUtils.nonClassicalProbabilityRandom("preferred", 0.8, "unpreferred", 0.2).equals("preferred") ? preferredIdxs : unPreferredIdxs;
                 } else if (!unPreferredIdxs.isEmpty()) {
                     idxsToChoose = unPreferredIdxs;
                 } else {

@@ -10,7 +10,7 @@ import static agh.ics.oop.Simulation.ANIMAL_STRING;
 
 public abstract class AbstractWorldMap implements WorldMap{
     private final UUID id = UUID.randomUUID();
-    protected final Map<Vector2d, Animal> animals = new HashMap<>();  //animals jest w obu mapach
+    protected Map<Vector2d, List<Animal>> animals = new HashMap<>();  //animals jest w obu mapach
     public abstract Boundary getCurrentBounds();
     public abstract boolean canMoveTo(Vector2d position);
     protected final List<MapChangeListener> observers = new ArrayList<>();
@@ -36,11 +36,15 @@ public abstract class AbstractWorldMap implements WorldMap{
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position){
+    public WorldElement objectAt(Vector2d position){ //najlepsze zwierze na danej pozycji
+        return resolveConflict(animals.get(position));
+    }
+
+    public List<Animal> getAnimalsAt(Vector2d position){
         return animals.get(position);
     }
 
-    public Map<Vector2d, Animal> getAnimals(){
+    public Map<Vector2d, List<Animal>> getAnimals(){
         return animals;
     }
 
@@ -70,6 +74,8 @@ public abstract class AbstractWorldMap implements WorldMap{
         }
     }
 
+
+
     public Vector2d getUpperRightBoundary(){
         return getCurrentBounds().upperRightBound();
     }
@@ -86,9 +92,17 @@ public abstract class AbstractWorldMap implements WorldMap{
         return mapVis.draw(lowerLeftBoundary, upperRightBoundary);
     }
 
-    @Override
-    public List<WorldElement> getElements(){
-        return new ArrayList<>(animals.values());
+
+    public Animal resolveConflict(List<Animal> animals) { //rozwiazuje konflikt gdy wiecej niz jedno zwierze na danej pozycji
+        if (animals.size() == 1) {
+            return animals.getFirst();
+        }
+        animals.sort(Comparator
+                .comparingInt(Animal::getEnergy)
+                .thenComparingInt(Animal::getDaysOld)
+                .thenComparingInt(Animal::getChildrenCnt)
+        );
+        return animals.getLast();
     }
 
     public UUID getId(){

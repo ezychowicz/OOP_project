@@ -122,8 +122,8 @@ public class GrassField extends AbstractWorldMap{
 
 
     @Override
-    public boolean canMoveTo(Vector2d position) { //inny validator
-        return !animals.containsKey(position);
+    public boolean canMoveTo(Vector2d position) { //validator, nie mozemy wyjsc za biegun
+        return position.getY() != height && position.getY() != -1;
     }
 
 
@@ -170,12 +170,7 @@ public class GrassField extends AbstractWorldMap{
         return new Boundary(new Vector2d(0,0), new Vector2d(width, height));
     }
 
-    @Override
-    public List<WorldElement> getElements() {
-        List <WorldElement> worldElements = super.getElements();
-        worldElements.addAll(grasses.values());
-        return worldElements;
-    }
+
     public Map<Vector2d, Grass> getGrasses() {
         return grasses;
     }
