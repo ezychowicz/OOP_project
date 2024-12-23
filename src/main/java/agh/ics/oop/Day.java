@@ -12,7 +12,7 @@ import static agh.ics.oop.WorldGUI.DAY_EFFORT_ENERGY;
 public class Day {
     private final int dayCnt = 0;
     private final GrassField grassField;
-    private final Map<Vector2d, List<Animal>> animals;
+    private Map<Vector2d, List<Animal>> animals;
     private final AnimalBehaviour animalBehaviour;
     public Day(GrassField grassField, AnimalBehaviour animalBehaviour) {
         this.grassField = grassField;
@@ -60,11 +60,11 @@ public class Day {
     }
 
     private void addAnimalAtPos(Map<Vector2d, List<Animal>> animals, Animal newAnimal, Vector2d position){
-        if (!animals.containsKey(position)){
+        if (!animals.containsKey(position)) {
             animals.put(position, new ArrayList<>());
-        }else{
-            animals.get(position).add(newAnimal);
         }
+        animals.get(position).add(newAnimal);
+
     }
     private Map<Vector2d,List<Animal>> updateAnimalsPositions(AnimalBehaviour behaviour){
         Map<Vector2d,List<Animal>> newAnimals =  new HashMap<>();
