@@ -131,9 +131,12 @@ public class GrassField extends AbstractWorldMap{
 
     @Override
     public WorldElement objectAt(Vector2d position) {
-        if (animals.get(position) != null) { //priorytet animals
-            return super.objectAt(position);
-        };
+        if (animals.get(position) != null){ //priorytet animals
+            if(animals.get(position).size()!=0){
+                return super.objectAt(position);
+            }
+            return grasses.get(position);
+        }
         return grasses.get(position);
     }
 

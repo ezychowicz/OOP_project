@@ -19,6 +19,8 @@ import javafx.scene.text.FontWeight;
 
 import java.util.List;
 
+import static agh.ics.oop.WorldGUI.initializeConstants;
+
 public class SimulationPresenter implements MapChangeListener {
     private WorldMap worldMap;
 
@@ -110,6 +112,7 @@ public class SimulationPresenter implements MapChangeListener {
         setupSlider(breedingThresholdSlider, breedingThresholdValue);
         setupSlider(breedingCostSlider, breedingCostValue);
         setupSlider(genomeLengthSlider, genomeLengthValue);
+        initializeConstants();
     }
 
     @FXML

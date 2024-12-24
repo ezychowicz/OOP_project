@@ -31,8 +31,11 @@ public abstract class AbstractWorldMap implements WorldMap{
         }
     }
 
-    public boolean isOccupied(Vector2d position){
-        return animals.containsKey(position);
+    public boolean isOccupied(Vector2d position){ //jakies dziadostwo
+        if (animals.containsKey(position)) {
+            return !animals.get(position).isEmpty();
+        }
+        return false;
     }
 
     @Override
@@ -52,7 +55,7 @@ public abstract class AbstractWorldMap implements WorldMap{
     @Override
     public boolean place(Animal animal) throws IncorrectPositionException {
         if (canMoveTo(animal.getPos())) {
-            animals.put(animal.getPos(), animal);
+            animals.put(animal.getPos(), new ArrayList<>(List.of(animal)));
             mapChanged("%s placed at %s".formatted(ANIMAL_STRING, animal.getPos()));
             return true;
         }
@@ -61,14 +64,14 @@ public abstract class AbstractWorldMap implements WorldMap{
 
     @Override
     public void move(Animal animal, MoveDirection direction) {
-        if (animals.containsValue(animal)) {
+        if (animals.containsKey(animal.getPos()) && animals.get(animal.getPos()).contains(animal)) {
             Vector2d initialPos = animal.getPos();
-            animals.remove(animal.getPos());  //usuń zwierzaka z aktualnej pozycji na mapie
-            animal.move(direction, this); //przenieś zwierzaka, chyba że sie nie da to nic nie zmieniaj
-            animals.put(animal.getPos(), animal); //umieść na mapie zwierzaka tam gdzie go przeniosłeś (lub przywróć)
-            if (!Objects.equals(initialPos, animal.getPos())) { //jesli faktycznie sie przemiescil
+            animals.get(initialPos).remove(animal);  // remove the animal from the current position
+            animal.move(direction, this); // move the animal
+            animals.computeIfAbsent(animal.getPos(), k -> new ArrayList<>()).add(animal); // add the animal to the new position
+            if (!Objects.equals(initialPos, animal.getPos())) { // if the animal actually moved
                 mapChanged("%s moved %s to %s".formatted(ANIMAL_STRING, direction, animal.getPos()));
-            }else if (direction == MoveDirection.RIGHT || direction == MoveDirection.LEFT){
+            } else if (direction == MoveDirection.RIGHT || direction == MoveDirection.LEFT) {
                 mapChanged("%s on %s turned %s".formatted(ANIMAL_STRING, initialPos, direction));
             }
         }

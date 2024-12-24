@@ -25,7 +25,6 @@ public class CumulativePreferences{
     public CumulativePreferences(GrassField grassField) {
         this.grassField = grassField;
         this.preferences = new int[grassField.getCurrentBounds().upperRightBound().getX()][grassField.getCurrentBounds().upperRightBound().getY()];
-
     }
     public void incrementAdjacentTo(Vector2d position){
         List<Vector2d> adjacent = getAdjacent(position);

@@ -7,13 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static agh.ics.oop.WorldGUI.DAY_EFFORT_ENERGY;
 
 public class Day {
     private final int dayCnt = 0;
     private final GrassField grassField;
     private Map<Vector2d, List<Animal>> animals;
     private final AnimalBehaviour animalBehaviour;
+    private static final int DAY_EFFORT_ENERGY = 1;
     public Day(GrassField grassField, AnimalBehaviour animalBehaviour) {
         this.grassField = grassField;
         this.animals = grassField.getAnimals(); //pozycje zwierzakow
