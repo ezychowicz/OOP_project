@@ -66,7 +66,7 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
                 } else if (!unPreferredIdxs.isEmpty()) {
                     idxsToChoose = unPreferredIdxs;
                 } else {
-                    idxsToChoose = unPreferredIdxs;
+                    idxsToChoose = preferredIdxs;
                 }
                 int randomInt = random.nextInt(idxsToChoose.size()); //losuje w zakresie dostepnych pozycji
                 Vector2d pos = grassField.getPosList().get(idxsToChoose.get(randomInt));

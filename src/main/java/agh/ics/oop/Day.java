@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import static agh.ics.oop.WorldGUI.GRASS_GROWTH_EACH_DAY;
+import static agh.ics.oop.WorldGUI.INITIAL_ANIMAL_ENERGY;
 
 
 public class Day {
@@ -53,7 +54,8 @@ public class Day {
             for (int i = 0; i < animalsAtPos.size(); i++) {
                 Animal animal = animalsAtPos.get(i);
                 animal.updateEnergy(-DAY_EFFORT_ENERGY);
-                if (animal.getEnergy() <= 0) {
+                if (animal.getEnergy() <= 0){
+                    System.out.println("huj huj huj");
                     toRemoveIdxs.add(i);
                 }
             }
@@ -87,6 +89,7 @@ public class Day {
         for (List<Animal> animalsAtPos : animals.values()){
             for (Animal animal : animalsAtPos){
                 animal.move(MoveDirection.geneToDirection(animal.getGenomeAtIdx(behaviour.nextGeneIdx(animal))), grassField);
+                System.out.println("id zwierzaka: " + animal.getId() + ", energia: " + animal.getEnergy());
                 //to jest okropne. demeter zawiedziona
                 addAnimalAtPos(newAnimals, animal, animal.getPos());
             }

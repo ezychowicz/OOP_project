@@ -187,4 +187,8 @@ public class GrassField extends AbstractWorldMap{
     public void setAnimals(Map<Vector2d, List<Animal>> animals){ //rozkminka...
         this.animals = animals;
     }
+
+    public Object getGrassAt(Vector2d position){
+        return grasses.get(position);
+    }
 }

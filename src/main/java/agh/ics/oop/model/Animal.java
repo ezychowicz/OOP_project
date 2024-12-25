@@ -12,6 +12,7 @@ import static agh.ics.oop.WorldGUI.MAP_WIDTH;
 import static agh.ics.oop.model.MoveDirection.BACKWARD;
 import static agh.ics.oop.Simulation.idCounter;
 import static agh.ics.oop.WorldGUI.INITIAL_ANIMAL_ENERGY;
+import static agh.ics.oop.WorldGUI.DAY_EFFORT_ENERGY;
 
 public class Animal implements WorldElement{
     private MapDirection direction;
@@ -183,6 +184,10 @@ public boolean moveForward(MapDirection direction,MoveValidator validator) throw
 
     public int getGenomeAtIdx(int idx){
         return genome.get(idx);
+    }
+
+    public int getId() {
+        return id;
     }
 }
 
