@@ -8,14 +8,14 @@ public class GrassFieldTest {
     void countOfGrassElements() {
         int grassCount = 10;
 
-        GrassField grassField = new GrassField(grassCount);
+        GrassField grassField = new GrassField(grassCount,10,10);
 
         assertEquals(grassCount, grassField.getGrasses().size());
     }
     @Test
     void grassPositioningWithinBounds() {
         int grassCount = 10;
-        GrassField grassField = new GrassField(grassCount);
+        GrassField grassField = new GrassField(grassCount,10,10);
         int maxBound = (int) Math.sqrt(10 * grassCount);
 
 
@@ -27,7 +27,7 @@ public class GrassFieldTest {
 
     @Test
     void placingAnimalOnEmptyGrassField() {
-        GrassField grassField = new GrassField(0);
+        GrassField grassField = new GrassField(0,10,10);
         Animal animal = new Animal(new Vector2d(2, 2));
         boolean result = false;
         try {
@@ -42,7 +42,7 @@ public class GrassFieldTest {
     }
     @Test
     void placingAnimalOnOccupiedGrassField() {
-        GrassField grassField = new GrassField(0);
+        GrassField grassField = new GrassField(0,10,10);
         Animal animal1 = new Animal(new Vector2d(2, 2));
         Animal animal2 = new Animal(new Vector2d(2, 2));
         try {
@@ -58,7 +58,7 @@ public class GrassFieldTest {
 
     @Test
     void placingAnimalOnPositionWithGrass() {
-        GrassField grassField = new GrassField(0);
+        GrassField grassField = new GrassField(0,10,10);
         grassField.getGrasses().put(new Vector2d(2,2), new Grass(new Vector2d(2, 2)));
         Animal animal1 = new Animal(new Vector2d(2, 2));
         Animal animal2 = new Animal(new Vector2d(2, 2));
@@ -74,7 +74,7 @@ public class GrassFieldTest {
     }
     @Test
     void movingAnimalThroughGrasses() {
-        GrassField grassField = new GrassField(0);
+        GrassField grassField = new GrassField(0,10,10);
         Animal animal = new Animal(new Vector2d(2, 2));
         Vector2d pos1 = new Vector2d(2, 2);
         Vector2d pos2 = new Vector2d(3, 2);
@@ -105,7 +105,7 @@ public class GrassFieldTest {
 
     @Test
     void mapBoundariesFinding() {
-        GrassField grassField = new GrassField(0);
+        GrassField grassField = new GrassField(0,10,10);
         try {
             grassField.place(new Animal(new Vector2d(1, 2)));
             grassField.place(new Animal(new Vector2d(4, 5)));

@@ -1,4 +1,6 @@
 package agh.ics.oop.model;
+import agh.ics.oop.model.util.MathUtils;
+
 import java.util.Objects;
 public class Vector2d {
     private final int x;
@@ -25,6 +27,7 @@ public class Vector2d {
     public Vector2d add(Vector2d other) {
         return new Vector2d(x + other.x, y + other.y);
     }
+    public Vector2d add(Vector2d other, int width) {return new Vector2d(MathUtils.mod(x + other.x, width), y + other.y);}
     public Vector2d subtract(Vector2d other) {
         return new Vector2d(x - other.x, y - other.y);
     }
@@ -37,6 +40,7 @@ public class Vector2d {
     public Vector2d opposite(){
         return new Vector2d(-x, -y);
     }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;

@@ -10,7 +10,7 @@ import static agh.ics.oop.Simulation.ANIMAL_STRING;
 
 public abstract class AbstractWorldMap implements WorldMap{
     private final UUID id = UUID.randomUUID();
-    protected final Map<Vector2d, Animal> animals = new HashMap<>();  //animals jest w obu mapach
+    protected Map<Vector2d, List<Animal>> animals = new HashMap<>();  //animals jest w obu mapach
     public abstract Boundary getCurrentBounds();
     public abstract boolean canMoveTo(Vector2d position);
     protected final List<MapChangeListener> observers = new ArrayList<>();
@@ -31,16 +31,23 @@ public abstract class AbstractWorldMap implements WorldMap{
         }
     }
 
-    public boolean isOccupied(Vector2d position){
-        return animals.containsKey(position);
+    public boolean isOccupied(Vector2d position){ //jakies dziadostwo
+        if (animals.containsKey(position)) {
+            return !animals.get(position).isEmpty();
+        }
+        return false;
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position){
+    public WorldElement objectAt(Vector2d position){ //najlepsze zwierze na danej pozycji
+        return resolveConflict(animals.get(position));
+    }
+
+    public List<Animal> getAnimalsAt(Vector2d position){
         return animals.get(position);
     }
 
-    public Map<Vector2d, Animal> getAnimals(){
+    public Map<Vector2d, List<Animal>> getAnimals(){
         return animals;
     }
 
@@ -48,7 +55,9 @@ public abstract class AbstractWorldMap implements WorldMap{
     @Override
     public boolean place(Animal animal) throws IncorrectPositionException {
         if (canMoveTo(animal.getPos())) {
-            animals.put(animal.getPos(), animal);
+            animals.put(animal.getPos(), new ArrayList<>(){{ // bo listof jest immutable
+                add(animal);
+            }});
             mapChanged("%s placed at %s".formatted(ANIMAL_STRING, animal.getPos()));
             return true;
         }
@@ -57,18 +66,20 @@ public abstract class AbstractWorldMap implements WorldMap{
 
     @Override
     public void move(Animal animal, MoveDirection direction) {
-        if (animals.containsValue(animal)) {
+        if (animals.containsKey(animal.getPos()) && animals.get(animal.getPos()).contains(animal)) {
             Vector2d initialPos = animal.getPos();
-            animals.remove(animal.getPos());  //usuń zwierzaka z aktualnej pozycji na mapie
-            animal.move(direction, this); //przenieś zwierzaka, chyba że sie nie da to nic nie zmieniaj
-            animals.put(animal.getPos(), animal); //umieść na mapie zwierzaka tam gdzie go przeniosłeś (lub przywróć)
-            if (!Objects.equals(initialPos, animal.getPos())) { //jesli faktycznie sie przemiescil
+            animals.get(initialPos).remove(animal);  // remove the animal from the current position
+            animal.move(direction, this); // move the animal
+            animals.computeIfAbsent(animal.getPos(), k -> new ArrayList<>()).add(animal); // add the animal to the new position
+            if (!Objects.equals(initialPos, animal.getPos())) { // if the animal actually moved
                 mapChanged("%s moved %s to %s".formatted(ANIMAL_STRING, direction, animal.getPos()));
-            }else if (direction == MoveDirection.RIGHT || direction == MoveDirection.LEFT){
+            } else if (direction == MoveDirection.RIGHT || direction == MoveDirection.LEFT) {
                 mapChanged("%s on %s turned %s".formatted(ANIMAL_STRING, initialPos, direction));
             }
         }
     }
+
+
 
     public Vector2d getUpperRightBoundary(){
         return getCurrentBounds().upperRightBound();
@@ -86,9 +97,20 @@ public abstract class AbstractWorldMap implements WorldMap{
         return mapVis.draw(lowerLeftBoundary, upperRightBoundary);
     }
 
-    @Override
-    public List<WorldElement> getElements(){
-        return new ArrayList<>(animals.values());
+
+    public Animal resolveConflict(List<Animal> animals) { //rozwiazuje konflikt gdy wiecej niz jedno zwierze na danej pozycji
+        if (animals == null || animals.isEmpty()) { // to sie nigdy nie powinno wydarzyc!
+            return null;
+        }
+        if (animals.size() == 1) {
+            return animals.getFirst();
+        }
+        animals.sort(Comparator
+                .comparingInt(Animal::getEnergy)
+                .thenComparingInt(Animal::getDaysOld)
+                .thenComparingInt(Animal::getChildrenCnt)
+        );
+        return animals.getLast();
     }
 
     public UUID getId(){

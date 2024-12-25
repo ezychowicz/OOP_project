@@ -51,7 +51,7 @@ public interface WorldMap extends MoveValidator {
      *
      * @return ArrayList of all objects on map
      */
-    List<WorldElement> getElements();
+//    List<WorldElement> getElements();
 
     /**
      * @return MapID

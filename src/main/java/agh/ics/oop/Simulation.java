@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
 public class Simulation implements Runnable {
     public static final String ANIMAL_STRING = "Animal";
     private final List<Vector2d> positions;
-    private final List<MoveDirection> moves;
     private final WorldMap worldMap;
-    public Simulation(List<Vector2d> positions, List<MoveDirection> moves, WorldMap worldMap) {
+    public static int idCounter= 0;
+    public Simulation(List<Vector2d> positions, WorldMap worldMap) {
         this.positions = new ArrayList<>(positions); //zeby dało sie usuwać
-        this.moves = moves;
         this.worldMap = worldMap;
 //        fillWorldMap();
     }
@@ -27,7 +27,7 @@ public class Simulation implements Runnable {
             Animal animal = new Animal(position);
             try {
                 worldMap.place(animal);
-                Thread.sleep(750);
+                sleep(750);
             }catch (IncorrectPositionException e){
                 indicesToRemove.add(i);
             } catch (InterruptedException e) {
@@ -50,19 +50,21 @@ public class Simulation implements Runnable {
     }
 
     public void run(){
-        int animalsIndex;
-        Vector2d currPos;
         fillWorldMap();
-        for (int i = 0; i < moves.size(); i++) {
-            animalsIndex = i % positions.size();
-            currPos = positions.get(animalsIndex); //pozycja zwierzaka, którego bedziemy chcieli przenieść
-            WorldElement animalAtCurrPos = worldMap.objectAt(currPos);
-            worldMap.move((Animal) animalAtCurrPos, moves.get(i)); //próba przeniesienia
-            positions.set(animalsIndex, animalAtCurrPos.getPos()); //zaktualizuj pozycje
-            try {
-                Thread.sleep(1500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        Day day = new Day((GrassField) worldMap, new NormalBehaviour());
+        while (true) {
+            day.setDayCnt(String.valueOf(day.getDayCnt()+1));
+            try{
+                day.dayProcedure();
+            } catch(IncorrectPositionException e){
+                throw new RuntimeException(e);
+            }
+            ((GrassField) worldMap).mapChanged("Day " + day.getDayCnt());
+
+            try{
+                sleep(1000);
+            } catch(InterruptedException e){
+                throw new RuntimeException(e);
             }
         }
 
