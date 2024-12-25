@@ -73,7 +73,7 @@
             <VBox.margin>
                <Insets top="-15.0" />
             </VBox.margin></Label>
-            <Slider fx:id="mapWidthSlider" blockIncrement="1" majorTickUnit="10.0" min="10.0" minorTickCount="1" prefHeight="16.0" prefWidth="150.0" showTickMarks="true" snapToTicks="true" value="10">
+            <Slider fx:id="mapWidthSlider" blockIncrement="1" majorTickUnit="10.0" min="10.0" minorTickCount="1" prefHeight="16.0" prefWidth="150.0" showTickMarks="true" snapToTicks="false" value="10">
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin></Slider>
@@ -90,7 +90,7 @@
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin></Label>
-            <Slider fx:id="mapHeightSlider" blockIncrement="1" majorTickUnit="10.0" min="10.0" minorTickCount="1" prefWidth="150.0" showTickMarks="true" snapToTicks="true" value="10">
+            <Slider fx:id="mapHeightSlider" blockIncrement="1" majorTickUnit="10.0" min="10.0" minorTickCount="1" prefWidth="150.0" showTickMarks="true" snapToTicks="false" value="10">
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin></Slider>
@@ -106,7 +106,7 @@
                <Insets top="-17.5" />
             </VBox.margin>
          </Label>
-         <Slider fx:id="grassesAmountSlider" blockIncrement="1" layoutX="10.0" layoutY="154.0" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+         <Slider fx:id="grassesAmountSlider" blockIncrement="1" layoutX="10.0" layoutY="154.0" max="30" min="0" prefWidth="150.0" snapToTicks="false" value="10">
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin>
@@ -124,7 +124,7 @@
                <Insets top="-17.5" />
             </VBox.margin>
          </Label>
-         <Slider fx:id="energyOnConsumptionSlider" blockIncrement="1" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+         <Slider fx:id="energyOnConsumptionSlider" blockIncrement="1" max="30" min="5" prefWidth="150.0" snapToTicks="false" value="10">
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin>
@@ -137,12 +137,12 @@
                <Insets top="-17.5" />
             </VBox.margin>
          </Label>
-         <Label text="Plant Growth Each Day">
+         <Label text="Grass Growth Each Day">
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin>
          </Label>
-         <Slider fx:id="grassGrowthEachDaySlider" blockIncrement="1" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+         <Slider fx:id="grassGrowthEachDaySlider" blockIncrement="1" max="30" min="0" prefWidth="150.0" snapToTicks="false" value="10">
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin>
@@ -160,7 +160,7 @@
                <Insets top="-17.5" />
             </VBox.margin>
          </Label>
-         <Slider fx:id="animalsAmountSlider" blockIncrement="1" max="30" min="2" prefWidth="150.0" snapToTicks="true" value="2">
+         <Slider fx:id="animalsAmountSlider" blockIncrement="1" max="30" min="2" prefWidth="150.0" snapToTicks="false" value="2">
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin>
@@ -178,7 +178,7 @@
                <Insets top="-17.5" />
             </VBox.margin>
          </Label>
-         <Slider fx:id="initialAnimalEnergySlider" blockIncrement="1" layoutX="10.0" layoutY="580.0" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+         <Slider fx:id="initialAnimalEnergySlider" blockIncrement="1" layoutX="10.0" layoutY="580.0" max="30" min="5" prefWidth="150.0" snapToTicks="false" value="10">
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin>
@@ -196,7 +196,7 @@
                <Insets top="-17.5" />
             </VBox.margin>
          </Label>
-         <Slider fx:id="breedingThresholdSlider" blockIncrement="1" layoutX="10.0" layoutY="686.0" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+         <Slider fx:id="breedingThresholdSlider" blockIncrement="1" layoutX="10.0" layoutY="686.0" max="30" min="5" prefWidth="150.0" snapToTicks="false" value="10">
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin>
@@ -214,7 +214,7 @@
                <Insets top="-17.5" />
             </VBox.margin>
          </Label>
-         <Slider fx:id="breedingCostSlider" blockIncrement="1" layoutX="10.0" layoutY="793.0" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+         <Slider fx:id="breedingCostSlider" blockIncrement="1" layoutX="10.0" layoutY="793.0" max="30" min="5" prefWidth="150.0" snapToTicks="false" value="10">
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin>
@@ -232,7 +232,7 @@
                <Insets top="-17.5" />
             </VBox.margin>
          </Label>
-         <Slider fx:id="genomeLengthSlider" blockIncrement="1" layoutX="10.0" layoutY="899.0" max="30" min="5" prefWidth="150.0" snapToTicks="true" value="10">
+         <Slider fx:id="genomeLengthSlider" blockIncrement="1" layoutX="10.0" layoutY="899.0" max="30" min="5" prefWidth="150.0" snapToTicks="false" value="10">
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin>

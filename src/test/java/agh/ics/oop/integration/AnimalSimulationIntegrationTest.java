@@ -18,7 +18,7 @@ public class AnimalSimulationIntegrationTest {
         List<MoveDirection> directions = List.of(MoveDirection.FORWARD);
         WorldMap worldMap = new RectangularMap(4, 4);
 
-        Simulation sim = new Simulation(positions, directions, worldMap);
+        Simulation sim = new Simulation(positions, worldMap);
         sim.run();
 
         Vector2d desiredEndPos = new Vector2d(2,4);
@@ -32,7 +32,7 @@ public class AnimalSimulationIntegrationTest {
         List<MoveDirection> directions = List.of(MoveDirection.BACKWARD);
         WorldMap worldMap = new RectangularMap(4, 4);
 
-        Simulation sim = new Simulation(positions, directions, worldMap);
+        Simulation sim = new Simulation(positions, worldMap);
         sim.run();
 
         Vector2d desiredEndPos = new Vector2d(2,0);
@@ -46,7 +46,7 @@ public class AnimalSimulationIntegrationTest {
         List<MoveDirection> directions = List.of(MoveDirection.LEFT, MoveDirection.FORWARD);
         WorldMap worldMap = new RectangularMap(4, 4);
 
-        Simulation sim = new Simulation(positions, directions, worldMap);
+        Simulation sim = new Simulation(positions, worldMap);
         sim.run();
 
         Vector2d desiredEndPos = new Vector2d(0,2);
@@ -60,7 +60,7 @@ public class AnimalSimulationIntegrationTest {
         List<MoveDirection> directions = List.of(MoveDirection.RIGHT, MoveDirection.FORWARD);
         WorldMap worldMap = new RectangularMap(4, 4);
 
-        Simulation sim = new Simulation(positions, directions, worldMap);
+        Simulation sim = new Simulation(positions, worldMap);
         sim.run();
 
         Vector2d desiredEndPos = new Vector2d(4,2);
@@ -82,7 +82,7 @@ public class AnimalSimulationIntegrationTest {
                 MoveDirection.LEFT);
         WorldMap worldMap = new RectangularMap(4, 4);
 
-        Simulation sim = new Simulation(positions, directions, worldMap);
+        Simulation sim = new Simulation(positions, worldMap);
         sim.run();
 
         Vector2d desiredEndPos = new Vector2d(2,2);
@@ -105,7 +105,7 @@ public class AnimalSimulationIntegrationTest {
                 MoveDirection.BACKWARD);
         WorldMap worldMap = new RectangularMap(4, 4);
 
-        Simulation sim = new Simulation(positions, directions, worldMap);
+        Simulation sim = new Simulation(positions, worldMap);
         sim.run();
 
         Vector2d desiredEndPos = new Vector2d(3,2);
@@ -127,7 +127,7 @@ public class AnimalSimulationIntegrationTest {
                 );
         WorldMap worldMap = new RectangularMap(4, 4);
 
-        Simulation sim = new Simulation(positions, directions, worldMap);
+        Simulation sim = new Simulation(positions, worldMap);
         sim.run();
 
         List<Vector2d> desiredEndPos = List.of(new Vector2d(1,2), new Vector2d(0,2));
@@ -148,7 +148,7 @@ public class AnimalSimulationIntegrationTest {
         );
         WorldMap worldMap = new RectangularMap(4, 4);
 
-        Simulation sim = new Simulation(positions, directions, worldMap);
+        Simulation sim = new Simulation(positions, worldMap);
         sim.run();
 
         assertEquals(1, sim.getPositions().size());
@@ -169,7 +169,7 @@ public class AnimalSimulationIntegrationTest {
         );
         WorldMap worldMap = new RectangularMap(4, 4);
 
-        Simulation sim = new Simulation(positions, directions, worldMap);
+        Simulation sim = new Simulation(positions, worldMap);
         sim.run();
 
         assertEquals(1, sim.getPositions().size());

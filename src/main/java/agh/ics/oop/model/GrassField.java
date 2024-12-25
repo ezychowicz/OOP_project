@@ -5,7 +5,9 @@ import agh.ics.oop.model.util.Converter;
 
 import java.util.*;
 
+import static agh.ics.oop.WorldGUI.GRASSES_AMOUNT;
 import static agh.ics.oop.model.MapDirection.*;
+import static agh.ics.oop.WorldGUI.GRASS_GROWTH_EACH_DAY;
 
 public class GrassField extends AbstractWorldMap{
     private final Map<Vector2d, Grass> grasses;
@@ -30,7 +32,7 @@ public class GrassField extends AbstractWorldMap{
         this.availableIdxs = new ArrayList<List<Integer>>(); //lista list: preferred, unpreferred. pomocnicze - tylko dla randomPositionGenerator
         availableIdxs.add(0, new ArrayList<Integer> (preferredSet));
         availableIdxs.add(1, new ArrayList<Integer> (unpreferredSet));
-        plantingGrasses();
+        plantingGrasses(GRASSES_AMOUNT);
     }
 
     private void initializeEquator(){
@@ -79,7 +81,7 @@ public class GrassField extends AbstractWorldMap{
 
     }
 
-    public void plantingGrasses(){
+    public void plantingGrasses(int grassCount){
         /*
         * metoda do sadzenia nowych roslin i aktualizowania przy tym preferredSet i unpreferredSet
         */
@@ -180,5 +182,9 @@ public class GrassField extends AbstractWorldMap{
 
     public int getWidth(){
         return width;
+    }
+
+    public void setAnimals(Map<Vector2d, List<Animal>> animals){ //rozkminka...
+        this.animals = animals;
     }
 }

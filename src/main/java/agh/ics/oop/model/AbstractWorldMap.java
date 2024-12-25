@@ -55,7 +55,9 @@ public abstract class AbstractWorldMap implements WorldMap{
     @Override
     public boolean place(Animal animal) throws IncorrectPositionException {
         if (canMoveTo(animal.getPos())) {
-            animals.put(animal.getPos(), new ArrayList<>(List.of(animal)));
+            animals.put(animal.getPos(), new ArrayList<>(){{ // bo listof jest immutable
+                add(animal);
+            }});
             mapChanged("%s placed at %s".formatted(ANIMAL_STRING, animal.getPos()));
             return true;
         }
@@ -97,6 +99,9 @@ public abstract class AbstractWorldMap implements WorldMap{
 
 
     public Animal resolveConflict(List<Animal> animals) { //rozwiazuje konflikt gdy wiecej niz jedno zwierze na danej pozycji
+        if (animals == null || animals.isEmpty()) { // to sie nigdy nie powinno wydarzyc!
+            return null;
+        }
         if (animals.size() == 1) {
             return animals.getFirst();
         }

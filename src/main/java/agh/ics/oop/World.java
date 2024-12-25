@@ -25,8 +25,8 @@ public class World {
             grassF.addObserver(new ConsoleMapDisplay());
             AbstractWorldMap rectangularF = new RectangularMap(5,5);
             rectangularF.addObserver(new ConsoleMapDisplay());
-            simulations.add(new Simulation(positions,directions,rectangularF));
-            simulations.add(new Simulation(positions,directions,grassF));
+            simulations.add(new Simulation(positions,rectangularF));
+            simulations.add(new Simulation(positions,grassF));
         }
         SimulationEngine simEngine = new SimulationEngine(simulations);
 //        simEngine.runSync();

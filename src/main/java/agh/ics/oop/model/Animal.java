@@ -10,6 +10,8 @@ import java.util.Random;
 import static agh.ics.oop.WorldGUI.GENOME_LENGTH;
 import static agh.ics.oop.WorldGUI.MAP_WIDTH;
 import static agh.ics.oop.model.MoveDirection.BACKWARD;
+import static agh.ics.oop.Simulation.idCounter;
+import static agh.ics.oop.WorldGUI.INITIAL_ANIMAL_ENERGY;
 
 public class Animal implements WorldElement{
     private MapDirection direction;
@@ -18,13 +20,8 @@ public class Animal implements WorldElement{
     private int daysOld;
     private int childrenCnt;
     private final List<Integer> genome = initializeGenome();
-    private final int genomeIdx = 0;
-    private static final Vector2d RIGHT_BOUNDARY_VECTOR = new Vector2d(4,4);
-    private static final Vector2d LEFT_BOUNDARY_VECTOR = new Vector2d(0,0);
-    public Animal(Vector2d startPosition){
-        this.direction = MapDirection.NORTH;
-        this.pos = startPosition;
-    }
+    private int genomeIdx = 0; // to bylo final - na pewno dobrze jest robione move? potrzebne to jest wogole?
+    private final int id;
 
     private List<Integer> initializeGenome() {
         /*
@@ -39,12 +36,13 @@ public class Animal implements WorldElement{
     }
 
     //nowy konstruktor docelowo ten pierwszy zostanie usuniety ale zeby nie zepsuc wszystkiego na razie jest tak
-    public Animal(Vector2d startPosition, int startingEnergy){
+    public Animal(Vector2d startPosition){
         this.direction = MapDirection.NORTH;
         this.pos = startPosition;
-        this.energy = startingEnergy;
+        this.energy = INITIAL_ANIMAL_ENERGY;
         this.daysOld = 0;
         this.childrenCnt = 0;
+        this.id = idCounter++;
     }
 
     public Animal() {
@@ -116,7 +114,7 @@ public class Animal implements WorldElement{
 //            case BACKWARD_RIGHT, BACKWARD_LEFT ->
 //        };
 //    }
-    private boolean moveForward(MapDirection direction, MoveValidator validator) throws IncorrectPositionException{
+public boolean moveForward(MapDirection direction,MoveValidator validator) throws IncorrectPositionException{
         Vector2d move;
         switch (direction) {
             case NORTH -> move =  MapDirection.NORTH_UNIT_VECTOR;
@@ -170,6 +168,7 @@ public class Animal implements WorldElement{
     public void updateEnergy(int energy) {
         this.energy += energy;
     }
+
     public int getDaysOld() {
         return daysOld;
     }

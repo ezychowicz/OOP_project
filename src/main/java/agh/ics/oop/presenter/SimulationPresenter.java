@@ -19,6 +19,7 @@ import javafx.scene.text.FontWeight;
 
 import java.util.List;
 
+import static agh.ics.oop.WorldGUI.GRASSES_AMOUNT;
 import static agh.ics.oop.WorldGUI.initializeConstants;
 
 public class SimulationPresenter implements MapChangeListener {
@@ -112,7 +113,6 @@ public class SimulationPresenter implements MapChangeListener {
         setupSlider(breedingThresholdSlider, breedingThresholdValue);
         setupSlider(breedingCostSlider, breedingCostValue);
         setupSlider(genomeLengthSlider, genomeLengthValue);
-        initializeConstants();
     }
 
     @FXML
@@ -217,15 +217,17 @@ public class SimulationPresenter implements MapChangeListener {
     public void initializeSim() {
         int mapWidth = (int) mapWidthSlider.getValue();
         int mapHeight = (int) mapHeightSlider.getValue();
-
+        initializeConstants(); // teraz suwaki na pewno dzialaja
         lowerLeft = new Vector2d(0, 0);
         upperRight = new Vector2d(mapWidth, mapHeight);
-        AbstractWorldMap grassF = new GrassField(10, mapWidth, mapHeight);
+        AbstractWorldMap grassF = new GrassField(GRASSES_AMOUNT, mapWidth, mapHeight);
         grassF.addObserver(this);
 
-        List<MoveDirection> directions = OptionsParser.parse(textField.getText().split("\\s+"));
-        List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 4));
-        Simulation sim = new Simulation(positions, directions, grassF);
+//        List<MoveDirection> directions = OptionsParser.parse(textField.getText().split("\\s+"));
+        List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 4), new Vector2d(4, 4), new Vector2d(5, 5));
+        // tu bedzie generowanie tych zwierzakow
+
+        Simulation sim = new Simulation(positions, grassF);
         SimulationEngine simEngine = new SimulationEngine(List.of(sim));
         new Thread(simEngine::runSync).start();
     }
