@@ -4,6 +4,7 @@ import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -224,9 +225,10 @@ public class SimulationPresenter implements MapChangeListener {
         grassF.addObserver(this);
 
 //        List<MoveDirection> directions = OptionsParser.parse(textField.getText().split("\\s+"));
-        List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 4), new Vector2d(4, 4), new Vector2d(5, 5));
+//        List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 4), new Vector2d(4, 4), new Vector2d(5, 5));
         // tu bedzie generowanie tych zwierzakow
-
+        AnimalGenerator animalGenerator = new AnimalGenerator();
+        List<Vector2d> positions = animalGenerator.generateInitialPositions();
         Simulation sim = new Simulation(positions, grassF);
         SimulationEngine simEngine = new SimulationEngine(List.of(sim));
         new Thread(simEngine::runSync).start();
@@ -236,5 +238,8 @@ public class SimulationPresenter implements MapChangeListener {
         mapGrid.getChildren().retainAll(mapGrid.getChildren().get(0)); // hack to retain visible grid lines
         mapGrid.getColumnConstraints().clear();
         mapGrid.getRowConstraints().clear();
+    }
+
+    public void pauseSim(ActionEvent actionEvent){
     }
 }
