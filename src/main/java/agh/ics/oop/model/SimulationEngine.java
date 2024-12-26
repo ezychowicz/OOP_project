@@ -1,7 +1,6 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.Simulation;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -13,12 +12,16 @@ public class SimulationEngine {
     private final List<Simulation> simulations;
     private final List <Thread> threads = new ArrayList<>();
     private final ExecutorService executor = Executors.newFixedThreadPool(4);
+
+    private volatile boolean isPaused = false;  // volatile uzywa sie przy synchronicznych rzeczach
+    private final Object lock = new Object();    // object level lock
+
     public SimulationEngine(List<Simulation> simulations){
         this.simulations = simulations;
     }
 
     public void runSync(){
-        for (Simulation sim : simulations){
+        for (Simulation sim : simulations) {
             sim.run();
         }
     }
@@ -29,11 +32,21 @@ public class SimulationEngine {
             threads.add(thread);
             thread.start();
         }
-        try {
-            awaitSimulationEnd();
-        }catch(InterruptedException e) {
-            e.printStackTrace();
+    }
+
+    public void pause(){
+        isPaused = true;
+    }
+
+    public void resume(){
+        isPaused = false;
+        synchronized (lock) {
+            lock.notifyAll();  // niech wszystkie czekajace watki wznowia prace
         }
+    }
+
+    public boolean isPaused() {
+        return isPaused;
     }
 
     public void awaitSimulationEnd() throws InterruptedException {
@@ -47,14 +60,11 @@ public class SimulationEngine {
         }
     }
 
-    public void runAsyncInThreadPool(){
-        for (Runnable simulation : simulations) {
-            executor.submit(simulation);
-        }
-        try {
-            awaitSimulationEnd();
-        }catch(InterruptedException e) {
-            e.printStackTrace();
+    public void pauseSimulationIfNeeded() throws InterruptedException {
+        synchronized (lock){
+            while (isPaused){
+                lock.wait();  //czekaj az ktos nie wywola notify, patrz resume()
+            }
         }
     }
 }

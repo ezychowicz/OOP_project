@@ -13,7 +13,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimulationApp extends Application {
+public class SimulationApp extends Application { //do usuniecia?
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();

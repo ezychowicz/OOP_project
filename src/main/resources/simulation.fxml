@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.layout.HBox?>
 <BorderPane minHeight="550.0" minWidth="850.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.presenter.SimulationPresenter">
     <!-- Top MenuBar -->
     <top>
@@ -255,10 +256,10 @@
 
     <!-- Bottom - Controls -->
     <bottom>
-        <VBox alignment="CENTER" spacing="10">
-            <TextField fx:id="textField" promptText="Moves: " />
-            <Label fx:id="moveInfo" text="Waiting for move specs... " textAlignment="CENTER" />
-            <Button onAction="#initializeSim" text="Start" />
-        </VBox>
+        <HBox alignment="CENTER" spacing="10">
+            <Button onAction="#startNewSim" text="Start" />
+            <Button onAction="#pauseSim" text="Pause" />
+            <Button onAction="#resumeSim" text="Resume" />
+        </HBox>
     </bottom>
 </BorderPane>
