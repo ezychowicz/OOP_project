@@ -27,13 +27,13 @@ public enum MoveDirection {
     public int directionToGene(MoveDirection direction) {
         return switch (direction) {
             case FORWARD -> 0;
-            case BACKWARD -> 1;
-            case LEFT -> 2;
-            case RIGHT -> 3;
-            case FORWARD_RIGHT -> 4;
-            case FORWARD_LEFT -> 5;
-            case BACKWARD_LEFT -> 6;
-            case BACKWARD_RIGHT -> 7;
+            case FORWARD_RIGHT -> 1;
+            case RIGHT -> 2;
+            case BACKWARD_RIGHT -> 3;
+            case BACKWARD -> 4;
+            case BACKWARD_LEFT -> 5;
+            case LEFT -> 6;
+            case FORWARD_LEFT -> 7;
         };
     }
 }

@@ -25,6 +25,7 @@ public class Day {
     }
 
     public void dayProcedure() throws IncorrectPositionException{
+        System.out.println("Dzien: " + dayCnt);
         //usuwanie martwych zwierzat z animals i codzienne redukowanie energii
         updateAnimalsState();
         //poruszanie sie zwierzakow

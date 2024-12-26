@@ -161,12 +161,12 @@
                <Insets top="-17.5" />
             </VBox.margin>
          </Label>
-         <Slider fx:id="animalsAmountSlider" blockIncrement="1" max="30" min="2" prefWidth="150.0" snapToTicks="false" value="2">
+         <Slider fx:id="animalsAmountSlider" blockIncrement="1" max="30" min="2" prefWidth="150.0" snapToTicks="false" value="4">
             <VBox.margin>
                <Insets top="-17.5" />
             </VBox.margin>
          </Slider>
-         <Label fx:id="animalsAmountValue" text="Current Value: 2" textAlignment="CENTER">
+         <Label fx:id="animalsAmountValue" text="Current Value: 4" textAlignment="CENTER">
             <font>
                <Font size="11.0" />
             </font>
