@@ -7,12 +7,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-import static agh.ics.oop.WorldGUI.GENOME_LENGTH;
-import static agh.ics.oop.WorldGUI.MAP_WIDTH;
+import static agh.ics.oop.WorldGUI.*;
 import static agh.ics.oop.model.MoveDirection.BACKWARD;
 import static agh.ics.oop.Simulation.idCounter;
-import static agh.ics.oop.WorldGUI.INITIAL_ANIMAL_ENERGY;
-import static agh.ics.oop.WorldGUI.DAY_EFFORT_ENERGY;
 
 public class Animal implements WorldElement{
     private MapDirection direction;
@@ -20,7 +17,7 @@ public class Animal implements WorldElement{
     private int energy;
     private int daysOld;
     private int childrenCnt;
-    private final List<Integer> genome = initializeGenome();
+    private final List<Integer> genome;
     private int genomeIdx = 0; // to bylo final - na pewno dobrze jest robione move? potrzebne to jest wogole?
     private final int id;
 
@@ -44,6 +41,17 @@ public class Animal implements WorldElement{
         this.daysOld = 0;
         this.childrenCnt = 0;
         this.id = idCounter++;
+        this.genome = initializeGenome();
+    }
+
+    public Animal(Vector2d startPosition, Animal parent1, Animal parent2, List<Integer> genome){
+        this.direction = MapDirection.NORTH;
+        this.pos = startPosition;
+        this.energy = 2*BREEDING_COST;
+        this.daysOld = 0;
+        this.childrenCnt = 0;
+        this.id = idCounter++;
+        this.genome = genome;
     }
 
     public Animal() {
@@ -184,6 +192,10 @@ public boolean moveForward(MapDirection direction,MoveValidator validator) throw
 
     public int getGenomeAtIdx(int idx){
         return genome.get(idx);
+    }
+
+    public List<Integer> getGenome(){
+        return genome;
     }
 
     public int getId() {

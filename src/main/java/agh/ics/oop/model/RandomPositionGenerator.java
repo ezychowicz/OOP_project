@@ -24,9 +24,6 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
         this.grassCount = grassCount;
         this.preferredIdxs = grassField.getAvailableIdxs().getFirst();
         this.unPreferredIdxs = grassField.getAvailableIdxs().getLast();
-        if (grassCount > preferredIdxs.size() + unPreferredIdxs.size()) {
-            throw new IllegalArgumentException("grassCount cannot be greater than the total number of available positions");
-        }
         this.count = 0;
         this.random = new Random();
     }
@@ -58,6 +55,9 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
             public Vector2d next() {
                 if (!hasNext()) {
                     throw new NoSuchElementException("No grasses left to allocate/no positions available");
+//                    if (preferredIdxs.isEmpty() && unPreferredIdxs.isEmpty()) {
+//                        System.out.println("no positions left to allocate...");
+//                    }
                 }
                 count++;
                 List<Integer> idxsToChoose;

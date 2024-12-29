@@ -207,7 +207,12 @@ public class SimulationPresenter implements MapChangeListener {
         initializeConstants(); // teraz suwaki na pewno dzialaja
         lowerLeft = new Vector2d(0, 0);
         upperRight = new Vector2d(mapWidth, mapHeight);
-        AbstractWorldMap grassF = new GrassField(GRASSES_AMOUNT, mapWidth, mapHeight);
+        GrassField grassF;
+        if (SPRAWLING_JUNGLE) {
+            grassF = new SprawlingJungle(GRASSES_AMOUNT, MAP_WIDTH, MAP_HEIGHT);
+        }else{
+            grassF = new NormalGrassField(GRASSES_AMOUNT, MAP_WIDTH, MAP_HEIGHT);
+        }
         grassF.addObserver(this);
         AnimalGenerator animalGenerator = new AnimalGenerator();
         List<Vector2d> positions = animalGenerator.generateInitialPositions();
@@ -247,7 +252,12 @@ public class SimulationPresenter implements MapChangeListener {
         }
 
         initializeConstants(); // zczytaj statiki
-        AbstractWorldMap grassF = new GrassField(GRASSES_AMOUNT, MAP_WIDTH, MAP_HEIGHT);
+        GrassField grassF;
+        if (SPRAWLING_JUNGLE) {
+            grassF = new SprawlingJungle(GRASSES_AMOUNT, MAP_WIDTH, MAP_HEIGHT);
+        }else{
+            grassF = new NormalGrassField(GRASSES_AMOUNT, MAP_WIDTH, MAP_HEIGHT);
+        }
         grassF.addObserver(this);
 
         AnimalGenerator animalGenerator = new AnimalGenerator();

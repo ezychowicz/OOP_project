@@ -9,17 +9,17 @@ import static agh.ics.oop.WorldGUI.GRASSES_AMOUNT;
 import static agh.ics.oop.model.MapDirection.*;
 import static agh.ics.oop.WorldGUI.GRASS_GROWTH_EACH_DAY;
 
-public class GrassField extends AbstractWorldMap{
-    private final Map<Vector2d, Grass> grasses;
-    private final int width;
-    private final int height;
+public abstract class GrassField extends AbstractWorldMap{
+    protected final Map<Vector2d, Grass> grasses;
+    protected final int width;
+    protected final int height;
     private final int grassCount;
-    private final Set<Integer> preferredSet = new HashSet<>();
-    private final Set<Integer> unpreferredSet = new HashSet<>();
+    protected final Set<Integer> preferredSet = new HashSet<>();
+    protected final Set<Integer> unpreferredSet = new HashSet<>();
     private final List<Vector2d> posList;
-    private final List<List<Integer>> availableIdxs;
+    protected final List<List<Integer>> availableIdxs;
     public static final List<Vector2d> ADJACENT = Arrays.asList(NORTH_UNIT_VECTOR, SOUTH_UNIT_VECTOR, WEST_UNIT_VECTOR, EAST_UNIT_VECTOR, SOUTHEAST_UNIT_VECTOR, SOUTHWEST_UNIT_VECTOR, NORTHWEST_UNIT_VECTOR, NORTHEAST_UNIT_VECTOR);
-    private final CumulativePreferences cumulativePrefs;
+    protected final CumulativePreferences cumulativePrefs;
 
     public GrassField(int grassCount, int width, int height) {
         this.grasses = new HashMap<Vector2d, Grass>();
@@ -64,35 +64,9 @@ public class GrassField extends AbstractWorldMap{
     }
 
 
-    public void eatenGrassProcedure(Vector2d position){
-        /*
-         * metoda obslugujaca dodawanie do preferred i unpreferred na polach na ktorych dopiero zjedzono rosline (nowo zwolnionych)
-         * uruchamiana dopiero po wykonaniu dekrementacji dla sasiadow wszystkich usuwanych traw danego dnia
-         * bo musi byc aktualny stan cumulativePrefs
-         */
-        grasses.remove(position);
+    public abstract void eatenGrassProcedure(Vector2d position);
 
-        int idx = Converter.convertToIdx(position, width);
-        if (cumulativePrefs.getPreferenceScoreAtPos(position) == 0){
-            unpreferredSet.add(idx);
-        } else {
-            preferredSet.add(idx);
-        }
-
-    }
-
-    public void plantingGrasses(int grassCount){
-        /*
-        * metoda do sadzenia nowych roslin i aktualizowania przy tym preferredSet i unpreferredSet
-        */
-        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(this, grassCount);
-        for (Vector2d grassPosition : randomPositionGenerator) {
-            grasses.put(grassPosition, new Grass(grassPosition));
-            this.updatePreferences(grassPosition, preferredSet, unpreferredSet);
-        }
-        availableIdxs.set(0, new ArrayList<Integer> (preferredSet));
-        availableIdxs.set(1, new ArrayList<Integer> (unpreferredSet));
-    }
+    public abstract void plantingGrasses(int grassCount);
 
     public void transferToPreferred(Vector2d position){
         int idx = Converter.convertToIdx(position, width);
@@ -106,7 +80,7 @@ public class GrassField extends AbstractWorldMap{
         preferredSet.remove(idx);
     }
 
-    private void updatePreferences(Vector2d newGrassPos, Set<Integer> preferredSet, Set<Integer> unpreferredSet){ //dodaj do indeksów sąsiadow tej pozycji, usun samą pozycje
+    protected void updatePreferences(Vector2d newGrassPos, Set<Integer> preferredSet, Set<Integer> unpreferredSet){ //dodaj do indeksów sąsiadow tej pozycji, usun samą pozycje
         int newGrassIdx = Converter.convertToIdx(newGrassPos, width);
         preferredSet.remove(newGrassIdx); //usuwaj pozycje na ktorej dodano trawe
         unpreferredSet.remove(newGrassIdx); //to samo ale jesli jest w unpreferred

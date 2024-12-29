@@ -1,12 +1,10 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.*;
+import agh.ics.oop.model.exceptions.CopulationFailedException;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static agh.ics.oop.WorldGUI.GRASS_GROWTH_EACH_DAY;
 import static agh.ics.oop.WorldGUI.INITIAL_ANIMAL_ENERGY;
@@ -36,8 +34,30 @@ public class Day {
         for (Vector2d position : animals.keySet()) {
             Consumption.consume(grassField, position);
         }
-        //rozmnazanie
 
+        //rozmnazanie
+        //iterator umozliwia modyfikowanie obiektu iterowanego w trakcie iteracji po nim w sposob bezpieczny
+        Iterator<Map.Entry<Vector2d, List<Animal>>> iterator = animals.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Vector2d, List<Animal>> entry = iterator.next();
+            Vector2d position = entry.getKey();
+            List<Animal> animalsAtPos = entry.getValue();
+
+            if (animalsAtPos.size() >= 2) {
+                try {
+                    Copulation copulation = new Copulation(position, grassField);
+                    Animal newborn = copulation.copulate();
+                    animalsAtPos.add(newborn); // Dodajemy nowo narodzone zwierzę do listy
+
+                    // Zaktualizuj listę zwierząt w mapie
+                    animals.put(position, animalsAtPos); // Bez usuwania klucza, po prostu zaktualizuj listę
+
+                } catch (CopulationFailedException e) {
+                    System.out.println("Kopulacja nie powiodła się dla pozycji: " + position);
+                }
+            }
+        }
+        grassField.setAnimals(animals);
 
         //wzrost nowych roslin
         grassField.plantingGrasses(GRASS_GROWTH_EACH_DAY);
