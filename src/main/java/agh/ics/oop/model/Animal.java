@@ -161,6 +161,7 @@ public boolean moveForward(MapDirection direction,MoveValidator validator) throw
             MapDirection newDirection = rotate(direction);
             if (moveForward(newDirection, validator)) {
                 this.direction = newDirection; //zaktualizuj zeby byl skierowany zgodnie z kierunkiem w ktorym sie poruszyl
+                genomeIdx = (genomeIdx + 1) % GENOME_LENGTH; //przesun sie w genomie
             }else{ //zwierzak chcial wyjsc za biegun
                 this.direction = rotate(BACKWARD); //odwroc zwierzaka
             }

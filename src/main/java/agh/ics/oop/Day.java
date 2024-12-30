@@ -76,7 +76,7 @@ public class Day {
                 Animal animal = animalsAtPos.get(i);
                 animal.updateEnergy(-DAY_EFFORT_ENERGY);
                 if (animal.getEnergy() <= 0){
-                    System.out.println("huj huj huj");
+                    System.out.println("Zwierze " + animal.getId() + " umarlo");
                     toRemoveIdxs.add(i);
                 }
             }

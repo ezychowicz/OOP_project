@@ -200,27 +200,6 @@ public class SimulationPresenter implements MapChangeListener {
         mapGrid.setGridLinesVisible(true);
     }
 
-    @FXML
-    public void initializeSim() {
-        int mapWidth = (int) mapWidthSlider.getValue();
-        int mapHeight = (int) mapHeightSlider.getValue();
-        initializeConstants(); // teraz suwaki na pewno dzialaja
-        lowerLeft = new Vector2d(0, 0);
-        upperRight = new Vector2d(mapWidth, mapHeight);
-        GrassField grassF;
-        if (SPRAWLING_JUNGLE) {
-            grassF = new SprawlingJungle(GRASSES_AMOUNT, MAP_WIDTH, MAP_HEIGHT);
-        }else{
-            grassF = new NormalGrassField(GRASSES_AMOUNT, MAP_WIDTH, MAP_HEIGHT);
-        }
-        grassF.addObserver(this);
-        AnimalGenerator animalGenerator = new AnimalGenerator();
-        List<Vector2d> positions = animalGenerator.generateInitialPositions();
-        Simulation sim = new Simulation(positions, grassF);
-        SimulationEngine simEngine = new SimulationEngine(List.of(sim));
-        new Thread(simEngine::runAsync).start();
-    }
-
     private void clearGrid() {
         mapGrid.getChildren().retainAll(mapGrid.getChildren().get(0)); // hack to retain visible grid lines
         mapGrid.getColumnConstraints().clear();
