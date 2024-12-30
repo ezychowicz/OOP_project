@@ -1,6 +1,5 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
@@ -9,7 +8,6 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -19,17 +17,11 @@ import javafx.scene.text.FontWeight;
 
 import java.util.List;
 
-import static agh.ics.oop.WorldGUI.GRASSES_AMOUNT;
-import static agh.ics.oop.WorldGUI.initializeConstants;
+import static agh.ics.oop.WorldGUI.*;
 
 public class SimulationPresenter implements MapChangeListener {
     private WorldMap worldMap;
-
-    @FXML
-    private Label moveInfo;
-
-    @FXML
-    private TextField textField;
+    private SimulationEngine simEngine;
 
     @FXML
     private GridPane mapGrid;
@@ -100,9 +92,7 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     private void initialize() {
-        instance = this; // Assign the current instance to the static field
-
-        // Set up the sliders
+        instance = this;
         setupSlider(mapWidthSlider, mapWidthValue);
         setupSlider(mapHeightSlider, mapHeightValue);
         setupSlider(grassesAmountSlider,grassesAmountValue);
@@ -128,7 +118,6 @@ public class SimulationPresenter implements MapChangeListener {
         this.setWorldMap(map);
         Platform.runLater(() -> {
             drawMap();
-            moveInfo.setText(message);
         });
     }
 
@@ -209,32 +198,54 @@ public class SimulationPresenter implements MapChangeListener {
         constructAxes();
         fillMapGrid();
         mapGrid.setGridLinesVisible(true);
-        System.out.println(moveInfo.getText());
-        moveInfo.setText(worldMap.toString());
-    }
-
-    @FXML
-    public void initializeSim() {
-        int mapWidth = (int) mapWidthSlider.getValue();
-        int mapHeight = (int) mapHeightSlider.getValue();
-        initializeConstants(); // teraz suwaki na pewno dzialaja
-        lowerLeft = new Vector2d(0, 0);
-        upperRight = new Vector2d(mapWidth, mapHeight);
-        AbstractWorldMap grassF = new GrassField(GRASSES_AMOUNT, mapWidth, mapHeight);
-        grassF.addObserver(this);
-
-//        List<MoveDirection> directions = OptionsParser.parse(textField.getText().split("\\s+"));
-        List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 4), new Vector2d(4, 4), new Vector2d(5, 5));
-        // tu bedzie generowanie tych zwierzakow
-
-        Simulation sim = new Simulation(positions, grassF);
-        SimulationEngine simEngine = new SimulationEngine(List.of(sim));
-        new Thread(simEngine::runSync).start();
     }
 
     private void clearGrid() {
         mapGrid.getChildren().retainAll(mapGrid.getChildren().get(0)); // hack to retain visible grid lines
         mapGrid.getColumnConstraints().clear();
         mapGrid.getRowConstraints().clear();
+    }
+
+    @FXML
+    public void pauseSim() {
+        if (simEngine != null) {
+            simEngine.pause();
+        }
+    }
+
+    // Resume simulation
+    @FXML
+    public void resumeSim() {
+        if (simEngine != null && simEngine.isPaused()) {
+            simEngine.resume();
+        }
+    }
+
+    // Zacznij nowa symulacje - zamiast initializesim - nie wiem czy mozemy usunac initializeSim, tu to jest troche inaczej zrobione
+    @FXML
+    public void startNewSim() {
+        // jesli trzeba - zatrzymaj symulacje
+        if (simEngine != null) {
+            simEngine.pause();  // zatrzymaj symulacje
+            simEngine = null;   // usun stara symulacje
+        }
+
+        initializeConstants(); // zczytaj statiki
+        GrassField grassF;
+        if (SPRAWLING_JUNGLE) {
+            grassF = new SprawlingJungle(GRASSES_AMOUNT, MAP_WIDTH, MAP_HEIGHT);
+        }else{
+            grassF = new NormalGrassField(GRASSES_AMOUNT, MAP_WIDTH, MAP_HEIGHT);
+        }
+        grassF.addObserver(this);
+
+        AnimalGenerator animalGenerator = new AnimalGenerator();
+        List<Vector2d> positions = animalGenerator.generateInitialPositions();
+        Simulation newSim = new Simulation(positions, grassF);
+
+        simEngine = new SimulationEngine(List.of(newSim));
+        newSim.setSimulationEngine(simEngine);
+
+        simEngine.runAsync();
     }
 }
