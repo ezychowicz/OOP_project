@@ -16,7 +16,6 @@ public class WorldGUI {
     public static int GENOME_LENGTH;
     public static boolean A_PINCH_OF_INSANITY;
     public static boolean SPRAWLING_JUNGLE;
-    public static final int DAY_EFFORT_ENERGY = 1;
 
     public static void initializeConstants() {
         SimulationPresenter presenter = SimulationPresenter.getInstance();
