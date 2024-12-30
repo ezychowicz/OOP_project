@@ -2,6 +2,7 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.presenter.SimulationPresenter;
 
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class Simulation implements Runnable {
     public static final String ANIMAL_STRING = "Animal";
     private final List<Vector2d> positions;
     private final WorldMap worldMap;
-    public static int idCounter= 0;
+    public static int idCounter = 0;
     private SimulationEngine simEngine;
     private Day day;
 
@@ -41,6 +42,8 @@ public class Simulation implements Runnable {
 
                 day.setDayCnt(String.valueOf(day.getDayCnt() + 1));
                 day.dayProcedure();
+                // statystyki
+                SimulationPresenter.getInstance().updateSimulationStats(this);
                 ((GrassField) worldMap).mapChanged("Day " + day.getDayCnt());
 
                 Thread.sleep(1000);
@@ -68,5 +71,33 @@ public class Simulation implements Runnable {
         for (int idx : indicesToRemove) {
             positions.remove(idx);
         }
+    }
+
+    public int getAnimalsCount(){
+        return day.currAnimalsCnt;
+    }
+
+    public int getPlantsCount(){
+        return day.currPlantsCnt;
+    }
+
+    public int getFreeFieldsCount(){
+        return day.currFreeFieldsCnt;
+    }
+
+    public String getMostPopularGenotypes(){
+        return day.getMostPopularGenotypes();
+    }
+
+    public float getAverageEnergy(){
+        return day.getAverageEnergy();
+    }
+
+    public float getAverageLifespan(){
+        return day.getAverageLifespan();
+    }
+
+    public float getAverageChildren(){
+        return day.getAverageChildren();
     }
 }

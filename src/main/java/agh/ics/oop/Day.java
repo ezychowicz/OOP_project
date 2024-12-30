@@ -3,6 +3,7 @@ package agh.ics.oop;
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.exceptions.CopulationFailedException;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.presenter.SimulationPresenter;
 
 import java.util.*;
 
@@ -16,6 +17,18 @@ public class Day {
     private Map<Vector2d, List<Animal>> animals;
     private final AnimalBehaviour animalBehaviour;
     private static final int DAY_EFFORT_ENERGY = 1;
+    public int currAnimalsCnt = 0;
+    public int currPlantsCnt = 0;
+    public int currFreeFieldsCnt = 0;
+    public String currMostPopularGenotypes = """
+            test
+            sfh
+            test ok
+            """;
+    public float currAverageEnergy = 0;
+    public float currAverageLifespan = 0;
+    public float currAverageChildren = 0;
+
     public Day(GrassField grassField, AnimalBehaviour animalBehaviour) {
         this.grassField = grassField;
         this.animals = grassField.getAnimals(); //pozycje zwierzakow
@@ -125,5 +138,33 @@ public class Day {
 
     public void setDayCnt(String s){
         dayCnt = Integer.parseInt(s);
+    }
+
+    public int getAnimalsCount(){
+        return currAnimalsCnt;
+    }
+
+    public int getPlantsCount(){
+        return currPlantsCnt;
+    }
+
+    public int getFreeFieldsCount(){
+        return currFreeFieldsCnt;
+    }
+
+    public String getMostPopularGenotypes(){
+        return currMostPopularGenotypes;
+    }
+
+    public float getAverageEnergy(){
+        return currAverageEnergy;
+    }
+
+    public float getAverageLifespan(){
+        return currAverageLifespan;
+    }
+
+    public float getAverageChildren(){
+        return currAverageChildren;
     }
 }

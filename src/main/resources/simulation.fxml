@@ -16,6 +16,7 @@
 <?import javafx.scene.text.Font?>
 
 <?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Pos?>
 <BorderPane minHeight="550.0" minWidth="850.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.presenter.SimulationPresenter">
     <!-- Top MenuBar -->
     <top>
@@ -66,13 +67,12 @@
          <CheckBox fx:id="sprawlingJungleCheckBox" mnemonicParsing="false" text="Sprawling Jungle" />
          <CheckBox fx:id="aPinchOfInsanityCheckBox" mnemonicParsing="false" text="A Pinch of Insanity">
             <VBox.margin>
-               <Insets top="-15.0" />
+               <Insets top="-17.5" />
             </VBox.margin>
          </CheckBox>
-            <!-- Slider for Map Width -->
             <Label text="Map Width">
             <VBox.margin>
-               <Insets top="-15.0" />
+               <Insets top="-17.5" />
             </VBox.margin></Label>
             <Slider fx:id="mapWidthSlider" blockIncrement="1" majorTickUnit="10.0" min="10.0" minorTickCount="1" prefHeight="16.0" prefWidth="150.0" showTickMarks="true" snapToTicks="false" value="10">
             <VBox.margin>
@@ -86,7 +86,6 @@
                <Insets top="-17.5" />
             </VBox.margin></Label>
 
-            <!-- Slider for Map Height -->
             <Label text="Map Height">
             <VBox.margin>
                <Insets top="-17.5" />
@@ -253,6 +252,53 @@
     <center>
         <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true" />
     </center>
+
+    <right>
+        <VBox minWidth="163.0" prefHeight="538.0" prefWidth="163.0" spacing="20" style="-fx-background-color: #f0f0f0;">
+            <Label text="Liczba zwierzaków" />
+            <Label fx:id="animalsCountLabel" text="0" textAlignment="CENTER">
+                <VBox.margin>
+                    <Insets top="-17.5" />
+                </VBox.margin>
+            </Label>
+            <Label text="Liczba roślin" />
+            <Label fx:id="grassesCountLabel" text="0" textAlignment="CENTER">
+                <VBox.margin>
+                    <Insets top="-17.5" />
+                </VBox.margin>
+            </Label>
+            <Label text="Liczba wolnych pól" />
+            <Label fx:id="freeFieldsCountLabel" text="0" textAlignment="CENTER">
+                <VBox.margin>
+                    <Insets top="-17.5" />
+                </VBox.margin>
+            </Label>
+            <Label text="Najpopularniejsze genotypy" />
+            <Label fx:id="mostPopularGenotypesLabel" text="-" textAlignment="CENTER" wrapText="true" prefWidth="163.0">
+                <VBox.margin>
+                    <Insets top="-17.5" />
+                </VBox.margin>
+            </Label>
+            <Label text="Średnia energia" />
+            <Label fx:id="averageEnergyLabel" text="0" textAlignment="CENTER">
+                <VBox.margin>
+                    <Insets top="-17.5" />
+                </VBox.margin>
+            </Label>
+            <Label text="Średnia długość życia" />
+            <Label fx:id="averageLifespanLabel" text="0" textAlignment="CENTER">
+                <VBox.margin>
+                    <Insets top="-17.5" />
+                </VBox.margin>
+            </Label>
+            <Label text="Średnia liczba dzieci" />
+            <Label fx:id="averageChildrenLabel" text="0" textAlignment="CENTER">
+                <VBox.margin>
+                    <Insets top="-17.5" />
+                </VBox.margin>
+            </Label>
+        </VBox>
+    </right>
 
     <!-- Bottom - Controls -->
     <bottom>

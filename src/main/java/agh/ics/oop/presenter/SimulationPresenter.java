@@ -5,6 +5,7 @@ import agh.ics.oop.model.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -84,6 +85,21 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     public CheckBox sprawlingJungleCheckBox;
+
+    @FXML
+    private Label animalsCountLabel;
+    @FXML
+    private Label grassesCountLabel;
+    @FXML
+    private Label freeFieldsCountLabel;
+    @FXML
+    private Label mostPopularGenotypesLabel;
+    @FXML
+    private Label averageEnergyLabel;
+    @FXML
+    private Label averageLifespanLabel;
+    @FXML
+    private Label averageChildrenLabel;
 
     // Getter for the instance
     public static SimulationPresenter getInstance() {
@@ -247,5 +263,18 @@ public class SimulationPresenter implements MapChangeListener {
         newSim.setSimulationEngine(simEngine);
 
         simEngine.runAsync();
+    }
+
+    public void updateSimulationStats(Simulation simulation) {
+        Platform.runLater(() -> {
+            animalsCountLabel.setText(String.valueOf(simulation.getAnimalsCount()));
+            grassesCountLabel.setText(String.valueOf(simulation.getPlantsCount()));
+            freeFieldsCountLabel.setText(String.valueOf(simulation.getFreeFieldsCount()));
+            mostPopularGenotypesLabel.setAlignment(Pos.TOP_CENTER); // inaczej sie dziwnie formatuje chyba
+            mostPopularGenotypesLabel.setText(simulation.getMostPopularGenotypes());
+            averageEnergyLabel.setText(String.format("%.2f", simulation.getAverageEnergy()));
+            averageLifespanLabel.setText(String.format("%.2f", simulation.getAverageLifespan()));
+            averageChildrenLabel.setText(String.format("%.2f", simulation.getAverageChildren()));
+        });
     }
 }
