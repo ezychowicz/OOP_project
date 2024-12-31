@@ -165,4 +165,14 @@ public abstract class GrassField extends AbstractWorldMap{
     public Object getGrassAt(Vector2d position){
         return grasses.get(position);
     }
+
+    public List<Vector2d> getFreeFields(){
+        List<Vector2d> freeFields = new ArrayList<Vector2d>();
+        for (Vector2d pos : posList){
+            if (!isOccupied(pos)){
+                freeFields.add(pos);
+            }
+        }
+        return freeFields;
+    }
 }

@@ -40,7 +40,7 @@ public class Simulation implements Runnable {
             try {
                 simEngine.pauseSimulationIfNeeded();
 
-                day.setDayCnt(String.valueOf(day.getDayCnt() + 1));
+                day.setDayCnt(day.getDayCnt() + 1);
                 day.dayProcedure();
                 // statystyki
                 SimulationPresenter.getInstance().updateSimulationStats(this);

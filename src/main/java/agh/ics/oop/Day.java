@@ -62,6 +62,8 @@ public class Day {
                     Animal newborn = copulation.copulate();
                     animalsAtPos.add(newborn); // Dodajemy nowo narodzone zwierzę do listy
 
+                    animalsAtPos.forEach(Animal::ChildrenCntIncrement); // jesli kilka zwierzat bralo udzial w kopulacji to dziecko jest kazdego z nich po rowno...
+
                     // Zaktualizuj listę zwierząt w mapie
                     animals.put(position, animalsAtPos); // Bez usuwania klucza, po prostu zaktualizuj listę
 
@@ -74,6 +76,8 @@ public class Day {
 
         //wzrost nowych roslin
         grassField.plantingGrasses(GRASS_GROWTH_EACH_DAY);
+
+        calculateStats();
     }
 
     private void updateAnimalsState() {
@@ -91,6 +95,9 @@ public class Day {
                 if (animal.getEnergy() <= 0){
                     System.out.println("Zwierze " + animal.getId() + " umarlo");
                     toRemoveIdxs.add(i);
+                }
+                else{
+                    animal.DaysOldIncrement();
                 }
             }
 
@@ -136,8 +143,54 @@ public class Day {
         return dayCnt;
     }
 
-    public void setDayCnt(String s){
-        dayCnt = Integer.parseInt(s);
+    public void setDayCnt(int i){
+        dayCnt = i;
+    }
+
+    private void calculateStats(){
+        int animalsCnt = 0;
+        int plantsCnt = 0;
+        int freeFieldsCnt = 0;
+        Map<String, Integer> genotypes = new HashMap<>();
+        float sumEnergy = 0;
+        float sumLifespan = 0;
+        float sumChildren = 0;
+
+        for (List<Animal> animalsAtPos : animals.values()){
+            for (Animal animal : animalsAtPos){
+                animalsCnt++;
+                sumEnergy += animal.getEnergy();
+                sumLifespan += animal.getDaysOld();
+                sumChildren += animal.getChildrenCnt();
+                String genotype = animal.getGenome().toString();
+                if (genotypes.containsKey(genotype)){
+                    genotypes.put(genotype, genotypes.get(genotype) + 1);
+                }
+                else{
+                    genotypes.put(genotype, 1);
+                }
+            }
+        }
+
+        plantsCnt = grassField.getGrasses().size();
+        freeFieldsCnt = grassField.getFreeFields().size();
+
+        currAnimalsCnt = animalsCnt;
+        currPlantsCnt = plantsCnt;
+        currFreeFieldsCnt = freeFieldsCnt;
+
+        StringBuilder topGenotypes = new StringBuilder();
+        genotypes.entrySet()
+                .stream()
+                .sorted((e1, e2) -> Integer.compare(e2.getValue(), e1.getValue()))
+                .limit(3)
+                .forEach(entry -> topGenotypes.append(entry.getKey()).append(", ").append(entry.getValue()).append("\n"));
+        //alez dziadostwo
+
+        currMostPopularGenotypes = topGenotypes.toString().trim();
+        currAverageEnergy = sumEnergy / animalsCnt;
+        currAverageLifespan = sumLifespan / animalsCnt;
+        currAverageChildren = sumChildren / animalsCnt;
     }
 
     public int getAnimalsCount(){

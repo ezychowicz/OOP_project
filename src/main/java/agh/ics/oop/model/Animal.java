@@ -202,5 +202,13 @@ public boolean moveForward(MapDirection direction,MoveValidator validator) throw
     public int getId() {
         return id;
     }
+
+    public void DaysOldIncrement(){
+        daysOld++;
+    }
+
+    public void ChildrenCntIncrement(){
+        childrenCnt++;
+    }
 }
 
