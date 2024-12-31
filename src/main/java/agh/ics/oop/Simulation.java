@@ -44,6 +44,7 @@ public class Simulation implements Runnable {
                 day.dayProcedure();
                 // statystyki
                 SimulationPresenter.getInstance().updateSimulationStats(this);
+                SimulationPresenter.getInstance().updateAnimalStats(day.getAnimalWithId(0));
                 ((GrassField) worldMap).mapChanged("Day " + day.getDayCnt());
 
                 Thread.sleep(1000);

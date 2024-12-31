@@ -101,6 +101,23 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private Label averageChildrenLabel;
 
+    @FXML
+    private Label animalGenomeLabel;
+    @FXML
+    private Label activeGenomePartLabel;
+    @FXML
+    private Label energyLabel;
+    @FXML
+    private Label eatenPlantsLabel;
+    @FXML
+    private Label childrenCountLabel;
+    @FXML
+    private Label descendantsCountLabel;
+    @FXML
+    private Label daysLivedLabel;
+    @FXML
+    private Label deathDayLabel;
+
     // Getter for the instance
     public static SimulationPresenter getInstance() {
         return instance;
@@ -275,6 +292,19 @@ public class SimulationPresenter implements MapChangeListener {
             averageEnergyLabel.setText(String.format("%.2f", simulation.getAverageEnergy()));
             averageLifespanLabel.setText(String.format("%.2f", simulation.getAverageLifespan()));
             averageChildrenLabel.setText(String.format("%.2f", simulation.getAverageChildren()));
+        });
+    }
+
+    public void updateAnimalStats(Animal animal) {
+        Platform.runLater(() -> {
+            animalGenomeLabel.setText(animal.getGenome().toString());
+            activeGenomePartLabel.setText(String.valueOf(animal.getGenomeAtIdx(animal.getGenomeIdx())));
+            energyLabel.setText(String.valueOf(animal.getEnergy()));
+            eatenPlantsLabel.setText(String.valueOf(animal.getEatenGrassCnt()));
+            childrenCountLabel.setText(String.valueOf(animal.getChildrenCnt()));
+            descendantsCountLabel.setText(String.valueOf(animal.getDescendantsCnt()));
+            daysLivedLabel.setText(String.valueOf(animal.getDaysOld()));
+            deathDayLabel.setText(String.valueOf(animal.getDeathDay()));
         });
     }
 }

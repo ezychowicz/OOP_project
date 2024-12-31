@@ -2,10 +2,7 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static agh.ics.oop.WorldGUI.*;
 import static agh.ics.oop.model.MoveDirection.BACKWARD;
@@ -18,7 +15,10 @@ public class Animal implements WorldElement{
     private int daysOld;
     private int childrenCnt;
     private final List<Integer> genome;
-    private int genomeIdx = 0; // to bylo final - na pewno dobrze jest robione move? potrzebne to jest wogole?
+    private int genomeIdx = 0;
+    private int eatenGrassCnt = 0;
+    private int descendantsCnt = 0;
+    private int deathDay = -1;
     private final int id;
 
     private List<Integer> initializeGenome() {
@@ -209,6 +209,30 @@ public boolean moveForward(MapDirection direction,MoveValidator validator) throw
 
     public void ChildrenCntIncrement(){
         childrenCnt++;
+    }
+
+    public int getEatenGrassCnt(){
+        return eatenGrassCnt;
+    }
+
+    public void EatenGrassCntIncrement(){
+        eatenGrassCnt++;
+    }
+
+    public int getDescendantsCnt(){
+        return descendantsCnt;
+    }
+
+    public void DescendantsCntIncrement(){
+        descendantsCnt++;
+    }
+
+    public int getDeathDay(){
+        return deathDay;
+    }
+
+    public void setDeathDay(int day){
+        deathDay = day;
     }
 }
 

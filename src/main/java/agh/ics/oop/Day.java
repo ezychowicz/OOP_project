@@ -95,6 +95,7 @@ public class Day {
                 if (animal.getEnergy() <= 0){
                     System.out.println("Zwierze " + animal.getId() + " umarlo");
                     toRemoveIdxs.add(i);
+                    animal.setDeathDay(dayCnt);
                 }
                 else{
                     animal.DaysOldIncrement();
@@ -193,6 +194,17 @@ public class Day {
         currAverageChildren = sumChildren / animalsCnt;
     }
 
+    public Animal getAnimalWithId(int i){
+        for (List<Animal> animalsAtPos : animals.values()){
+            for (Animal animal : animalsAtPos){
+                if (animal.getId() == i){
+                    return animal;
+                }
+            }
+        }
+        return null;
+    }
+
     public int getAnimalsCount(){
         return currAnimalsCnt;
     }
@@ -219,5 +231,9 @@ public class Day {
 
     public float getAverageChildren(){
         return currAverageChildren;
+    }
+
+    public Map<Vector2d, List<Animal>> getAnimals(){
+        return animals;
     }
 }
