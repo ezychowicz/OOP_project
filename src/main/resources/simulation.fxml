@@ -73,7 +73,7 @@
             <VBox.margin>
                <Insets top="-10.0" />
             </VBox.margin></Label>
-            <Slider fx:id="mapWidthSlider" blockIncrement="1" majorTickUnit="10.0" min="10.0" minorTickCount="1" prefHeight="16.0" prefWidth="150.0" showTickMarks="true" snapToTicks="false" value="10">
+            <Slider fx:id="mapWidthSlider" blockIncrement="1" majorTickUnit="10.0" min="5.0" minorTickCount="1" prefHeight="16.0" prefWidth="150.0" showTickMarks="true" snapToTicks="false" value="10">
             <VBox.margin>
                <Insets top="-16.0" />
             </VBox.margin></Slider>
@@ -89,7 +89,7 @@
             <VBox.margin>
                <Insets top="-16.0" />
             </VBox.margin></Label>
-            <Slider fx:id="mapHeightSlider" blockIncrement="1" majorTickUnit="10.0" min="10.0" minorTickCount="1" prefWidth="150.0" showTickMarks="true" snapToTicks="false" value="10">
+            <Slider fx:id="mapHeightSlider" blockIncrement="1" majorTickUnit="10.0" min="5.0" minorTickCount="1" prefWidth="150.0" showTickMarks="true" snapToTicks="false" value="10">
             <VBox.margin>
                <Insets top="-16.0" />
             </VBox.margin></Slider>

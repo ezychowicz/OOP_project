@@ -7,8 +7,7 @@ import agh.ics.oop.presenter.SimulationPresenter;
 
 import java.util.*;
 
-import static agh.ics.oop.WorldGUI.GRASS_GROWTH_EACH_DAY;
-import static agh.ics.oop.WorldGUI.INITIAL_ANIMAL_ENERGY;
+import static agh.ics.oop.WorldGUI.*;
 
 
 public class Day {
@@ -28,6 +27,7 @@ public class Day {
     public float currAverageEnergy = 0;
     public float currAverageLifespan = 0;
     public float currAverageChildren = 0;
+    private final AnimalFamilyTree familyTree = new AnimalFamilyTree();
 
     public Day(GrassField grassField, AnimalBehaviour animalBehaviour) {
         this.grassField = grassField;
@@ -58,11 +58,9 @@ public class Day {
 
             if (animalsAtPos.size() >= 2) {
                 try {
-                    Copulation copulation = new Copulation(position, grassField);
+                    Copulation copulation = new Copulation(position, grassField, familyTree);
                     Animal newborn = copulation.copulate();
                     animalsAtPos.add(newborn); // Dodajemy nowo narodzone zwierzę do listy
-
-                    animalsAtPos.forEach(Animal::ChildrenCntIncrement); // jesli kilka zwierzat bralo udzial w kopulacji to dziecko jest kazdego z nich po rowno...
 
                     // Zaktualizuj listę zwierząt w mapie
                     animals.put(position, animalsAtPos); // Bez usuwania klucza, po prostu zaktualizuj listę
@@ -77,6 +75,8 @@ public class Day {
         //wzrost nowych roslin
         grassField.plantingGrasses(GRASS_GROWTH_EACH_DAY);
 
+        //brzydalstwo fuuuu
+        getAnimalWithId(0).setDescendantsCnt(getDescendantsCount(0));
         calculateStats();
     }
 
@@ -235,5 +235,9 @@ public class Day {
 
     public Map<Vector2d, List<Animal>> getAnimals(){
         return animals;
+    }
+
+    public int getDescendantsCount(int animalId) {
+        return familyTree.getDescendantsCount(animalId);
     }
 }

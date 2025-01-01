@@ -17,6 +17,8 @@ public class WorldGUI {
     public static boolean A_PINCH_OF_INSANITY;
     public static boolean SPRAWLING_JUNGLE;
 
+    public static int SIMULATION_SPEED = 1000;
+
     public static void initializeConstants() {
         SimulationPresenter presenter = SimulationPresenter.getInstance();
         MAP_WIDTH = (int) presenter.mapWidthSlider.getValue();

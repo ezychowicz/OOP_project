@@ -15,10 +15,10 @@ public class Animal implements WorldElement{
     private int daysOld;
     private int childrenCnt;
     private final List<Integer> genome;
-    private int genomeIdx = 0;
-    private int eatenGrassCnt = 0;
-    private int descendantsCnt = 0;
-    private int deathDay = -1;
+    private int genomeIdx;
+    private int eatenGrassCnt;
+    private int descendantsCnt;
+    private int deathDay;
     private final int id;
 
     private List<Integer> initializeGenome() {
@@ -52,6 +52,9 @@ public class Animal implements WorldElement{
         this.childrenCnt = 0;
         this.id = idCounter++;
         this.genome = genome;
+        this.genomeIdx = 0;
+        this.eatenGrassCnt = 0;
+        this.descendantsCnt = 0;
     }
 
     public Animal() {
@@ -223,8 +226,8 @@ public boolean moveForward(MapDirection direction,MoveValidator validator) throw
         return descendantsCnt;
     }
 
-    public void DescendantsCntIncrement(){
-        descendantsCnt++;
+    public void setDescendantsCnt(int cnt){
+        descendantsCnt = cnt;
     }
 
     public int getDeathDay(){
