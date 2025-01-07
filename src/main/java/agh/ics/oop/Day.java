@@ -28,6 +28,7 @@ public class Day {
     public float currAverageLifespan = 0;
     public float currAverageChildren = 0;
     private final AnimalFamilyTree familyTree = new AnimalFamilyTree();
+    private List<Animal> deadAnimals = new ArrayList<>();
 
     public Day(GrassField grassField, AnimalBehaviour animalBehaviour) {
         this.grassField = grassField;
@@ -103,11 +104,11 @@ public class Day {
             }
 
             // Remove animals marked for removal
-            for (int idx = toRemoveIdxs.size() - 1; idx >= 0; idx--) { // Reverse loop
+            for (int idx = toRemoveIdxs.size() - 1; idx >= 0; idx--) {
+                deadAnimals.add(animalsAtPos.get((int) toRemoveIdxs.get(idx)));
                 animalsAtPos.remove((int) toRemoveIdxs.get(idx));
             }
 
-            // Mark position for removal if no animals are left
             if (animalsAtPos.isEmpty()) {
                 positionsToRemove.add(pos);
             }
@@ -200,6 +201,11 @@ public class Day {
                 if (animal.getId() == i){
                     return animal;
                 }
+            }
+        }
+        for (Animal animal : deadAnimals){
+            if (animal.getId() == i){
+                return animal;
             }
         }
         return null;
