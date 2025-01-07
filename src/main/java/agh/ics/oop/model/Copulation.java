@@ -28,10 +28,12 @@ public class Copulation {
     * */
     private final Vector2d position;
     private final GrassField grassField;
+    private final AnimalFamilyTree familyTree;
 
-    public Copulation(Vector2d position, GrassField grassField) {
+    public Copulation(Vector2d position, GrassField grassField, AnimalFamilyTree familyTree) {
         this.position = position;
         this.grassField = grassField;
+        this.familyTree = familyTree;
     }
 
     private List<Animal> pairPartners() {
@@ -39,7 +41,7 @@ public class Copulation {
         Animal winner1 = grassField.resolveConflict(grassField.getAnimalsAt(position));
         List<Animal> animalsAtPosWithoutWinner = new ArrayList<>(animalsAtPos); // Kopia listy
         animalsAtPosWithoutWinner.remove(winner1);
-        Animal winner2 = grassField.resolveConflict(grassField.getAnimalsAt(position));
+        Animal winner2 = grassField.resolveConflict(animalsAtPosWithoutWinner); // przesada dziadek.. godzine szukalem czemu to nie dzialalo
         return List.of(winner1, winner2);
     }
 
@@ -93,7 +95,13 @@ public class Copulation {
             for (Integer gene : mutationRecipe.keySet()) {
                 newGenome.set(gene, mutationRecipe.get(gene));
             }
-            return new Animal(position, dominant, recessive, newGenome);
+
+            Animal newborn = new Animal(position, dominant, recessive, newGenome);
+            familyTree.registerParentChild(dominant.getId(), newborn.getId());
+            dominant.ChildrenCntIncrement();
+            familyTree.registerParentChild(recessive.getId(), newborn.getId());
+            recessive.ChildrenCntIncrement();
+            return newborn;
         } else {
             throw new CopulationFailedException("Animals do not have enough energy");
         }
