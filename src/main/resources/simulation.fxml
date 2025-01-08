@@ -64,7 +64,11 @@
     <left>
         <VBox minWidth="163.0" prefHeight="538.0" prefWidth="163.0" spacing="20" style="-fx-background-color: #f0f0f0;">
          <CheckBox fx:id="sprawlingJungleCheckBox" mnemonicParsing="false" text="Sprawling Jungle" />
-         <CheckBox fx:id="aPinchOfInsanityCheckBox" mnemonicParsing="false" text="A Pinch of Insanity"/>
+         <CheckBox fx:id="aPinchOfInsanityCheckBox" mnemonicParsing="false" text="A Pinch of Insanity">
+            <VBox.margin>
+                <Insets top="-10.0" />
+            </VBox.margin>
+        </CheckBox>
          <CheckBox fx:id="excelCheckBox" mnemonicParsing="false" text="Save to .CSV">
             <VBox.margin>
                <Insets top="-10.0" />
@@ -411,6 +415,16 @@
                     </VBox.margin>
                 </Label>
                 <Label fx:id="deathDayLabel" text="-" textAlignment="CENTER">
+                    <VBox.margin>
+                        <Insets top="-17.5" />
+                    </VBox.margin>
+                </Label>
+                <Label text="Id zwierzęcia">
+                    <VBox.margin>
+                        <Insets top="-15.0" />
+                    </VBox.margin>
+                </Label>
+                <Label fx:id="animalIdLabel" text="-" textAlignment="CENTER">
                     <VBox.margin>
                         <Insets top="-17.5" />
                     </VBox.margin>

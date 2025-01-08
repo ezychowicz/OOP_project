@@ -30,6 +30,7 @@ public class Day {
     private final AnimalFamilyTree familyTree = new AnimalFamilyTree();
     private List<Animal> deadAnimals = new ArrayList<>();
     private final List<DayObserver> observers = new ArrayList<>();
+    private int watchedAnimalId = 0;
 
     public Day(GrassField grassField, AnimalBehaviour animalBehaviour) {
         this.grassField = grassField;
@@ -89,9 +90,9 @@ public class Day {
         grassField.plantingGrasses(GRASS_GROWTH_EACH_DAY);
 
         //brzydalstwo fuuuu
-        getAnimalWithId(0).setDescendantsCnt(getDescendantsCount(0));
+        getWatchedAnimal().setDescendantsCnt(getDescendantsCount(watchedAnimalId));
         calculateStats();
-        signalObservers(getAnimalWithId(0));
+        signalObservers(getWatchedAnimal());
     }
 
     private void updateAnimalsState() {
@@ -258,5 +259,25 @@ public class Day {
 
     public int getDescendantsCount(int animalId) {
         return familyTree.getDescendantsCount(animalId);
+    }
+
+    public List<Animal> getCurrSimAnimals() {
+        List<Animal> currSimAnimals = new ArrayList<>();
+        for (List<Animal> animalsAtPos : animals.values()){
+            currSimAnimals.addAll(animalsAtPos);
+        }
+        return currSimAnimals;
+    }
+
+    public Animal getFirstCurrSimAnimal() {
+        return getCurrSimAnimals().getFirst();
+    }
+
+    public void setWatchedAnimalId(int id) {
+        watchedAnimalId = id;
+    }
+
+    public Animal getWatchedAnimal() {
+        return getAnimalWithId(watchedAnimalId);
     }
 }

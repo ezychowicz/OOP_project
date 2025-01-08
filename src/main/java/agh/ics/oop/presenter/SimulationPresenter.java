@@ -123,6 +123,8 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
     private Label daysLivedLabel;
     @FXML
     private Label deathDayLabel;
+    @FXML
+    private Label animalIdLabel;
 
     private Day day;
 
@@ -329,6 +331,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
             descendantsCountLabel.setText(String.valueOf(animal.getDescendantsCnt()));
             daysLivedLabel.setText(String.valueOf(animal.getDaysOld()));
             deathDayLabel.setText(String.valueOf(animal.getDeathDay()));
+            animalIdLabel.setText(String.valueOf(animal.getId()));
         });
     }
 }

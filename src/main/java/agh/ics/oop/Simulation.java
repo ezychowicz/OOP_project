@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static agh.ics.oop.WorldGUI.SAVE_TO_CSV;
+import static agh.ics.oop.WorldGUI.*;
 import static java.lang.Thread.sleep;
-import static agh.ics.oop.WorldGUI.A_PINCH_OF_INSANITY;
+
 public class Simulation implements Runnable {
     public static final String ANIMAL_STRING = "Animal";
     private final List<Vector2d> positions;
@@ -34,6 +34,8 @@ public class Simulation implements Runnable {
     public void run() {
         fillWorldMap();
 
+        day.setWatchedAnimalId(day.getFirstCurrSimAnimal().getId());
+
         while (true) {
             try {
                 simEngine.pauseSimulationIfNeeded();
@@ -41,10 +43,10 @@ public class Simulation implements Runnable {
                 day.dayProcedure();
                 // statystyki
                 SimulationPresenter.getInstance().updateSimulationInfo();
-                SimulationPresenter.getInstance().updateAnimalInfo(day.getAnimalWithId(0));
+                SimulationPresenter.getInstance().updateAnimalInfo(day.getWatchedAnimal()); //domyslnie wybiera sie losowy animal a nie z najmniejszym id z jakiegos powodu ale w sumie to nawet lepiej wiec tego nie naprawiam!
                 ((GrassField) worldMap).mapChanged("Day " + day.getDayCnt());
 
-                Thread.sleep(1000);
+                Thread.sleep(SIMULATION_SPEED);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             } catch (IncorrectPositionException e) {
