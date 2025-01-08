@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="750.0" minWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.presenter.SimulationPresenter">
+<BorderPane minHeight="770.0" minWidth="1100.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.presenter.SimulationPresenter">
     <!-- Top MenuBar -->
     <top>
         <MenuBar VBox.vgrow="NEVER">
@@ -105,7 +105,7 @@
             <VBox.margin>
                <Insets top="-16.0" />
             </VBox.margin></Label>
-         <Label layoutX="10.0" layoutY="117.0" text="Plants">
+         <Label layoutX="10.0" layoutY="117.0" text="Grasses">
             <VBox.margin>
                <Insets top="-16.0" />
             </VBox.margin>
@@ -236,7 +236,7 @@
                <Insets top="-16.0" />
             </VBox.margin>
          </Label>
-         <Slider fx:id="genomeLengthSlider" blockIncrement="1" layoutX="10.0" layoutY="899.0" max="30" min="5" prefWidth="150.0" snapToTicks="false" value="10">
+         <Slider fx:id="genomeLengthSlider" blockIncrement="1" layoutX="10.0" layoutY="899.0" max="12" min="5" prefWidth="150.0" snapToTicks="false" value="10">
             <VBox.margin>
                <Insets top="-16.0" />
             </VBox.margin>
@@ -258,7 +258,7 @@
     </center>
 
     <right>
-        <VBox maxHeight="-Infinity" minWidth="163.0" prefWidth="163.0" spacing="20" style="-fx-background-color: #f0f0f0;">
+        <VBox maxHeight="-Infinity" minWidth="163.0" prefWidth="200.0" spacing="20" style="-fx-background-color: #f0f0f0;">
             <Label text="Liczba zwierzaków" />
             <Label fx:id="animalsCountLabel" text="0" textAlignment="CENTER">
                 <VBox.margin>
@@ -290,7 +290,7 @@
                     <Insets top="-15.0" />
                 </VBox.margin>
             </Label>
-            <Label fx:id="mostPopularGenotypesLabel" prefWidth="163.0" text="-" textAlignment="CENTER" wrapText="true">
+            <Label fx:id="mostPopularGenotypesLabel" prefWidth="200.0" text="-" textAlignment="CENTER" wrapText="true">
                 <VBox.margin>
                     <Insets top="-17.5" />
                 </VBox.margin>

@@ -261,7 +261,7 @@ public class Day {
         return familyTree.getDescendantsCount(animalId);
     }
 
-    public List<Animal> getCurrSimAnimals() {
+    public List<Animal> getCurrSimAnimals() { // aby domyslny ogladany animal istnial w obecnej symulacji
         List<Animal> currSimAnimals = new ArrayList<>();
         for (List<Animal> animalsAtPos : animals.values()){
             currSimAnimals.addAll(animalsAtPos);
@@ -269,7 +269,7 @@ public class Day {
         return currSimAnimals;
     }
 
-    public Animal getFirstCurrSimAnimal() {
+    public Animal getFirstCurrSimAnimal() { // nie jest to pierwsze id tylko pierwszy w liscie a to nie koniecznie to samo ale wychodzi z tego fajna losowosc - chyba mozemy to zostawic i nadpisywac te domyslnosc wyborem uzytkownika ktory zaimplementujemy w gui
         return getCurrSimAnimals().getFirst();
     }
 
