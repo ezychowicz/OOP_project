@@ -1,7 +1,9 @@
 package agh.ics.oop.presenter;
 
+import agh.ics.oop.Day;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
+import agh.ics.oop.model.util.ImportStats;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -20,7 +22,8 @@ import java.util.List;
 
 import static agh.ics.oop.WorldGUI.*;
 
-public class SimulationPresenter implements MapChangeListener {
+public class SimulationPresenter implements MapChangeListener, DayObserver {
+
     private WorldMap worldMap;
     private SimulationEngine simEngine;
 
@@ -87,6 +90,9 @@ public class SimulationPresenter implements MapChangeListener {
     public CheckBox sprawlingJungleCheckBox;
 
     @FXML
+    public CheckBox excelCheckBox;
+
+    @FXML
     private Label animalsCountLabel;
     @FXML
     private Label grassesCountLabel;
@@ -117,6 +123,8 @@ public class SimulationPresenter implements MapChangeListener {
     private Label daysLivedLabel;
     @FXML
     private Label deathDayLabel;
+
+    private Day day;
 
     // Getter for the instance
     public static SimulationPresenter getInstance() {
@@ -272,9 +280,22 @@ public class SimulationPresenter implements MapChangeListener {
         }
         grassF.addObserver(this);
 
+
         AnimalGenerator animalGenerator = new AnimalGenerator();
         List<Vector2d> positions = animalGenerator.generateInitialPositions();
-        Simulation newSim = new Simulation(positions, grassF);
+
+        if (A_PINCH_OF_INSANITY){
+            day = new Day((GrassField) grassF,new CrazyBehaviour());
+        }
+        else{
+            day = new Day((GrassField) grassF,new NormalBehaviour());
+        }
+        if (SAVE_TO_CSV){
+            ImportStats excel = new ImportStats("data.csv", day);
+            day.addObserver(excel);
+        }
+        day.addObserver(this);
+        Simulation newSim = new Simulation(positions, grassF, day);
 
         simEngine = new SimulationEngine(List.of(newSim));
         newSim.setSimulationEngine(simEngine);
@@ -282,20 +303,23 @@ public class SimulationPresenter implements MapChangeListener {
         simEngine.runAsync();
     }
 
-    public void updateSimulationStats(Simulation simulation) {
+
+    @Override
+    public void updateSimulationInfo() {
         Platform.runLater(() -> {
-            animalsCountLabel.setText(String.valueOf(simulation.getAnimalsCount()));
-            grassesCountLabel.setText(String.valueOf(simulation.getPlantsCount()));
-            freeFieldsCountLabel.setText(String.valueOf(simulation.getFreeFieldsCount()));
+            animalsCountLabel.setText(String.valueOf(day.getAnimalsCount()));
+            grassesCountLabel.setText(String.valueOf(day.getPlantsCount()));
+            freeFieldsCountLabel.setText(String.valueOf(day.getFreeFieldsCount()));
             mostPopularGenotypesLabel.setAlignment(Pos.TOP_CENTER); // inaczej sie dziwnie formatuje chyba
-            mostPopularGenotypesLabel.setText(simulation.getMostPopularGenotypes());
-            averageEnergyLabel.setText(String.format("%.2f", simulation.getAverageEnergy()));
-            averageLifespanLabel.setText(String.format("%.2f", simulation.getAverageLifespan()));
-            averageChildrenLabel.setText(String.format("%.2f", simulation.getAverageChildren()));
+            mostPopularGenotypesLabel.setText(day.getMostPopularGenotypes());
+            averageEnergyLabel.setText(String.format("%.2f", day.getAverageEnergy()));
+            averageLifespanLabel.setText(String.format("%.2f", day.getAverageLifespan()));
+            averageChildrenLabel.setText(String.format("%.2f", day.getAverageChildren()));
         });
     }
 
-    public void updateAnimalStats(Animal animal) {
+    @Override
+    public void updateAnimalInfo(Animal animal) {
         Platform.runLater(() -> {
             animalGenomeLabel.setText(animal.getGenome().toString());
             activeGenomePartLabel.setText(String.valueOf(animal.getGenomeAtIdx(animal.getGenomeIdx())));

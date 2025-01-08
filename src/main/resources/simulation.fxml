@@ -64,7 +64,8 @@
     <left>
         <VBox minWidth="163.0" prefHeight="538.0" prefWidth="163.0" spacing="20" style="-fx-background-color: #f0f0f0;">
          <CheckBox fx:id="sprawlingJungleCheckBox" mnemonicParsing="false" text="Sprawling Jungle" />
-         <CheckBox fx:id="aPinchOfInsanityCheckBox" mnemonicParsing="false" text="A Pinch of Insanity">
+         <CheckBox fx:id="aPinchOfInsanityCheckBox" mnemonicParsing="false" text="A Pinch of Insanity"/>
+         <CheckBox fx:id="excelCheckBox" mnemonicParsing="false" text="Save to .CSV">
             <VBox.margin>
                <Insets top="-10.0" />
             </VBox.margin>

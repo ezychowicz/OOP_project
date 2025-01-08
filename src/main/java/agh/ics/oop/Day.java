@@ -29,11 +29,23 @@ public class Day {
     public float currAverageChildren = 0;
     private final AnimalFamilyTree familyTree = new AnimalFamilyTree();
     private List<Animal> deadAnimals = new ArrayList<>();
+    private final List<DayObserver> observers = new ArrayList<>();
 
     public Day(GrassField grassField, AnimalBehaviour animalBehaviour) {
         this.grassField = grassField;
         this.animals = grassField.getAnimals(); //pozycje zwierzakow
         this.animalBehaviour = animalBehaviour;
+    }
+
+    public void addObserver(DayObserver observer) {
+        observers.add(observer);
+    }
+
+    public void signalObservers(Animal animal) {
+        for (DayObserver observer : observers) {
+            observer.updateSimulationInfo();
+            observer.updateAnimalInfo(animal);
+        }
     }
 
     public void dayProcedure() throws IncorrectPositionException{
@@ -79,6 +91,7 @@ public class Day {
         //brzydalstwo fuuuu
         getAnimalWithId(0).setDescendantsCnt(getDescendantsCount(0));
         calculateStats();
+        signalObservers(getAnimalWithId(0));
     }
 
     private void updateAnimalsState() {

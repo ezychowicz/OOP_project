@@ -2,6 +2,7 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.util.ImportStats;
 import agh.ics.oop.presenter.SimulationPresenter;
 
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static agh.ics.oop.WorldGUI.SAVE_TO_CSV;
 import static java.lang.Thread.sleep;
 import static agh.ics.oop.WorldGUI.A_PINCH_OF_INSANITY;
 public class Simulation implements Runnable {
@@ -17,11 +19,12 @@ public class Simulation implements Runnable {
     private final WorldMap worldMap;
     public static int idCounter = 0;
     private SimulationEngine simEngine;
-    private Day day;
+    private final Day day;
 
-    public Simulation(List<Vector2d> positions, WorldMap worldMap) {
+    public Simulation(List<Vector2d> positions, WorldMap worldMap, Day day) {
         this.positions = new ArrayList<>(positions); //zeby dało sie usuwać
         this.worldMap = worldMap;
+        this.day = day;
     }
 
     public void setSimulationEngine(SimulationEngine simEngine) {
@@ -30,21 +33,15 @@ public class Simulation implements Runnable {
 
     public void run() {
         fillWorldMap();
-        if (A_PINCH_OF_INSANITY){
-            day = new Day((GrassField) worldMap,new CrazyBehaviour());
-        }
-        else{
-            day = new Day((GrassField) worldMap,new NormalBehaviour());
-        }
+
         while (true) {
             try {
                 simEngine.pauseSimulationIfNeeded();
-
                 day.setDayCnt(day.getDayCnt() + 1);
                 day.dayProcedure();
                 // statystyki
-                SimulationPresenter.getInstance().updateSimulationStats(this);
-                SimulationPresenter.getInstance().updateAnimalStats(day.getAnimalWithId(0));
+                SimulationPresenter.getInstance().updateSimulationInfo();
+                SimulationPresenter.getInstance().updateAnimalInfo(day.getAnimalWithId(0));
                 ((GrassField) worldMap).mapChanged("Day " + day.getDayCnt());
 
                 Thread.sleep(1000);
