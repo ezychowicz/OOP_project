@@ -18,6 +18,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.io.File;
 import java.util.List;
 
 import static agh.ics.oop.WorldGUI.*;
@@ -293,7 +294,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
             day = new Day((GrassField) grassF,new NormalBehaviour());
         }
         if (SAVE_TO_CSV){
-            ImportStats excel = new ImportStats("data.csv", day);
+            ImportStats excel = new ImportStats(String.format("%s%s%s","csvsFolder", File.separator, "data.csv"), String.format("%s%s%s","csvsFolder", File.separator, "animaldata.csv"),day);
             day.addObserver(excel);
         }
         day.addObserver(this);
