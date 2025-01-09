@@ -1,5 +1,6 @@
 package agh.ics.oop.presenter;
 
+import agh.ics.oop.ChartUpdater;
 import agh.ics.oop.Day;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
@@ -9,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -126,7 +128,10 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
     private Label deathDayLabel;
     @FXML
     private Label animalIdLabel;
+    @FXML
+    private LineChart<Number, Number> chart;
 
+    private ChartUpdater chartUpdater;
     private Day day;
 
     // Getter for the instance
@@ -302,7 +307,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
 
         simEngine = new SimulationEngine(List.of(newSim));
         newSim.setSimulationEngine(simEngine);
-
+        chartUpdater = new ChartUpdater(chart, day);
         simEngine.runAsync();
     }
 
@@ -318,6 +323,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
             averageEnergyLabel.setText(String.format("%.2f", day.getAverageEnergy()));
             averageLifespanLabel.setText(String.format("%.2f", day.getAverageLifespan()));
             averageChildrenLabel.setText(String.format("%.2f", day.getAverageChildren()));
+
         });
     }
 
@@ -333,6 +339,8 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
             daysLivedLabel.setText(String.valueOf(animal.getDaysOld()));
             deathDayLabel.setText(String.valueOf(animal.getDeathDay()));
             animalIdLabel.setText(String.valueOf(animal.getId()));
+            chartUpdater.updateData(animal);
+            chartUpdater.drawChart();
         });
     }
 }

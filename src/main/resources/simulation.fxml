@@ -16,6 +16,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.chart.XYChart?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <BorderPane minHeight="770.0" minWidth="1100.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.presenter.SimulationPresenter">
     <!-- Top MenuBar -->
     <top>
@@ -254,7 +257,21 @@
 
     <!-- Center - GridPane for map -->
     <center>
-        <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true" />
+        <VBox>
+            <!-- Map GridPane -->
+            <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true" prefHeight="400.0" />
+
+            <!-- XYChart below the map -->
+            <LineChart fx:id="chart" prefHeight="200.0" prefWidth="800.0">
+                <!-- Define axes -->
+                <xAxis>
+                    <NumberAxis label="Day" />
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Animal energy" />
+                </yAxis>
+            </LineChart>
+        </VBox>
     </center>
 
     <right>

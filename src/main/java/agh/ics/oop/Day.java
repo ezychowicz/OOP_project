@@ -93,6 +93,7 @@ public class Day {
         getWatchedAnimal().setDescendantsCnt(getDescendantsCount(watchedAnimalId));
         calculateStats();
         signalObservers(getWatchedAnimal());
+
     }
 
     private void updateAnimalsState() {

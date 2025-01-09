@@ -17,7 +17,7 @@ public class WorldGUI {
     public static boolean A_PINCH_OF_INSANITY;
     public static boolean SPRAWLING_JUNGLE;
     public static boolean SAVE_TO_CSV;
-    public static int SIMULATION_SPEED = 50;
+    public static int SIMULATION_SPEED = 500;
 
     public static void initializeConstants() {
         SimulationPresenter presenter = SimulationPresenter.getInstance();
