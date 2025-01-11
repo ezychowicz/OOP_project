@@ -13,6 +13,7 @@ public class Consumption {
         if (grassField.getAnimalsAt(position).size() >= 1 && grassField.getGrassAt(position) != null) {
             Animal winner=grassField.resolveConflict(grassField.getAnimalsAt(position));
             winner.updateEnergy(GRASS_ENERGY);
+            winner.EatenGrassCntIncrement();
             grassField.eatenGrassProcedure(winner.getPos());
         }
     }

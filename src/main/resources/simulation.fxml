@@ -7,16 +7,19 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.layout.HBox?>
-<BorderPane minHeight="550.0" minWidth="850.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.presenter.SimulationPresenter">
+<?import javafx.scene.chart.XYChart?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<BorderPane minHeight="770.0" minWidth="1100.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.presenter.SimulationPresenter">
     <!-- Top MenuBar -->
     <top>
         <MenuBar VBox.vgrow="NEVER">
@@ -66,50 +69,53 @@
          <CheckBox fx:id="sprawlingJungleCheckBox" mnemonicParsing="false" text="Sprawling Jungle" />
          <CheckBox fx:id="aPinchOfInsanityCheckBox" mnemonicParsing="false" text="A Pinch of Insanity">
             <VBox.margin>
-               <Insets top="-15.0" />
+                <Insets top="-10.0" />
+            </VBox.margin>
+        </CheckBox>
+         <CheckBox fx:id="excelCheckBox" mnemonicParsing="false" text="Save to .CSV">
+            <VBox.margin>
+               <Insets top="-10.0" />
             </VBox.margin>
          </CheckBox>
-            <!-- Slider for Map Width -->
             <Label text="Map Width">
             <VBox.margin>
-               <Insets top="-15.0" />
+               <Insets top="-10.0" />
             </VBox.margin></Label>
-            <Slider fx:id="mapWidthSlider" blockIncrement="1" majorTickUnit="10.0" min="10.0" minorTickCount="1" prefHeight="16.0" prefWidth="150.0" showTickMarks="true" snapToTicks="false" value="10">
+            <Slider fx:id="mapWidthSlider" blockIncrement="1" majorTickUnit="10.0" min="5.0" minorTickCount="1" prefHeight="16.0" prefWidth="150.0" showTickMarks="true" snapToTicks="false" value="10">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin></Slider>
             <Label fx:id="mapWidthValue" prefHeight="14.0" prefWidth="202.0" text="Current Value: 10" textAlignment="CENTER">
             <font>
                <Font size="11.0" />
             </font>
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin></Label>
 
-            <!-- Slider for Map Height -->
             <Label text="Map Height">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin></Label>
-            <Slider fx:id="mapHeightSlider" blockIncrement="1" majorTickUnit="10.0" min="10.0" minorTickCount="1" prefWidth="150.0" showTickMarks="true" snapToTicks="false" value="10">
+            <Slider fx:id="mapHeightSlider" blockIncrement="1" majorTickUnit="10.0" min="5.0" minorTickCount="1" prefWidth="150.0" showTickMarks="true" snapToTicks="false" value="10">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin></Slider>
             <Label fx:id="mapHeightValue" text="Current Value: 10" textAlignment="CENTER">
             <font>
                <Font size="11.0" />
             </font>
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin></Label>
-         <Label layoutX="10.0" layoutY="117.0" text="Plants">
+         <Label layoutX="10.0" layoutY="117.0" text="Grasses">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Label>
          <Slider fx:id="grassesAmountSlider" blockIncrement="1" layoutX="10.0" layoutY="154.0" max="30" min="0" prefWidth="150.0" snapToTicks="false" value="10">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Slider>
          <Label fx:id="grassesAmountValue" layoutX="10.0" layoutY="189.0" text="Current Value: 10" textAlignment="CENTER">
@@ -117,17 +123,17 @@
                <Font size="11.0" />
             </font>
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Label>
          <Label text="Energy on Consumption">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Label>
          <Slider fx:id="energyOnConsumptionSlider" blockIncrement="1" max="30" min="5" prefWidth="150.0" snapToTicks="false" value="10">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Slider>
          <Label fx:id="energyOnConsumptionValue" prefHeight="14.0" prefWidth="202.0" text="Current Value: 10" textAlignment="CENTER">
@@ -135,17 +141,17 @@
                <Font size="11.0" />
             </font>
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Label>
          <Label text="Grass Growth Each Day">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Label>
          <Slider fx:id="grassGrowthEachDaySlider" blockIncrement="1" max="30" min="0" prefWidth="150.0" snapToTicks="false" value="10">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Slider>
          <Label fx:id="grassGrowthEachDayValue" text="Current Value: 10" textAlignment="CENTER">
@@ -153,17 +159,17 @@
                <Font size="11.0" />
             </font>
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Label>
          <Label text="Animals">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Label>
          <Slider fx:id="animalsAmountSlider" blockIncrement="1" max="30" min="2" prefWidth="150.0" snapToTicks="false" value="4">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Slider>
          <Label fx:id="animalsAmountValue" text="Current Value: 4" textAlignment="CENTER">
@@ -171,17 +177,17 @@
                <Font size="11.0" />
             </font>
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Label>
          <Label layoutX="10.0" layoutY="543.0" text="Initial Animal Energy">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Label>
          <Slider fx:id="initialAnimalEnergySlider" blockIncrement="1" layoutX="10.0" layoutY="580.0" max="30" min="5" prefWidth="150.0" snapToTicks="false" value="10">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Slider>
          <Label fx:id="initialAnimalEnergyValue" layoutX="10.0" layoutY="615.0" text="Current Value: 10" textAlignment="CENTER">
@@ -189,17 +195,17 @@
                <Font size="11.0" />
             </font>
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Label>
          <Label layoutX="10.0" layoutY="649.0" text="Breeding Threshold">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Label>
          <Slider fx:id="breedingThresholdSlider" blockIncrement="1" layoutX="10.0" layoutY="686.0" max="30" min="5" prefWidth="150.0" snapToTicks="false" value="10">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Slider>
          <Label fx:id="breedingThresholdValue" layoutX="10.0" layoutY="722.0" text="Current Value: 10" textAlignment="CENTER">
@@ -207,17 +213,17 @@
                <Font size="11.0" />
             </font>
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Label>
          <Label layoutX="10.0" layoutY="756.0" text="Breeding Cost">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Label>
          <Slider fx:id="breedingCostSlider" blockIncrement="1" layoutX="10.0" layoutY="793.0" max="30" min="5" prefWidth="150.0" snapToTicks="false" value="10">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Slider>
          <Label fx:id="breedingCostValue" layoutX="10.0" layoutY="828.0" text="Current Value: 10" textAlignment="CENTER">
@@ -225,17 +231,17 @@
                <Font size="11.0" />
             </font>
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Label>
          <Label layoutX="10.0" layoutY="862.0" text="Genome Length">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Label>
-         <Slider fx:id="genomeLengthSlider" blockIncrement="1" layoutX="10.0" layoutY="899.0" max="30" min="5" prefWidth="150.0" snapToTicks="false" value="10">
+         <Slider fx:id="genomeLengthSlider" blockIncrement="1" layoutX="10.0" layoutY="899.0" max="12" min="5" prefWidth="150.0" snapToTicks="false" value="10">
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Slider>
          <Label fx:id="genomeLengthValue" layoutX="10.0" layoutY="935.0" text="Current Value: 10" textAlignment="CENTER">
@@ -243,7 +249,7 @@
                <Font size="11.0" />
             </font>
             <VBox.margin>
-               <Insets top="-17.5" />
+               <Insets top="-16.0" />
             </VBox.margin>
          </Label>
         </VBox>
@@ -251,8 +257,198 @@
 
     <!-- Center - GridPane for map -->
     <center>
-        <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true" />
+        <VBox>
+            <!-- Map GridPane -->
+            <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true" prefHeight="400.0" />
+
+            <!-- XYChart below the map -->
+            <LineChart fx:id="chart" prefHeight="200.0" prefWidth="800.0">
+                <!-- Define axes -->
+                <xAxis>
+                    <NumberAxis label="Day" />
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Animal energy" />
+                </yAxis>
+            </LineChart>
+        </VBox>
     </center>
+
+    <right>
+        <VBox maxHeight="-Infinity" minWidth="163.0" prefWidth="200.0" spacing="20" style="-fx-background-color: #f0f0f0;">
+            <Label text="Liczba zwierzaków" />
+            <Label fx:id="animalsCountLabel" text="0" textAlignment="CENTER">
+                <VBox.margin>
+                    <Insets top="-17.5" />
+                </VBox.margin>
+            </Label>
+            <Label text="Liczba roślin">
+                <VBox.margin>
+                   <Insets top="-15.0" />
+                </VBox.margin>
+            </Label>
+            <Label fx:id="grassesCountLabel" text="0" textAlignment="CENTER">
+                <VBox.margin>
+                    <Insets top="-17.5" />
+                </VBox.margin>
+            </Label>
+            <Label text="Liczba wolnych pól">
+                <VBox.margin>
+                    <Insets top="-15.0" />
+                </VBox.margin>
+            </Label>
+            <Label fx:id="freeFieldsCountLabel" text="0" textAlignment="CENTER">
+                <VBox.margin>
+                    <Insets top="-17.5" />
+                </VBox.margin>
+            </Label>
+            <Label text="Najpopularniejsze genotypy">
+                <VBox.margin>
+                    <Insets top="-15.0" />
+                </VBox.margin>
+            </Label>
+            <Label fx:id="mostPopularGenotypesLabel" prefWidth="200.0" text="-" textAlignment="CENTER" wrapText="true">
+                <VBox.margin>
+                    <Insets top="-17.5" />
+                </VBox.margin>
+            </Label>
+            <Label text="Średnia energia">
+                <VBox.margin>
+                    <Insets top="-15.0" />
+                </VBox.margin>
+            </Label>
+            <Label fx:id="averageEnergyLabel" text="0" textAlignment="CENTER">
+                <VBox.margin>
+                    <Insets top="-17.5" />
+                </VBox.margin>
+            </Label>
+            <Label text="Średnia długość życia">
+                <VBox.margin>
+                    <Insets top="-15.0" />
+                </VBox.margin>
+            </Label>
+            <Label fx:id="averageLifespanLabel" text="0" textAlignment="CENTER">
+                <VBox.margin>
+                    <Insets top="-17.5" />
+                </VBox.margin>
+            </Label>
+            <Label text="Średnia liczba dzieci">
+                <VBox.margin>
+                    <Insets top="-15.0" />
+                </VBox.margin>
+            </Label>
+            <Label fx:id="averageChildrenLabel" text="0" textAlignment="CENTER">
+                <VBox.margin>
+                    <Insets top="-17.5" />
+                </VBox.margin>
+            </Label>
+         <Separator prefWidth="200.0">
+             <VBox.margin> 
+                 <Insets top="-10.0" />
+             </VBox.margin>
+         </Separator>
+         <VBox maxHeight="-Infinity" prefWidth="163.0" spacing="20">
+            <children>
+                <Label text="Genom">
+                    <VBox.margin>
+                        <Insets top="-15.0" />
+                    </VBox.margin>
+                </Label>
+                <Label fx:id="animalGenomeLabel" text="-" textAlignment="CENTER">
+                    <VBox.margin>
+                        <Insets top="-17.5" />
+                    </VBox.margin>
+                </Label>
+
+                <Label text="Aktywna część genotypu">
+                    <VBox.margin>
+                        <Insets top="-15.0" />
+                    </VBox.margin>
+                </Label>
+                <Label fx:id="activeGenomePartLabel" text="-" textAlignment="CENTER">
+                    <VBox.margin>
+                        <Insets top="-17.5" />
+                    </VBox.margin>
+                </Label>
+
+                <Label text="Energia">
+                    <VBox.margin>
+                        <Insets top="-15.0" />
+                    </VBox.margin>
+                </Label>
+                <Label fx:id="energyLabel" text="-" textAlignment="CENTER">
+                    <VBox.margin>
+                        <Insets top="-17.5" />
+                    </VBox.margin>
+                </Label>
+
+                <Label text="Zjedzone rośliny">
+                    <VBox.margin>
+                        <Insets top="-15.0" />
+                    </VBox.margin>
+                </Label>
+                <Label fx:id="eatenPlantsLabel" text="-" textAlignment="CENTER">
+                    <VBox.margin>
+                        <Insets top="-17.5" />
+                    </VBox.margin>
+                </Label>
+
+                <Label text="Liczba dzieci">
+                    <VBox.margin>
+                        <Insets top="-15.0" />
+                    </VBox.margin>
+                </Label>
+                <Label fx:id="childrenCountLabel" text="-" textAlignment="CENTER">
+                    <VBox.margin>
+                        <Insets top="-17.5" />
+                    </VBox.margin>
+                </Label>
+
+                <Label text="Liczba potomków">
+                    <VBox.margin>
+                        <Insets top="-15.0" />
+                    </VBox.margin>
+                </Label>
+                <Label fx:id="descendantsCountLabel" text="-" textAlignment="CENTER">
+                    <VBox.margin>
+                        <Insets top="-17.5" />
+                    </VBox.margin>
+                </Label>
+
+                <Label text="Liczba dni życia">
+                    <VBox.margin>
+                        <Insets top="-15.0" />
+                    </VBox.margin>
+                </Label>
+                <Label fx:id="daysLivedLabel" text="-" textAlignment="CENTER">
+                    <VBox.margin>
+                        <Insets top="-17.5" />
+                    </VBox.margin>
+                </Label>
+
+                <Label text="Dzień śmierci">
+                    <VBox.margin>
+                        <Insets top="-15.0" />
+                    </VBox.margin>
+                </Label>
+                <Label fx:id="deathDayLabel" text="-" textAlignment="CENTER">
+                    <VBox.margin>
+                        <Insets top="-17.5" />
+                    </VBox.margin>
+                </Label>
+                <Label text="Id zwierzęcia">
+                    <VBox.margin>
+                        <Insets top="-15.0" />
+                    </VBox.margin>
+                </Label>
+                <Label fx:id="animalIdLabel" text="-" textAlignment="CENTER">
+                    <VBox.margin>
+                        <Insets top="-17.5" />
+                    </VBox.margin>
+                </Label>
+            </children></VBox>
+        </VBox>
+    </right>
 
     <!-- Bottom - Controls -->
     <bottom>

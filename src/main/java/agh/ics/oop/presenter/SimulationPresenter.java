@@ -1,11 +1,16 @@
 package agh.ics.oop.presenter;
 
+import agh.ics.oop.ChartUpdater;
+import agh.ics.oop.Day;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
+import agh.ics.oop.model.util.ImportStats;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -15,11 +20,13 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.io.File;
 import java.util.List;
 
 import static agh.ics.oop.WorldGUI.*;
 
-public class SimulationPresenter implements MapChangeListener {
+public class SimulationPresenter implements MapChangeListener, DayObserver {
+
     private WorldMap worldMap;
     private SimulationEngine simEngine;
 
@@ -84,6 +91,48 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     public CheckBox sprawlingJungleCheckBox;
+
+    @FXML
+    public CheckBox excelCheckBox;
+
+    @FXML
+    private Label animalsCountLabel;
+    @FXML
+    private Label grassesCountLabel;
+    @FXML
+    private Label freeFieldsCountLabel;
+    @FXML
+    private Label mostPopularGenotypesLabel;
+    @FXML
+    private Label averageEnergyLabel;
+    @FXML
+    private Label averageLifespanLabel;
+    @FXML
+    private Label averageChildrenLabel;
+
+    @FXML
+    private Label animalGenomeLabel;
+    @FXML
+    private Label activeGenomePartLabel;
+    @FXML
+    private Label energyLabel;
+    @FXML
+    private Label eatenPlantsLabel;
+    @FXML
+    private Label childrenCountLabel;
+    @FXML
+    private Label descendantsCountLabel;
+    @FXML
+    private Label daysLivedLabel;
+    @FXML
+    private Label deathDayLabel;
+    @FXML
+    private Label animalIdLabel;
+    @FXML
+    private LineChart<Number, Number> chart;
+
+    private ChartUpdater chartUpdater;
+    private Day day;
 
     // Getter for the instance
     public static SimulationPresenter getInstance() {
@@ -239,13 +288,59 @@ public class SimulationPresenter implements MapChangeListener {
         }
         grassF.addObserver(this);
 
+
         AnimalGenerator animalGenerator = new AnimalGenerator();
         List<Vector2d> positions = animalGenerator.generateInitialPositions();
-        Simulation newSim = new Simulation(positions, grassF);
+
+        if (A_PINCH_OF_INSANITY){
+            day = new Day((GrassField) grassF,new CrazyBehaviour());
+        }
+        else{
+            day = new Day((GrassField) grassF,new NormalBehaviour());
+        }
+        if (SAVE_TO_CSV){
+            ImportStats excel = new ImportStats(String.format("%s%s%s","csvsFolder", File.separator, "data.csv"), String.format("%s%s%s","csvsFolder", File.separator, "animaldata.csv"),day);
+            day.addObserver(excel);
+        }
+        day.addObserver(this);
+        Simulation newSim = new Simulation(positions, grassF, day);
 
         simEngine = new SimulationEngine(List.of(newSim));
         newSim.setSimulationEngine(simEngine);
-
+        chartUpdater = new ChartUpdater(chart, day);
         simEngine.runAsync();
+    }
+
+
+    @Override
+    public void updateSimulationInfo() {
+        Platform.runLater(() -> {
+            animalsCountLabel.setText(String.valueOf(day.getAnimalsCount()));
+            grassesCountLabel.setText(String.valueOf(day.getPlantsCount()));
+            freeFieldsCountLabel.setText(String.valueOf(day.getFreeFieldsCount()));
+            mostPopularGenotypesLabel.setAlignment(Pos.TOP_CENTER); // inaczej sie dziwnie formatuje chyba
+            mostPopularGenotypesLabel.setText(day.getMostPopularGenotypes());
+            averageEnergyLabel.setText(String.format("%.2f", day.getAverageEnergy()));
+            averageLifespanLabel.setText(String.format("%.2f", day.getAverageLifespan()));
+            averageChildrenLabel.setText(String.format("%.2f", day.getAverageChildren()));
+
+        });
+    }
+
+    @Override
+    public void updateAnimalInfo(Animal animal) {
+        Platform.runLater(() -> {
+            animalGenomeLabel.setText(animal.getGenome().toString());
+            activeGenomePartLabel.setText(String.valueOf(animal.getGenomeAtIdx(animal.getGenomeIdx())));
+            energyLabel.setText(String.valueOf(animal.getEnergy()));
+            eatenPlantsLabel.setText(String.valueOf(animal.getEatenGrassCnt()));
+            childrenCountLabel.setText(String.valueOf(animal.getChildrenCnt()));
+            descendantsCountLabel.setText(String.valueOf(animal.getDescendantsCnt()));
+            daysLivedLabel.setText(String.valueOf(animal.getDaysOld()));
+            deathDayLabel.setText(String.valueOf(animal.getDeathDay()));
+            animalIdLabel.setText(String.valueOf(animal.getId()));
+            chartUpdater.updateData(animal);
+            chartUpdater.drawChart();
+        });
     }
 }

@@ -16,6 +16,8 @@ public class WorldGUI {
     public static int GENOME_LENGTH;
     public static boolean A_PINCH_OF_INSANITY;
     public static boolean SPRAWLING_JUNGLE;
+    public static boolean SAVE_TO_CSV;
+    public static int SIMULATION_SPEED = 500;
 
     public static void initializeConstants() {
         SimulationPresenter presenter = SimulationPresenter.getInstance();
@@ -31,6 +33,7 @@ public class WorldGUI {
         GENOME_LENGTH = (int) presenter.genomeLengthSlider.getValue();
         A_PINCH_OF_INSANITY = presenter.aPinchOfInsanityCheckBox.isSelected();
         SPRAWLING_JUNGLE = presenter.sprawlingJungleCheckBox.isSelected();
+        SAVE_TO_CSV = presenter.excelCheckBox.isSelected();
     }
 
     public static void main(String[] args) {

@@ -2,10 +2,7 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static agh.ics.oop.WorldGUI.*;
 import static agh.ics.oop.model.MoveDirection.BACKWARD;
@@ -18,7 +15,10 @@ public class Animal implements WorldElement{
     private int daysOld;
     private int childrenCnt;
     private final List<Integer> genome;
-    private int genomeIdx = 0; // to bylo final - na pewno dobrze jest robione move? potrzebne to jest wogole?
+    private int genomeIdx;
+    private int eatenGrassCnt;
+    private int descendantsCnt;
+    private int deathDay = -1;
     private final int id;
 
     private List<Integer> initializeGenome() {
@@ -52,6 +52,9 @@ public class Animal implements WorldElement{
         this.childrenCnt = 0;
         this.id = idCounter++;
         this.genome = genome;
+        this.genomeIdx = 0;
+        this.eatenGrassCnt = 0;
+        this.descendantsCnt = 0;
     }
 
     public Animal() {
@@ -85,44 +88,7 @@ public class Animal implements WorldElement{
         this.direction = direction;
     }
 
-//
-//    private void moveForwardBackward(MoveDirection currMoveDirection, MapDirection direction, MoveValidator validator) throws IncorrectPositionException{
-//        Vector2d move;
-//        switch (direction) {
-//            case NORTH -> move = (currMoveDirection == MoveDirection.FORWARD ? MapDirection.NORTH_UNIT_VECTOR : MapDirection.SOUTH_UNIT_VECTOR);
-//            case SOUTH -> move = (currMoveDirection == MoveDirection.FORWARD ? MapDirection.SOUTH_UNIT_VECTOR : MapDirection.NORTH_UNIT_VECTOR);
-//            case EAST -> move = (currMoveDirection == MoveDirection.FORWARD ? MapDirection.EAST_UNIT_VECTOR : MapDirection.WEST_UNIT_VECTOR);
-//            case WEST -> move = (currMoveDirection == MoveDirection.FORWARD ? MapDirection.WEST_UNIT_VECTOR : MapDirection.EAST_UNIT_VECTOR);
-//            case NORTH_WEST ->  move = (currMoveDirection == MoveDirection.FORWARD ? MapDirection.WEST_UNIT_VECTOR : MapDirection.EAST_UNIT_VECTOR);
-//            case NORTH_EAST -> move = (currMoveDirection == MoveDirection.FORWARD ? MapDirection.WEST_UNIT_VECTOR : MapDirection.EAST_UNIT_VECTOR);
-//            case SOUTH_EAST -> move = (currMoveDirection == MoveDirection.FORWARD ? MapDirection.WEST_UNIT_VECTOR : MapDirection.EAST_UNIT_VECTOR);
-//            case SOUTH_WEST -> move = (currMoveDirection == MoveDirection.FORWARD ? MapDirection.WEST_UNIT_VECTOR : MapDirection.EAST_UNIT_VECTOR);
-//            default -> throw new IllegalStateException("Unexpected value: " + direction);
-//        }
-//        Vector2d newPosition = pos.add(move, grassField.width);
-//        if (validator.canMoveTo(newPosition)) {
-//            pos = newPosition;
-//        }else{//zwierzak chcial wyjsc za biegun
-//
-////            throw new IncorrectPositionException(newPosition);
-//        }
-//    }
 
-//    public void move(MoveDirection direction, MoveValidator validator) {
-//        switch(direction) {
-//            case LEFT -> this.direction = this.direction.previous();
-//            case RIGHT -> this.direction = this.direction.next();
-//            case FORWARD, BACKWARD -> {
-//                try {
-//                    moveForwardBackward(direction, this.direction, validator);
-//                } catch (IncorrectPositionException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            case FORWARD_RIGHT, FORWARD_LEFT ->
-//            case BACKWARD_RIGHT, BACKWARD_LEFT ->
-//        };
-//    }
 public boolean moveForward(MapDirection direction,MoveValidator validator) throws IncorrectPositionException{
         Vector2d move;
         switch (direction) {
@@ -201,6 +167,38 @@ public boolean moveForward(MapDirection direction,MoveValidator validator) throw
 
     public int getId() {
         return id;
+    }
+
+    public void DaysOldIncrement(){
+        daysOld++;
+    }
+
+    public void ChildrenCntIncrement(){
+        childrenCnt++;
+    }
+
+    public int getEatenGrassCnt(){
+        return eatenGrassCnt;
+    }
+
+    public void EatenGrassCntIncrement(){
+        eatenGrassCnt++;
+    }
+
+    public int getDescendantsCnt(){
+        return descendantsCnt;
+    }
+
+    public void setDescendantsCnt(int cnt){
+        descendantsCnt = cnt;
+    }
+
+    public int getDeathDay(){
+        return deathDay;
+    }
+
+    public void setDeathDay(int day){
+        deathDay = day;
     }
 }
 

@@ -2,25 +2,29 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.util.ImportStats;
+import agh.ics.oop.presenter.SimulationPresenter;
 
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static agh.ics.oop.WorldGUI.*;
 import static java.lang.Thread.sleep;
-import static agh.ics.oop.WorldGUI.A_PINCH_OF_INSANITY;
+
 public class Simulation implements Runnable {
     public static final String ANIMAL_STRING = "Animal";
     private final List<Vector2d> positions;
     private final WorldMap worldMap;
-    public static int idCounter= 0;
+    public static int idCounter = 0;
     private SimulationEngine simEngine;
-    private Day day;
+    private final Day day;
 
-    public Simulation(List<Vector2d> positions, WorldMap worldMap) {
+    public Simulation(List<Vector2d> positions, WorldMap worldMap, Day day) {
         this.positions = new ArrayList<>(positions); //zeby dało sie usuwać
         this.worldMap = worldMap;
+        this.day = day;
     }
 
     public void setSimulationEngine(SimulationEngine simEngine) {
@@ -29,21 +33,20 @@ public class Simulation implements Runnable {
 
     public void run() {
         fillWorldMap();
-        if (A_PINCH_OF_INSANITY){
-            day = new Day((GrassField) worldMap,new CrazyBehaviour());
-        }
-        else{
-            day = new Day((GrassField) worldMap,new NormalBehaviour());
-        }
+
+        day.setWatchedAnimalId(day.getFirstCurrSimAnimal().getId());
+
         while (true) {
             try {
                 simEngine.pauseSimulationIfNeeded();
-
-                day.setDayCnt(String.valueOf(day.getDayCnt() + 1));
+                day.setDayCnt(day.getDayCnt() + 1);
                 day.dayProcedure();
+                // statystyki
+                SimulationPresenter.getInstance().updateSimulationInfo();
+                SimulationPresenter.getInstance().updateAnimalInfo(day.getWatchedAnimal()); //domyslnie wybiera sie losowy animal a nie z najmniejszym id z jakiegos powodu ale w sumie to nawet lepiej wiec tego nie naprawiam!
                 ((GrassField) worldMap).mapChanged("Day " + day.getDayCnt());
 
-                Thread.sleep(1000);
+                Thread.sleep(SIMULATION_SPEED);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             } catch (IncorrectPositionException e) {
@@ -68,5 +71,33 @@ public class Simulation implements Runnable {
         for (int idx : indicesToRemove) {
             positions.remove(idx);
         }
+    }
+
+    public int getAnimalsCount(){
+        return day.currAnimalsCnt;
+    }
+
+    public int getPlantsCount(){
+        return day.currPlantsCnt;
+    }
+
+    public int getFreeFieldsCount(){
+        return day.currFreeFieldsCnt;
+    }
+
+    public String getMostPopularGenotypes(){
+        return day.getMostPopularGenotypes();
+    }
+
+    public float getAverageEnergy(){
+        return day.getAverageEnergy();
+    }
+
+    public float getAverageLifespan(){
+        return day.getAverageLifespan();
+    }
+
+    public float getAverageChildren(){
+        return day.getAverageChildren();
     }
 }
