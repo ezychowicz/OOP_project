@@ -17,6 +17,7 @@ public class WorldGUI {
     public static boolean A_PINCH_OF_INSANITY;
     public static boolean SPRAWLING_JUNGLE;
     public static boolean SAVE_TO_CSV;
+    public static boolean COLORING;
     public static int SIMULATION_SPEED = 200;
 
     public static void initializeConstants() {
@@ -34,6 +35,7 @@ public class WorldGUI {
         A_PINCH_OF_INSANITY = presenter.aPinchOfInsanityCheckBox.isSelected();
         SPRAWLING_JUNGLE = presenter.sprawlingJungleCheckBox.isSelected();
         SAVE_TO_CSV = presenter.excelCheckBox.isSelected();
+        COLORING = presenter.coloringCheckbox.isSelected();
     }
 
     public static void main(String[] args) {

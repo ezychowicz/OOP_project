@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.HashSet;
 import java.util.List;
@@ -101,6 +102,9 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
 
     @FXML
     public CheckBox excelCheckBox;
+
+    @FXML
+    public CheckBox coloringCheckbox;
 
     @FXML
     private Label animalsCountLabel;
@@ -239,13 +243,15 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
             for (int j = minY; j < minY + rows - 1; j++) {
                 Vector2d pos = new Vector2d(i, j);
                 StackPane cellBackground = new StackPane();
-                if (toColorPos.contains(pos)){
-                    Color lessIntenseColor = Color.LIGHTBLUE.deriveColor(0, 1, 1, 0.5);
-                    cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor, null, null)));
-                }
-                if (toColorAnimalPos != null && toColorAnimalPos.equals(pos)){
-                    Color lessIntenseColor = Color.LIGHTGREEN.deriveColor(0, 1, 1, 0.5);
-                    cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor, null, null)));
+                if (COLORING) {
+                    if (toColorPos.contains(pos)) {
+                        Color lessIntenseColor = Color.LIGHTBLUE.deriveColor(0, 1, 1, 0.5);
+                        cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor, null, null)));
+                    }
+                    if (toColorAnimalPos != null && toColorAnimalPos.equals(pos)) {
+                        Color lessIntenseColor = Color.LIGHTGREEN.deriveColor(0, 1, 1, 0.5);
+                        cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor, null, null)));
+                    }
                 }
                 if(worldMap.isOccupied(pos)){
                     Object object=worldMap.objectAt(pos);

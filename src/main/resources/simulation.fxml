@@ -77,6 +77,11 @@
                <Insets top="-10.0" />
             </VBox.margin>
          </CheckBox>
+        <CheckBox fx:id="coloringCheckbox" mnemonicParsing="false" text="Highlight cells">
+            <VBox.margin>
+                <Insets top="-10.0" />
+            </VBox.margin>
+        </CheckBox>
             <Label text="Map Width">
             <VBox.margin>
                <Insets top="-10.0" />
