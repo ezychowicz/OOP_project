@@ -42,10 +42,11 @@ public class CumulativePreferences{
 
         for (Vector2d adj : adjacent){
             Vector2d checkedPos = position.add(adj, grassField.getWidth());
+            preferences[checkedPos.getX()][checkedPos.getY()]--;
             if (preferences[checkedPos.getX()][checkedPos.getY()] == 0 && !grassField.getGrasses().containsKey(checkedPos)) {
                 grassField.transferToUnpreferred(checkedPos);
             }
-            preferences[checkedPos.getX()][checkedPos.getY()]--;
+
             if (preferences[checkedPos.getX()][checkedPos.getY()] < 0) {
                 throw new ArithmeticException();
             }

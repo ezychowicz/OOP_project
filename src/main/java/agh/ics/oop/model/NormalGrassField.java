@@ -25,6 +25,9 @@ public class NormalGrassField extends GrassField{
         RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(this, grassCount);
         for (Vector2d grassPosition : randomPositionGenerator) {
             grasses.put(grassPosition, new Grass(grassPosition));
+            int newGrassIdx = Converter.convertToIdx(grassPosition, width);
+            preferredSet.remove(newGrassIdx); //usuwaj pozycje na ktorej dodano trawe
+            unpreferredSet.remove(newGrassIdx); //to samo ale jesli jest w unpreferred
         }
         availableIdxs.set(0, new ArrayList<Integer>(preferredSet));
         availableIdxs.set(1, new ArrayList<Integer> (unpreferredSet));

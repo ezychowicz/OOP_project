@@ -7,6 +7,6 @@ public class Converter {
         return point.getY()*width + point.getX();
     }
     public static Vector2d convertFromIdx(int idx, int width) {
-        return new Vector2d(idx/width, idx%width);
+        return new Vector2d(idx%width, idx/width);
     }
 }

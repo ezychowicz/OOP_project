@@ -4,17 +4,18 @@ import agh.ics.oop.model.util.Boundary;
 import agh.ics.oop.model.util.Converter;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static agh.ics.oop.WorldGUI.GRASSES_AMOUNT;
+import static agh.ics.oop.WorldGUI.MAP_WIDTH;
 import static agh.ics.oop.model.MapDirection.*;
-import static agh.ics.oop.WorldGUI.GRASS_GROWTH_EACH_DAY;
 
 public abstract class GrassField extends AbstractWorldMap{
     protected final Map<Vector2d, Grass> grasses;
     protected final int width;
     protected final int height;
     private final int grassCount;
-    protected final Set<Integer> preferredSet = new HashSet<>();
+    protected final Set<Integer> preferredSet = new HashSet<>(); //na indeksach zeby wydobyc wspolrzedne mozna uzywac Converter
     protected final Set<Integer> unpreferredSet = new HashSet<>();
     private final List<Vector2d> posList;
     protected final List<List<Integer>> availableIdxs;
@@ -29,7 +30,7 @@ public abstract class GrassField extends AbstractWorldMap{
         this.posList = this.createPosList();
         this.cumulativePrefs = new CumulativePreferences(this);
         initializeEquator();
-        this.availableIdxs = new ArrayList<List<Integer>>(); //lista list: preferred, unpreferred. pomocnicze - tylko dla randomPositionGenerator
+        this.availableIdxs = new ArrayList<>(); //lista list: preferred, unpreferred. pomocnicze - tylko dla randomPositionGenerator
         availableIdxs.add(0, new ArrayList<Integer> (preferredSet));
         availableIdxs.add(1, new ArrayList<Integer> (unpreferredSet));
         plantingGrasses(GRASSES_AMOUNT);
@@ -145,6 +146,9 @@ public abstract class GrassField extends AbstractWorldMap{
         return new Boundary(new Vector2d(0,0), new Vector2d(width, height));
     }
 
+    public List<Vector2d> getPrefferedPositions(){
+        return preferredSet.stream().map(idx -> Converter.convertFromIdx(idx, MAP_WIDTH)).toList();
+    }
 
     public Map<Vector2d, Grass> getGrasses() {
         return grasses;

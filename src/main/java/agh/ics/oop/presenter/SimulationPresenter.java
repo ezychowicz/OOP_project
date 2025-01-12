@@ -14,14 +14,15 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static agh.ics.oop.WorldGUI.*;
 
@@ -133,7 +134,6 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
 
     private ChartUpdater chartUpdater;
     private Day day;
-
     // Getter for the instance
     public static SimulationPresenter getInstance() {
         return instance;
@@ -172,6 +172,8 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
 
     private Vector2d lowerLeft;
     private Vector2d upperRight;
+    private Vector2d toColorAnimalPos = new Vector2d(-1, -1);
+    private Set<Vector2d> toColorPos = new HashSet<>();
 
     public void setWorldMap(WorldMap worldMap) {
         this.worldMap = worldMap;
@@ -230,13 +232,23 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         for (int i = minX; i < minX + cols - 1; i++) {
             for (int j = minY; j < minY + rows - 1; j++) {
                 Vector2d pos = new Vector2d(i, j);
+                StackPane cellBackground = new StackPane();
+                if (toColorPos.contains(pos)){
+                    Color lessIntenseColor = Color.LIGHTBLUE.deriveColor(0, 1, 1, 0.5);
+                    cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor, null, null)));
+                }
+                if (toColorAnimalPos.equals(pos)){
+                    Color lessIntenseColor = Color.LIGHTGREEN.deriveColor(0, 1, 1, 0.5);
+                    cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor, null, null)));
+                }
                 if (worldMap.isOccupied(pos)){
                     Label cell = new Label(worldMap.objectAt(pos).toString());
                     GridPane.setHalignment(cell, HPos.CENTER); // Wyrównanie poziome
                     GridPane.setValignment(cell, VPos.CENTER); // Wyrównanie pionowe
                     cell.setFont(Font.font("System", FontWeight.BOLD, 30));
-                    mapGrid.add(cell, i - minX + 1, (rows - 1) - (j - minY));
+                    cellBackground.getChildren().add(cell);
                 }
+                mapGrid.add(cellBackground, i - minX + 1, (rows - 1) - (j - minY));
             }
         }
     }
@@ -308,6 +320,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         simEngine = new SimulationEngine(List.of(newSim));
         newSim.setSimulationEngine(simEngine);
         chartUpdater = new ChartUpdater(chart, day);
+
         simEngine.runAsync();
     }
 
@@ -323,7 +336,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
             averageEnergyLabel.setText(String.format("%.2f", day.getAverageEnergy()));
             averageLifespanLabel.setText(String.format("%.2f", day.getAverageLifespan()));
             averageChildrenLabel.setText(String.format("%.2f", day.getAverageChildren()));
-
+            toColorPos = new HashSet<>(((GrassField) worldMap).getPrefferedPositions());
         });
     }
 
@@ -341,6 +354,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
             animalIdLabel.setText(String.valueOf(animal.getId()));
             chartUpdater.updateData(animal);
             chartUpdater.drawChart();
+            toColorAnimalPos = animal.getPos();
         });
     }
 }

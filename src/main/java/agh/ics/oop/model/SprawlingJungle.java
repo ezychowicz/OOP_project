@@ -19,6 +19,7 @@ public class SprawlingJungle extends GrassField{
         grasses.remove(position);
 
         int idx = Converter.convertToIdx(position, width);
+        cumulativePrefs.decrementAdjacentTo(position);
         if (cumulativePrefs.getPreferenceScoreAtPos(position) == 0){
             unpreferredSet.add(idx);
         } else {
