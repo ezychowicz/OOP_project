@@ -14,6 +14,8 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -22,11 +24,15 @@ import javafx.scene.text.FontWeight;
 import java.io.File;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import static agh.ics.oop.WorldGUI.*;
 
 public class SimulationPresenter implements MapChangeListener, DayObserver {
+
+    private final Image animalImageResource = new Image(Objects.requireNonNull(getClass().getResource("/icons/animal.png")).toExternalForm());
+    private final Image grassImageResource = new Image(Objects.requireNonNull(getClass().getResource("/icons/grass.png")).toExternalForm());
 
     private WorldMap worldMap;
     private SimulationEngine simEngine;
@@ -241,16 +247,45 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
                     Color lessIntenseColor = Color.LIGHTGREEN.deriveColor(0, 1, 1, 0.5);
                     cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor, null, null)));
                 }
-                if (worldMap.isOccupied(pos)){
-                    Label cell = new Label(worldMap.objectAt(pos).toString());
-                    GridPane.setHalignment(cell, HPos.CENTER); // Wyrównanie poziome
-                    GridPane.setValignment(cell, VPos.CENTER); // Wyrównanie pionowe
-                    cell.setFont(Font.font("System", FontWeight.BOLD, 30));
-                    cellBackground.getChildren().add(cell);
+                if(worldMap.isOccupied(pos)){
+                    Object object=worldMap.objectAt(pos);
+                    if(object instanceof Animal){
+                        ImageView animalImageView=getAnimalImageView((Animal) object);
+                        GridPane.setHalignment(animalImageView,HPos.CENTER);
+                        GridPane.setValignment(animalImageView,VPos.CENTER);
+                        cellBackground.getChildren().add(animalImageView);
+                    } else if(object instanceof Grass){
+                        ImageView grassImageView = new ImageView(grassImageResource);
+                        grassImageView.setFitWidth(40);
+                        grassImageView.setFitHeight(40);
+                        GridPane.setHalignment(grassImageView,HPos.CENTER);
+                        GridPane.setValignment(grassImageView,VPos.CENTER);
+                        cellBackground.getChildren().add(grassImageView);
+                    }
+                    mapGrid.add(cellBackground,i - minX + 1,(rows - 1) - (j - minY));
                 }
-                mapGrid.add(cellBackground, i - minX + 1, (rows - 1) - (j - minY));
             }
         }
+    }
+
+    //brzydka logika przerzucona do metody
+    private ImageView getAnimalImageView(Animal object){
+        ImageView animalImageView = new ImageView(animalImageResource);
+        animalImageView.setFitWidth(40);
+        animalImageView.setFitHeight(40);
+        MapDirection direction = object.getDirection();
+        double angle=switch(direction){
+            case NORTH -> 0;
+            case EAST -> 90;
+            case SOUTH -> 180;
+            case WEST -> 270;
+            case NORTH_EAST -> 45;
+            case NORTH_WEST -> 315;
+            case SOUTH_EAST -> 135;
+            case SOUTH_WEST -> 225;
+        };
+        animalImageView.setRotate(angle);
+        return animalImageView;
     }
 
     @FXML
