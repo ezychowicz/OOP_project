@@ -8,6 +8,21 @@ public class NormalGrassField extends GrassField{
 
     public NormalGrassField(int grassCount, int width, int height) {
         super(grassCount, width, height);
+        initializeEquator();
+    }
+
+    private void initializeEquator(){
+        int equatorY = height/2;
+        for (int x = 0; x < width; x++){
+            preferredSet.add(Converter.convertToIdx(new Vector2d(x, equatorY),width));
+        }
+        for (int x = 0; x <width; x++){
+            for (int y = 0; y < height; y++){
+                if (y != equatorY) {
+                    unpreferredSet.add(Converter.convertToIdx(new Vector2d(x, y), width));
+                }
+            }
+        }
     }
 
     @Override

@@ -29,26 +29,12 @@ public abstract class GrassField extends AbstractWorldMap{
         this.height = height;
         this.posList = this.createPosList();
         this.cumulativePrefs = new CumulativePreferences(this);
-        initializeEquator();
         this.availableIdxs = new ArrayList<>(); //lista list: preferred, unpreferred. pomocnicze - tylko dla randomPositionGenerator
         availableIdxs.add(0, new ArrayList<Integer> (preferredSet));
         availableIdxs.add(1, new ArrayList<Integer> (unpreferredSet));
         plantingGrasses(GRASSES_AMOUNT);
     }
 
-    private void initializeEquator(){
-        int equatorY = height/2;
-        for (int x = 0; x < width; x++){
-            preferredSet.add(Converter.convertToIdx(new Vector2d(x, equatorY),width));
-        }
-        for (int x = 0; x <width; x++){
-            for (int y = 0; y < height; y++){
-                if (y != equatorY) {
-                    unpreferredSet.add(Converter.convertToIdx(new Vector2d(x, y), width));
-                }
-            }
-        }
-    }
 
     private List<Vector2d> createPosList(){
         List<Vector2d> posList = new ArrayList<Vector2d>();

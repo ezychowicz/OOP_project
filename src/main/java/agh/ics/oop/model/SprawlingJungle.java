@@ -7,6 +7,15 @@ import java.util.ArrayList;
 public class SprawlingJungle extends GrassField{
     public SprawlingJungle(int grassCount, int width, int height) {
         super(grassCount, width, height);
+        initializeUnpreferred();
+    }
+
+    private void initializeUnpreferred() {
+        for (int x = 0; x <width; x++){
+            for (int y = 0; y < height; y++){
+                unpreferredSet.add(Converter.convertToIdx(new Vector2d(x, y), width));
+            }
+        }
     }
 
     @Override

@@ -237,7 +237,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
                     Color lessIntenseColor = Color.LIGHTBLUE.deriveColor(0, 1, 1, 0.5);
                     cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor, null, null)));
                 }
-                if (toColorAnimalPos.equals(pos)){
+                if (toColorAnimalPos != null && toColorAnimalPos.equals(pos)){
                     Color lessIntenseColor = Color.LIGHTGREEN.deriveColor(0, 1, 1, 0.5);
                     cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor, null, null)));
                 }
@@ -354,7 +354,11 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
             animalIdLabel.setText(String.valueOf(animal.getId()));
             chartUpdater.updateData(animal);
             chartUpdater.drawChart();
-            toColorAnimalPos = animal.getPos();
+            if (animal.getDeathDay() == -1) { //is alive
+                toColorAnimalPos = animal.getPos();
+            } else {
+                toColorAnimalPos = null;
+            }
         });
     }
 }
