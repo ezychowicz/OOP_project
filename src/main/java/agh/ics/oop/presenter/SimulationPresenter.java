@@ -260,6 +260,16 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
                         GridPane.setHalignment(animalImageView,HPos.CENTER);
                         GridPane.setValignment(animalImageView,VPos.CENTER);
                         cellBackground.getChildren().add(animalImageView);
+                        // todo ogarnac zeby od razu sie odkolorowywal poprzedni animal, moze zrobic osobna funkcje ktora zrefreshuje backgroundy
+                        animalImageView.setOnMouseClicked(event -> {
+                            // todo cos mi sie nie podoba to ogladanie animala, raz gdzies przekazuje id raz samego zwierzaka pochylic sie nad tym
+                            day.setWatchedAnimalId(((Animal) object).getId());
+                            updateAnimalInfo((Animal) object);
+                            if (COLORING){
+                                Color lessIntenseColor=Color.LIGHTGREEN.deriveColor(0,1,1,0.5);
+                                cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor,null,null)));
+                            }
+                        });
                     } else if(object instanceof Grass){
                         ImageView grassImageView = new ImageView(grassImageResource);
                         grassImageView.setFitWidth(40);
