@@ -258,6 +258,12 @@
                <Insets top="-16.0" />
             </VBox.margin>
          </Label>
+        <!-- Save and Load Buttons -->
+        <Label text="Configuration Management" style="-fx-font-weight: bold;" />
+        <HBox spacing="10" alignment="CENTER">
+            <Button fx:id="saveConfigButton" text="Save Config to File" onAction="#handleSaveConfig" />
+            <Button fx:id="loadConfigButton" text="Load Config from File" onAction="#handleLoadConfig" />
+        </HBox>
         </VBox>
     </left>
 

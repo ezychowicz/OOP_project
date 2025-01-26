@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.util.Config;
 import agh.ics.oop.model.util.MathUtils;
 
 import java.util.*;
@@ -19,11 +20,11 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
     public RandomPositionGenerator(GrassField grassField, int grassCount) {
 
         this.grassField = grassField;
-        this.maxWidth = grassField.getCurrentBounds().upperRightBound().getX();
-        this.maxHeight = grassField.getCurrentBounds().upperRightBound().getY();
+        this.maxWidth = grassField.getWidth();
+        this.maxHeight = grassField.getHeight();
         this.grassCount = grassCount;
-        this.preferredIdxs = grassField.getAvailableIdxs().getFirst();
-        this.unPreferredIdxs = grassField.getAvailableIdxs().getLast();
+        this.preferredIdxs = grassField.getAvailableIdxs().get(0);
+        this.unPreferredIdxs = grassField.getAvailableIdxs().get(1);
         this.count = 0;
         this.random = new Random();
     }

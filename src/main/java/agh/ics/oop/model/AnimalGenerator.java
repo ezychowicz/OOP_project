@@ -1,17 +1,19 @@
 package agh.ics.oop.model;
 
-import java.util.*;
+import agh.ics.oop.model.util.Config;
 
-import static agh.ics.oop.WorldGUI.ANIMALS_AMOUNT;
-import static agh.ics.oop.WorldGUI.GENOME_LENGTH;
-import static agh.ics.oop.WorldGUI.INITIAL_ANIMAL_ENERGY;
-import static agh.ics.oop.WorldGUI.MAP_WIDTH;
-import static agh.ics.oop.WorldGUI.MAP_HEIGHT;
+import java.util.*;
 
 public class AnimalGenerator{
     private final int genomeLength;
     private final int initialEnergy;
     private final int animalsAmount;
+    private final Config config = Config.getInstance();
+    private final int GENOME_LENGTH = config.getInt("GENOME_LENGTH");
+    private final int INITIAL_ANIMAL_ENERGY = config.getInt("INITIAL_ANIMAL_ENERGY");
+    private final int ANIMALS_AMOUNT = config.getInt("ANIMALS_AMOUNT");
+    private final int MAP_WIDTH = config.getInt("MAP_WIDTH");
+    private final int MAP_HEIGHT = config.getInt("MAP_HEIGHT");
     public AnimalGenerator(){
         this.genomeLength = GENOME_LENGTH;
         this.initialEnergy = INITIAL_ANIMAL_ENERGY;

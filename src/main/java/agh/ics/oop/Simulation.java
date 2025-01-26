@@ -20,6 +20,7 @@ public class Simulation implements Runnable {
     public static int idCounter = 0;
     private SimulationEngine simEngine;
     private final Day day;
+    private final int SIMULATION_SPEED = 200;
 
     public Simulation(List<Vector2d> positions, WorldMap worldMap, Day day) {
         this.positions = new ArrayList<>(positions); //zeby dało sie usuwać
@@ -62,7 +63,7 @@ public class Simulation implements Runnable {
             Animal animal = new Animal(position);
             try {
                 worldMap.place(animal);
-                Thread.sleep(250);
+                Thread.sleep(100);
             } catch(IncorrectPositionException | InterruptedException e){
                 indicesToRemove.add(i);
             }

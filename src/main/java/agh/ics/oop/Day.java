@@ -3,11 +3,11 @@ package agh.ics.oop;
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.exceptions.CopulationFailedException;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.util.Config;
 import agh.ics.oop.presenter.SimulationPresenter;
 
 import java.util.*;
 
-import static agh.ics.oop.WorldGUI.*;
 
 
 public class Day {
@@ -31,6 +31,10 @@ public class Day {
     private List<Animal> deadAnimals = new ArrayList<>();
     private final List<DayObserver> observers = new ArrayList<>();
     private int watchedAnimalId = 0;
+    private final Consumption consumption = new Consumption();
+
+    private final Config config = Config.getInstance();
+    private final int GRASS_GROWTH_EACH_DAY = config.getInt("GRASS_GROWTH_EACH_DAY");
 
     public Day(GrassField grassField, AnimalBehaviour animalBehaviour) {
         this.grassField = grassField;
@@ -59,7 +63,7 @@ public class Day {
 
         //konsumpcja roslin
         for (Vector2d position : animals.keySet()) {
-            Consumption.consume(grassField, position);
+            consumption.consume(grassField, position);
         }
 
         //rozmnazanie

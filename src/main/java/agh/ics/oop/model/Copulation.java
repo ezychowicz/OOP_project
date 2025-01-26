@@ -1,14 +1,13 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.exceptions.CopulationFailedException;
+import agh.ics.oop.model.util.Config;
 
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static agh.ics.oop.WorldGUI.BREEDING_THRESHOLD;
-import static agh.ics.oop.WorldGUI.GENOME_LENGTH;
 
 public class Copulation {
     /*
@@ -30,6 +29,10 @@ public class Copulation {
     private final GrassField grassField;
     private final AnimalFamilyTree familyTree;
 
+    private final Config config = Config.getInstance();
+    private final int GENOME_LENGTH = config.getInt("GENOME_LENGTH");
+    private final int BREEDING_THRESHOLD = config.getInt("BREEDING_THRESHOLD");
+
     public Copulation(Vector2d position, GrassField grassField, AnimalFamilyTree familyTree) {
         this.position = position;
         this.grassField = grassField;
@@ -45,7 +48,7 @@ public class Copulation {
         return List.of(winner1, winner2);
     }
 
-    public static int findCrossoverIndex(int energyParent1, int energyParent2) {
+    public int findCrossoverIndex(int energyParent1, int energyParent2) {
         int totalEnergy = energyParent1 + energyParent2;
         if (totalEnergy == 0) {
             throw new IllegalArgumentException("Energy values cannot both be zero.");

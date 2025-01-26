@@ -9,6 +9,7 @@ public class NormalGrassField extends GrassField{
     public NormalGrassField(int grassCount, int width, int height) {
         super(grassCount, width, height);
         initializeEquator();
+        plantingGrasses(grassCount);
     }
 
     private void initializeEquator(){
@@ -23,6 +24,8 @@ public class NormalGrassField extends GrassField{
                 }
             }
         }
+        availableIdxs.set(0, new ArrayList<Integer> (preferredSet));
+        availableIdxs.set(1, new ArrayList<Integer> (unpreferredSet));
     }
 
     @Override
@@ -44,7 +47,7 @@ public class NormalGrassField extends GrassField{
             preferredSet.remove(newGrassIdx); //usuwaj pozycje na ktorej dodano trawe
             unpreferredSet.remove(newGrassIdx); //to samo ale jesli jest w unpreferred
         }
-        availableIdxs.set(0, new ArrayList<Integer>(preferredSet));
+        availableIdxs.set(0, new ArrayList<Integer> (preferredSet));
         availableIdxs.set(1, new ArrayList<Integer> (unpreferredSet));
     }
 

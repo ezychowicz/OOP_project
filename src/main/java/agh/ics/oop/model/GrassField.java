@@ -1,13 +1,12 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.util.Boundary;
+import agh.ics.oop.model.util.Config;
 import agh.ics.oop.model.util.Converter;
 
 import java.util.*;
 import java.util.stream.Stream;
 
-import static agh.ics.oop.WorldGUI.GRASSES_AMOUNT;
-import static agh.ics.oop.WorldGUI.MAP_WIDTH;
 import static agh.ics.oop.model.MapDirection.*;
 
 public abstract class GrassField extends AbstractWorldMap{
@@ -21,6 +20,10 @@ public abstract class GrassField extends AbstractWorldMap{
     protected final List<List<Integer>> availableIdxs;
     public static final List<Vector2d> ADJACENT = Arrays.asList(NORTH_UNIT_VECTOR, SOUTH_UNIT_VECTOR, WEST_UNIT_VECTOR, EAST_UNIT_VECTOR, SOUTHEAST_UNIT_VECTOR, SOUTHWEST_UNIT_VECTOR, NORTHWEST_UNIT_VECTOR, NORTHEAST_UNIT_VECTOR);
     protected final CumulativePreferences cumulativePrefs;
+    private final Config config = Config.getInstance();
+    private final int GRASSES_AMOUNT = config.getInt("GRASSES_AMOUNT");
+    private final int MAP_WIDTH = config.getInt("MAP_WIDTH");
+
 
     public GrassField(int grassCount, int width, int height) {
         this.grasses = new HashMap<Vector2d, Grass>();

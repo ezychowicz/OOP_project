@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.util.Config;
 
 import java.util.*;
 
@@ -20,6 +21,12 @@ public class Animal implements WorldElement{
     private int descendantsCnt;
     private int deathDay = -1;
     private final int id;
+
+    private final Config config = Config.getInstance();
+    private final int INITIAL_ANIMAL_ENERGY = config.getInt("INITIAL_ANIMAL_ENERGY");
+    private final int BREEDING_COST = config.getInt("BREEDING_COST");
+    private final int GENOME_LENGTH = config.getInt("GENOME_LENGTH");
+    private final int MAP_WIDTH = config.getInt("MAP_WIDTH");
 
     private List<Integer> initializeGenome() {
         /*
