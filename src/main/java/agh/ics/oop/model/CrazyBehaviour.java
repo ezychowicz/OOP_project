@@ -8,10 +8,11 @@ import java.util.Random;
 
 
 public class CrazyBehaviour extends NormalBehaviour {
+    private final int GENOME_LENGTH = Config.getInstance().getInt("GENOME_LENGTH");
     private final Randomizer randomizer;
-    private final Config config = Config.getInstance();
-    private final int GENOME_LENGTH = config.getInt("GENOME_LENGTH");
+
     private final double boringProbability;
+
     public CrazyBehaviour() {
         super();
         this.randomizer = new NonDeterministicRandomGenerator();

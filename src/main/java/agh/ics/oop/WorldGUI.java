@@ -8,9 +8,8 @@ import java.io.IOException;
 
 public class WorldGUI {
     public static void initializeConstants() throws IOException{
-        Config config = Config.getInstance();
         SimulationPresenter presenter = SimulationPresenter.getInstance();
-
+        Config config = Config.getInstance();
         config.set("MAP_WIDTH", (int) presenter.mapWidthSlider.getValue());
         config.set("MAP_HEIGHT", (int) presenter.mapHeightSlider.getValue());
         config.set("GRASSES_AMOUNT", (int) presenter.grassesAmountSlider.getValue());
@@ -32,7 +31,9 @@ public class WorldGUI {
 
     public static void main(String[] args) {
         try {
-            Config.getInstance().load();
+            Config config = Config.getInstance();
+            config.initialize("config.properties");
+            config.load();
         } catch (IOException e) {
             System.err.println("Failed to load configuration: " + e.getMessage());
         }

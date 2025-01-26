@@ -3,6 +3,7 @@ package agh.ics.oop.integration;
 import agh.ics.oop.WorldGUI;
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.exceptions.CopulationFailedException;
+import agh.ics.oop.model.util.Config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +14,9 @@ import static org.mockito.Mockito.*;
 import java.util.*;
 
 class CopulationTest {
-
+    private int GENOME_LENGTH;
+    private int BREEDING_COST;
+    private int BREEDING_THRESHOLD;
     private Copulation copulation;
     private GrassField grassField;
     private AnimalFamilyTree familyTree;
@@ -22,12 +25,16 @@ class CopulationTest {
     @BeforeEach
     void setUp() throws NoSuchFieldException, IllegalAccessException{
         position = new Vector2d(2, 3); // przykładowa pozycja
+        Config.getInstance().set("GRASSES_AMOUNT", 10);
         grassField = new NormalGrassField(10,10,10); // przykładowa wielkość
         familyTree = new AnimalFamilyTree();
-        GENOME_LENGTH = 50;
-        BREEDING_COST = 10;
-        BREEDING_THRESHOLD = 20;
+        Config.getInstance().set("GENOME_LENGTH", 50);
+        Config.getInstance().set("BREEDING_COST", 10);
+        Config.getInstance().set("BREEDING_THRESHOLD",20);
 
+        GENOME_LENGTH = Config.getInstance().getInt("GENOME_LENGTH");
+        BREEDING_COST = Config.getInstance().getInt("BREEDING_COST");
+        BREEDING_THRESHOLD = Config.getInstance().getInt("BREEDING_THRESHOLD");
     }
 
     @Test
@@ -76,9 +83,10 @@ class CopulationTest {
         // Given
         int energyParent1 = BREEDING_COST;
         int energyParent2 = 4*BREEDING_COST;
+        copulation = new Copulation(position, grassField, familyTree);
 
         // When
-        int crossoverIndex = Copulation.findCrossoverIndex(energyParent1, energyParent2);
+        int crossoverIndex = copulation.findCrossoverIndex(energyParent1, energyParent2);
 
         // Then
         double expectedRatio = (double) energyParent1 / (energyParent1 + energyParent2);

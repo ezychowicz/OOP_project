@@ -11,30 +11,15 @@ import java.util.stream.IntStream;
 import static agh.ics.oop.WorldGUI.*;
 
 public class Copulation {
-    /*
-    Rozmnażanie jest zwykle najciekawszą częścią każdej symulacji ze zwierzakami. Zdrowe młode może mieć
-    tylko zdrowa para rodziców, dlatego nasze zwierzaki będą się rozmnażać tylko jeśli mają odpowiednią ilość energii.
-    Przy reprodukcji rodzice tracą na rzecz młodego pewną część swojej energii - ta energia będzie rónocześnie stanowić
-    startową energię ich potomka.
-    Urodzone zwierzę otrzymuje genotyp będący krzyżówką genotypów rodziców. Udział genów jest proporcjonalny do
-    energii rodziców i wyznacza miejsce podziału genotypu. Przykładowo, jeśli jeden rodzic ma 50, a drugi 150
-    punktów energii, to dziecko otrzyma 25% genów pierwszego oraz 75% genów drugiego rodzica. Udział ten określa
-    miejsce przecięcia genotypu, przyjmując, że geny są uporządkowane. W pierwszym kroku losowana jest strona
-    genotypu, z której zostanie wzięta część osobnika silniejszego, np. prawa. W tym przypadku dziecko
-    otrzymałoby odcinek obejmujący 25% lewych genów pierwszego rodzica oraz 75% prawych genów drugiego rodzica.
-    Jeśli jednak wylosowana byłaby strona lewa, to dziecko otrzymałoby 75% lewych genów silniejszego osobnika oraz
-    25% prawych genów. Na koniec mają zaś miejsce mutacje: losowa liczba (wybranych również losowo) genów potomka
-    zmienia swoje wartości na zupełnie nowe.
-    * */
     private final Vector2d position;
     private final GrassField grassField;
     private final AnimalFamilyTree familyTree;
     private final Randomizer randomizer;
 
-    private final Config config = Config.getInstance();
+    Config config = Config.getInstance();
     private final int GENOME_LENGTH = config.getInt("GENOME_LENGTH");
     private final int BREEDING_THRESHOLD = config.getInt("BREEDING_THRESHOLD");
-
+    private final int BREEDING_COST = config.getInt("BREEDING_COST");
     public Copulation(Vector2d position, GrassField grassField, AnimalFamilyTree familyTree, Randomizer randomizer) {
         this.position = position;
         this.grassField = grassField;

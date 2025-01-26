@@ -1,24 +1,31 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.util.Config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static agh.ics.oop.WorldGUI.GENOME_LENGTH;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CrazyBehaviourTest {
     private GrassField grassField;
     private CrazyBehaviour crazyBehaviour;
-    private Vector2d position;
     private Animal animal;
     @BeforeEach
     void setUp() {
-        GENOME_LENGTH = 7;
-        position = new Vector2d(2, 3);
-        animal = new Animal(position, null, null, List.of(0, 1, 2, 3, 4, 5));
+        Config.resetForTests();
+        Config config = Config.getInstance();
+        config.initialize("crazybehaviourtest.properties");
+        try {
+            config.load();
+        } catch (IOException e) {
+            System.err.println("Failed to load configuration: " + e.getMessage());
+        }
+        animal = new Animal(new Vector2d(2, 3), null, null, List.of(0, 1, 2, 3, 4, 5));
     }
 
     @Test

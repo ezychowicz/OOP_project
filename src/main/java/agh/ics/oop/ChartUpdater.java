@@ -39,6 +39,7 @@ public class ChartUpdater {
         if (followedAnimalId != animal.getId()) {
             currData = new LinkedList<>();
             followedAnimalId = animal.getId();
+            dataSize = 0;
         }
 
         if (dataSize > 100){ //tylko dodaj dane

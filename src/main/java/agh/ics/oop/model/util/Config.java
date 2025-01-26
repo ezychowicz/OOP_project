@@ -3,10 +3,12 @@ package agh.ics.oop.model.util;
 import java.io.*;
 import java.util.Properties;
 
+
+
 public class Config {
     private static Config instance;
     private final Properties properties;
-    private static final String CONFIG_FILE = "src/main/resources/config.properties";
+    private String configFile;
 
     private Config() {
         properties = new Properties();
@@ -17,6 +19,13 @@ public class Config {
             instance = new Config();
         }
         return instance;
+    }
+
+    public void initialize(String fileName) {
+        if (this.configFile != null) {
+            throw new IllegalStateException("Singleton is already initialized");
+        }
+        this.configFile = String.format("%s%s%s%s%s%s%s%s%s", "src", File.separator, "main",File.separator, "resources", File.separator, "configs", File.separator, fileName);
     }
 
     public int getInt(String key) {
@@ -36,14 +45,18 @@ public class Config {
     }
 
     public void load() throws IOException {
-        try (InputStream input = new FileInputStream(CONFIG_FILE)) {
+        try (InputStream input = new FileInputStream(configFile)) {
             properties.load(input);
         }
     }
 
     public void save() throws IOException {
-        try (OutputStream output = new FileOutputStream(CONFIG_FILE)) {
+        try (OutputStream output = new FileOutputStream(configFile)) {
             properties.store(output, "Simulation Configuration");
         }
+    }
+
+    public static void resetForTests() {
+        instance = null;
     }
 }
