@@ -19,6 +19,7 @@
 <?import javafx.scene.chart.XYChart?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.layout.StackPane?>
 <BorderPane minHeight="770.0" minWidth="1100.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.presenter.SimulationPresenter">
     <!-- Top MenuBar -->
     <top>
@@ -262,13 +263,21 @@
 
     <!-- Center - GridPane for map -->
     <center>
-        <VBox>
-            <!-- Map GridPane -->
-            <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true" prefHeight="400.0" />
+        <VBox alignment="CENTER" prefHeight="600.0" prefWidth="800.0" maxHeight="600.0" maxWidth="800.0" fillWidth="false">
+            <StackPane maxWidth="400.0" maxHeight="400.0">
+                <GridPane fx:id="mapGrid"
+                          alignment="CENTER"
+                          gridLinesVisible="true"
+                          prefHeight="400.0"
+                          prefWidth="400.0"
+                          maxWidth="400.0"
+                          maxHeight="400.0"
+                          VBox.vgrow="NEVER" />
+            </StackPane>
 
-            <!-- XYChart below the map -->
-            <LineChart fx:id="chart" prefHeight="200.0" prefWidth="800.0">
-                <!-- Define axes -->
+            <LineChart fx:id="chart"
+                       prefHeight="200.0"
+                       prefWidth="800.0">
                 <xAxis>
                     <NumberAxis label="Day" />
                 </xAxis>

@@ -197,11 +197,11 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
     }
 
     private void constructAxes(){
-        Label cell = new Label("y/x");
-        GridPane.setHalignment(cell, HPos.CENTER); // Wyrównanie poziome
-        GridPane.setValignment(cell, VPos.CENTER); // Wyrównanie pionowe
-        cell.setFont(Font.font("System", FontWeight.BOLD, 14));
-        mapGrid.add(cell, 0, 0);
+//        Label cell = new Label();
+//        GridPane.setHalignment(cell, HPos.CENTER); // Wyrównanie poziome
+//        GridPane.setValignment(cell, VPos.CENTER); // Wyrównanie pionowe
+//        cell.setFont(Font.font("System", FontWeight.BOLD, 14));
+//        mapGrid.add(cell, 0, 0);
         lowerLeft = ((AbstractWorldMap) worldMap).getLowerLeftBoundary();
         upperRight = ((AbstractWorldMap) worldMap).getUpperRightBoundary();
         int cols = calculateColsCnt();
@@ -223,26 +223,33 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
             GridPane.setHalignment(cellR, HPos.CENTER); // Wyrównanie poziome
             GridPane.setValignment(cellR, VPos.CENTER); // Wyrównanie pionowe
             cellR.setFont(Font.font("System", FontWeight.BOLD, 14));
-            mapGrid.add(cellR, 0,  i);
+//            mapGrid.add(cellR, 0,  i);
         }
         for (int i = 0; i < cols - 1; i++) {
             Label cellC = new Label("%d".formatted(i + lowerLeft.getX()));
             GridPane.setHalignment(cellC, HPos.CENTER); // Wyrównanie poziome
             GridPane.setValignment(cellC, VPos.CENTER); // Wyrównanie pionowe
             cellC.setFont(Font.font("System", FontWeight.BOLD, 14));
-            mapGrid.add(cellC, i+1, 0);
+//            mapGrid.add(cellC, i+1, 0);
         }
     }
 
-    private void fillMapGrid(){
+    private void fillMapGrid() {
         int cols = calculateColsCnt();
         int rows = calculateRowsCnt();
+
+        // Calculate image size dynamically based on grid size (400px total width/height)
+        double cellWidth = 400.0 / cols;
+        double cellHeight = 400.0 / rows;
+
         int minX = lowerLeft.getX();
         int minY = lowerLeft.getY();
+
         for (int i = minX; i < minX + cols - 1; i++) {
             for (int j = minY; j < minY + rows - 1; j++) {
                 Vector2d pos = new Vector2d(i, j);
                 StackPane cellBackground = new StackPane();
+
                 if (COLORING) {
                     if (toColorPos.contains(pos)) {
                         Color lessIntenseColor = Color.LIGHTBLUE.deriveColor(0, 1, 1, 0.5);
@@ -253,44 +260,44 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
                         cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor, null, null)));
                     }
                 }
-                if(worldMap.isOccupied(pos)){
-                    Object object=worldMap.objectAt(pos);
-                    if(object instanceof Animal){
-                        ImageView animalImageView=getAnimalImageView((Animal) object);
-                        GridPane.setHalignment(animalImageView,HPos.CENTER);
-                        GridPane.setValignment(animalImageView,VPos.CENTER);
+
+                if (worldMap.isOccupied(pos)) {
+                    Object object = worldMap.objectAt(pos);
+                    if (object instanceof Animal) {
+                        ImageView animalImageView = getAnimalImageView((Animal) object, cellWidth, cellHeight);
+                        GridPane.setHalignment(animalImageView, HPos.CENTER);
+                        GridPane.setValignment(animalImageView, VPos.CENTER);
                         cellBackground.getChildren().add(animalImageView);
-                        // todo ogarnac zeby od razu sie odkolorowywal poprzedni animal, moze zrobic osobna funkcje ktora zrefreshuje backgroundy
+
                         animalImageView.setOnMouseClicked(event -> {
-                            // todo cos mi sie nie podoba to ogladanie animala, raz gdzies przekazuje id raz samego zwierzaka pochylic sie nad tym
                             day.setWatchedAnimalId(((Animal) object).getId());
                             updateAnimalInfo((Animal) object);
-                            if (COLORING){
-                                Color lessIntenseColor=Color.LIGHTGREEN.deriveColor(0,1,1,0.5);
-                                cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor,null,null)));
+                            if (COLORING) {
+                                Color lessIntenseColor = Color.LIGHTGREEN.deriveColor(0, 1, 1, 0.5);
+                                cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor, null, null)));
                             }
                         });
-                    } else if(object instanceof Grass){
+                    } else if (object instanceof Grass) {
                         ImageView grassImageView = new ImageView(grassImageResource);
-                        grassImageView.setFitWidth(40);
-                        grassImageView.setFitHeight(40);
-                        GridPane.setHalignment(grassImageView,HPos.CENTER);
-                        GridPane.setValignment(grassImageView,VPos.CENTER);
+                        grassImageView.setFitWidth(cellWidth);
+                        grassImageView.setFitHeight(cellHeight);
+                        GridPane.setHalignment(grassImageView, HPos.CENTER);
+                        GridPane.setValignment(grassImageView, VPos.CENTER);
                         cellBackground.getChildren().add(grassImageView);
                     }
-                    mapGrid.add(cellBackground,i - minX + 1,(rows - 1) - (j - minY));
+                    mapGrid.add(cellBackground, i - minX + 1, (rows - 1) - (j - minY));
                 }
             }
         }
     }
 
-    //brzydka logika przerzucona do metody
-    private ImageView getAnimalImageView(Animal object){
+    // Update the method to accept dynamic width and height for image
+    private ImageView getAnimalImageView(Animal object, double cellWidth, double cellHeight) {
         ImageView animalImageView = new ImageView(animalImageResource);
-        animalImageView.setFitWidth(40);
-        animalImageView.setFitHeight(40);
+        animalImageView.setFitWidth(cellWidth);
+        animalImageView.setFitHeight(cellHeight);
         MapDirection direction = object.getDirection();
-        double angle=switch(direction){
+        double angle = switch (direction) {
             case NORTH -> 0;
             case EAST -> 90;
             case SOUTH -> 180;
