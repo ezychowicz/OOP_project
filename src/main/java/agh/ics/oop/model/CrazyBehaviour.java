@@ -1,13 +1,16 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.util.Config;
 import agh.ics.oop.model.util.MathUtils;
 
 import java.util.Random;
 
-import static agh.ics.oop.WorldGUI.GENOME_LENGTH;
+
 
 public class CrazyBehaviour extends NormalBehaviour {
     private final Randomizer randomizer;
+    private final Config config = Config.getInstance();
+    private final int GENOME_LENGTH = config.getInt("GENOME_LENGTH");
     private final double boringProbability;
     public CrazyBehaviour() {
         super();
@@ -20,7 +23,6 @@ public class CrazyBehaviour extends NormalBehaviour {
         this.randomizer = randomizer;
         this.boringProbability = boringProbability;
     }
-
     @Override
     public int nextGeneIdx(Animal animal) {
         String behaviour = MathUtils.nonClassicalProbabilityRandom("boring", boringProbability,"crazy",1 - boringProbability);

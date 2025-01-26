@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.exceptions.CopulationFailedException;
+import agh.ics.oop.model.util.Config;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -29,6 +30,11 @@ public class Copulation {
     private final GrassField grassField;
     private final AnimalFamilyTree familyTree;
     private final Randomizer randomizer;
+
+    private final Config config = Config.getInstance();
+    private final int GENOME_LENGTH = config.getInt("GENOME_LENGTH");
+    private final int BREEDING_THRESHOLD = config.getInt("BREEDING_THRESHOLD");
+
     public Copulation(Vector2d position, GrassField grassField, AnimalFamilyTree familyTree, Randomizer randomizer) {
         this.position = position;
         this.grassField = grassField;
@@ -39,7 +45,6 @@ public class Copulation {
     public Copulation(Vector2d position, GrassField grassField, AnimalFamilyTree familyTree) {
         this(position, grassField, familyTree, new NonDeterministicRandomGenerator());
     }
-
     private List<Animal> pairPartners() {
         List<Animal> animalsAtPos = grassField.getAnimalsAt(position);
         Animal winner1 = grassField.resolveConflict(grassField.getAnimalsAt(position));
@@ -49,7 +54,7 @@ public class Copulation {
         return List.of(winner1, winner2);
     }
 
-    public static int findCrossoverIndex(int energyParent1, int energyParent2) {
+    public int findCrossoverIndex(int energyParent1, int energyParent2) {
         int totalEnergy = energyParent1 + energyParent2;
         if (totalEnergy == 0) {
             throw new IllegalArgumentException("Energy values cannot both be zero.");

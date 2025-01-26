@@ -4,6 +4,7 @@ import agh.ics.oop.ChartUpdater;
 import agh.ics.oop.Day;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
+import agh.ics.oop.model.util.Config;
 import agh.ics.oop.model.util.ImportStats;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -11,6 +12,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.chart.LineChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -20,20 +22,22 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import javax.swing.*;
-import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 import static agh.ics.oop.WorldGUI.*;
 
 public class SimulationPresenter implements MapChangeListener, DayObserver {
 
-    private final Image animalImageResource = new Image(Objects.requireNonNull(getClass().getResource("/icons/animal.png")).toExternalForm());
-    private final Image grassImageResource = new Image(Objects.requireNonNull(getClass().getResource("/icons/grass.png")).toExternalForm());
+    private final Image animalImageResource = new Image(Objects.requireNonNull(getClass().getResource("/icons/rat2.png")).toExternalForm());
+    private final Image grassImageResource = new Image(Objects.requireNonNull(getClass().getResource("/icons/bush.png")).toExternalForm());
+    public Button saveConfigButton;
+    public Button loadConfigButton;
+
 
     private WorldMap worldMap;
     private SimulationEngine simEngine;
@@ -172,6 +176,76 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         });
     }
 
+    private final Config config = Config.getInstance();
+    int MAP_WIDTH = config.getInt("MAP_WIDTH");
+    int MAP_HEIGHT = config.getInt("MAP_HEIGHT");
+    boolean COLORING = config.getBoolean("COLORING");
+
+    // Save Configurations to File
+    public void handleSaveConfig() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Configuration");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Properties Files", "*.properties"));
+        File file = fileChooser.showSaveDialog(new Stage());
+
+        if (file != null) {
+            try (OutputStream output = new FileOutputStream(file)) {
+                Properties config = new Properties();
+                config.setProperty("mapWidth", String.valueOf(mapWidthSlider.getValue()));
+                config.setProperty("mapHeight", String.valueOf(mapHeightSlider.getValue()));
+                config.setProperty("grassesAmount", String.valueOf(grassesAmountSlider.getValue()));
+                config.setProperty("energyOnConsumption", String.valueOf(energyOnConsumptionSlider.getValue()));
+                config.setProperty("grassGrowthEachDay", String.valueOf(grassGrowthEachDaySlider.getValue()));
+                config.setProperty("animalsAmount", String.valueOf(animalsAmountSlider.getValue()));
+                config.setProperty("initialAnimalEnergy", String.valueOf(initialAnimalEnergySlider.getValue()));
+                config.setProperty("breedingThreshold", String.valueOf(breedingThresholdSlider.getValue()));
+                config.setProperty("breedingCost", String.valueOf(breedingCostSlider.getValue()));
+                config.setProperty("genomeLength", String.valueOf(genomeLengthSlider.getValue()));
+                config.setProperty("saveToCsv", String.valueOf(excelCheckBox.isSelected()));
+                config.setProperty("sprawlingJungle", String.valueOf(sprawlingJungleCheckBox.isSelected()));
+                config.setProperty("aPinchOfInsanity", String.valueOf(aPinchOfInsanityCheckBox.isSelected()));
+                config.setProperty("coloring", String.valueOf(coloringCheckbox.isSelected()));
+
+                config.store(output, "Simulation Configuration");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Load Configurations from File
+    public void handleLoadConfig() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load Configuration");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Properties Files", "*.properties"));
+        File file = fileChooser.showOpenDialog(new Stage());
+
+        if (file != null) {
+            try (InputStream input = new FileInputStream(file)) {
+                Properties config = new Properties();
+                config.load(input);
+
+                mapWidthSlider.setValue(Double.parseDouble(config.getProperty("mapWidth", "10")));
+                mapHeightSlider.setValue(Double.parseDouble(config.getProperty("mapHeight", "10")));
+                grassesAmountSlider.setValue(Double.parseDouble(config.getProperty("grassesAmount", "10")));
+                energyOnConsumptionSlider.setValue(Double.parseDouble(config.getProperty("energyOnConsumption", "10")));
+                grassGrowthEachDaySlider.setValue(Double.parseDouble(config.getProperty("grassGrowthEachDay", "10")));
+                animalsAmountSlider.setValue(Double.parseDouble(config.getProperty("animalsAmount", "10")));
+                initialAnimalEnergySlider.setValue(Double.parseDouble(config.getProperty("initialAnimalEnergy", "10")));
+                breedingThresholdSlider.setValue(Double.parseDouble(config.getProperty("breedingThreshold", "10")));
+                breedingCostSlider.setValue(Double.parseDouble(config.getProperty("breedingCost", "10")));
+                genomeLengthSlider.setValue(Double.parseDouble(config.getProperty("genomeLength", "10")));
+                excelCheckBox.setSelected(Boolean.parseBoolean(config.getProperty("saveToCsv", "false")));
+                aPinchOfInsanityCheckBox.setSelected(Boolean.parseBoolean(config.getProperty("aPinchOfInsanity", "false")));
+                sprawlingJungleCheckBox.setSelected(Boolean.parseBoolean(config.getProperty("sprawlingJungle", "false")));
+                coloringCheckbox.setSelected(Boolean.parseBoolean(config.getProperty("coloring", "false")));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public void mapChanged(WorldMap map, String message) {
         this.setWorldMap(map);
@@ -180,8 +254,8 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         });
     }
 
-    private Vector2d lowerLeft;
-    private Vector2d upperRight;
+    private Vector2d lowerLeft = new Vector2d(-1, -1);
+    private Vector2d upperRight = new Vector2d(MAP_WIDTH, MAP_HEIGHT);
     private Vector2d toColorAnimalPos = new Vector2d(-1, -1);
     private Set<Vector2d> toColorPos = new HashSet<>();
 
@@ -197,11 +271,11 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
     }
 
     private void constructAxes(){
-        Label cell = new Label("y/x");
-        GridPane.setHalignment(cell, HPos.CENTER); // Wyrównanie poziome
-        GridPane.setValignment(cell, VPos.CENTER); // Wyrównanie pionowe
-        cell.setFont(Font.font("System", FontWeight.BOLD, 14));
-        mapGrid.add(cell, 0, 0);
+//        Label cell = new Label();
+//        GridPane.setHalignment(cell, HPos.CENTER); // Wyrównanie poziome
+//        GridPane.setValignment(cell, VPos.CENTER); // Wyrównanie pionowe
+//        cell.setFont(Font.font("System", FontWeight.BOLD, 14));
+//        mapGrid.add(cell, 0, 0);
         lowerLeft = ((AbstractWorldMap) worldMap).getLowerLeftBoundary();
         upperRight = ((AbstractWorldMap) worldMap).getUpperRightBoundary();
         int cols = calculateColsCnt();
@@ -223,26 +297,38 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
             GridPane.setHalignment(cellR, HPos.CENTER); // Wyrównanie poziome
             GridPane.setValignment(cellR, VPos.CENTER); // Wyrównanie pionowe
             cellR.setFont(Font.font("System", FontWeight.BOLD, 14));
-            mapGrid.add(cellR, 0,  i);
+//            mapGrid.add(cellR, 0,  i);
         }
         for (int i = 0; i < cols - 1; i++) {
             Label cellC = new Label("%d".formatted(i + lowerLeft.getX()));
             GridPane.setHalignment(cellC, HPos.CENTER); // Wyrównanie poziome
             GridPane.setValignment(cellC, VPos.CENTER); // Wyrównanie pionowe
             cellC.setFont(Font.font("System", FontWeight.BOLD, 14));
-            mapGrid.add(cellC, i+1, 0);
+//            mapGrid.add(cellC, i+1, 0);
         }
     }
 
-    private void fillMapGrid(){
+    private void fillMapGrid() {
         int cols = calculateColsCnt();
         int rows = calculateRowsCnt();
+
+        // Calculate image size dynamically based on grid size (400px total width/height)
+        double cellWidth = 400.0 / cols;
+        double cellHeight = 400.0 / rows;
+
         int minX = lowerLeft.getX();
         int minY = lowerLeft.getY();
+
+        COLORING = config.getBoolean("COLORING");
+
         for (int i = minX; i < minX + cols - 1; i++) {
             for (int j = minY; j < minY + rows - 1; j++) {
                 Vector2d pos = new Vector2d(i, j);
                 StackPane cellBackground = new StackPane();
+                Color groundGreen = Color.LIGHTGOLDENRODYELLOW;
+                cellBackground.setBackground(new Background(new BackgroundFill(groundGreen, null, null)));
+
+
                 if (COLORING) {
                     if (toColorPos.contains(pos)) {
                         Color lessIntenseColor = Color.LIGHTBLUE.deriveColor(0, 1, 1, 0.5);
@@ -253,34 +339,45 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
                         cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor, null, null)));
                     }
                 }
-                if(worldMap.isOccupied(pos)){
-                    Object object=worldMap.objectAt(pos);
-                    if(object instanceof Animal){
-                        ImageView animalImageView=getAnimalImageView((Animal) object);
-                        GridPane.setHalignment(animalImageView,HPos.CENTER);
-                        GridPane.setValignment(animalImageView,VPos.CENTER);
+
+                if (worldMap.isOccupied(pos)) {
+                    Object object = worldMap.objectAt(pos);
+                    if (object instanceof Animal) {
+                        ImageView animalImageView = getAnimalImageView((Animal) object, cellWidth, cellHeight);
+                        GridPane.setHalignment(animalImageView, HPos.CENTER);
+                        GridPane.setValignment(animalImageView, VPos.CENTER);
                         cellBackground.getChildren().add(animalImageView);
-                    } else if(object instanceof Grass){
+
+                        animalImageView.setOnMouseClicked(event -> {
+                            day.setWatchedAnimalId(((Animal) object).getId());
+                            updateAnimalInfo((Animal) object);
+                            if (COLORING) {
+                                Color lessIntenseColor = Color.LIGHTGREEN.deriveColor(0, 1, 1, 0.5);
+                                cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor, null, null)));
+                            }
+                        });
+                    } else if (object instanceof Grass) {
                         ImageView grassImageView = new ImageView(grassImageResource);
-                        grassImageView.setFitWidth(40);
-                        grassImageView.setFitHeight(40);
-                        GridPane.setHalignment(grassImageView,HPos.CENTER);
-                        GridPane.setValignment(grassImageView,VPos.CENTER);
+                        grassImageView.setFitWidth(cellWidth);
+                        grassImageView.setFitHeight(cellHeight);
+                        GridPane.setHalignment(grassImageView, HPos.CENTER);
+                        GridPane.setValignment(grassImageView, VPos.CENTER);
                         cellBackground.getChildren().add(grassImageView);
                     }
-                    mapGrid.add(cellBackground,i - minX + 1,(rows - 1) - (j - minY));
+
                 }
+                mapGrid.add(cellBackground, i - minX + 1, (rows - 1) - (j - minY));
             }
         }
     }
 
-    //brzydka logika przerzucona do metody
-    private ImageView getAnimalImageView(Animal object){
+    // Update the method to accept dynamic width and height for image
+    private ImageView getAnimalImageView(Animal object, double cellWidth, double cellHeight) {
         ImageView animalImageView = new ImageView(animalImageResource);
-        animalImageView.setFitWidth(40);
-        animalImageView.setFitHeight(40);
+        animalImageView.setFitWidth(cellWidth);
+        animalImageView.setFitHeight(cellHeight);
         MapDirection direction = object.getDirection();
-        double angle=switch(direction){
+        double angle = switch (direction) {
             case NORTH -> 0;
             case EAST -> 90;
             case SOUTH -> 180;
@@ -299,7 +396,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         clearGrid();
         constructAxes();
         fillMapGrid();
-        mapGrid.setGridLinesVisible(true);
+        mapGrid.setGridLinesVisible(false);
     }
 
     private void clearGrid() {
@@ -325,7 +422,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
 
     // Zacznij nowa symulacje - zamiast initializesim - nie wiem czy mozemy usunac initializeSim, tu to jest troche inaczej zrobione
     @FXML
-    public void startNewSim() {
+    public void startNewSim() throws IOException{
         // jesli trzeba - zatrzymaj symulacje
         if (simEngine != null) {
             simEngine.pause();  // zatrzymaj symulacje
@@ -333,6 +430,13 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         }
 
         initializeConstants(); // zczytaj statiki
+        int MAP_WIDTH = config.getInt("MAP_WIDTH");
+        int MAP_HEIGHT = config.getInt("MAP_HEIGHT");
+        int GRASSES_AMOUNT = config.getInt("GRASSES_AMOUNT");
+        boolean A_PINCH_OF_INSANITY = config.getBoolean("A_PINCH_OF_INSANITY");
+        boolean SPRAWLING_JUNGLE = config.getBoolean("SPRAWLING_JUNGLE");
+        boolean SAVE_TO_CSV = config.getBoolean("SAVE_TO_CSV");
+        boolean COLORING = config.getBoolean("COLORING");
         GrassField grassF;
         if (SPRAWLING_JUNGLE) {
             grassF = new SprawlingJungle(GRASSES_AMOUNT, MAP_WIDTH, MAP_HEIGHT);
