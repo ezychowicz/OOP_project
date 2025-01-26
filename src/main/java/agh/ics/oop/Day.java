@@ -38,6 +38,7 @@ public class Day {
         this.animalBehaviour = animalBehaviour;
     }
 
+
     public void addObserver(DayObserver observer) {
         observers.add(observer);
     }
@@ -135,13 +136,7 @@ public class Day {
         }
     }
 
-    private void addAnimalAtPos(Map<Vector2d, List<Animal>> animals, Animal newAnimal, Vector2d position){
-        if (!animals.containsKey(position)) {
-            animals.put(position, new ArrayList<>());
-        }
-        animals.get(position).add(newAnimal);
 
-    }
     private Map<Vector2d,List<Animal>> updateAnimalsPositions(AnimalBehaviour behaviour) throws IncorrectPositionException{
         Map<Vector2d,List<Animal>> newAnimals =  new HashMap<>();
         for (List<Animal> animalsAtPos : animals.values()){
@@ -149,7 +144,7 @@ public class Day {
                 animal.move(MoveDirection.geneToDirection(animal.getGenomeAtIdx(behaviour.nextGeneIdx(animal))), grassField);
                 System.out.println("id zwierzaka: " + animal.getId() + ", energia: " + animal.getEnergy());
                 //to jest okropne. demeter zawiedziona
-                addAnimalAtPos(newAnimals, animal, animal.getPos());
+                grassField.addAnimalAtPos(newAnimals, animal, animal.getPos());
             }
         }
         return newAnimals;

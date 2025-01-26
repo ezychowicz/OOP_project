@@ -9,7 +9,11 @@ public class AnimalFamilyTree {
     private final Map<Integer, Set<Integer>> descendants = new HashMap<>(); // rodzic -> dzieci
 
     public void registerParentChild(int parentId, int childId) {
+        if (parentId == childId){
+            throw new IllegalArgumentException("Parent id and child id are the same");
+        }else{
         descendants.computeIfAbsent(parentId, k -> new HashSet<>()).add(childId);
+        }
     }
 
     public Set<Integer> getDescendants(int animalId) {

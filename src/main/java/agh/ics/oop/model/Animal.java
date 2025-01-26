@@ -23,7 +23,7 @@ public class Animal implements WorldElement{
 
     private List<Integer> initializeGenome() {
         /*
-        na razie po prostu tworzy losową wariacje o dlugosci GENOME_LENGTH
+        tworzy losową wariacje o dlugosci GENOME_LENGTH
          */
         Random random = new Random();
         List<Integer> genome = new ArrayList<>();
@@ -33,7 +33,6 @@ public class Animal implements WorldElement{
         return genome;
     }
 
-    //nowy konstruktor docelowo ten pierwszy zostanie usuniety ale zeby nie zepsuc wszystkiego na razie jest tak
     public Animal(Vector2d startPosition){
         this.direction = MapDirection.NORTH;
         this.pos = startPosition;
@@ -57,9 +56,7 @@ public class Animal implements WorldElement{
         this.descendantsCnt = 0;
     }
 
-    public Animal() {
-        this(new Vector2d(2,2));
-    }
+
     @Override
     public String toString() {
         return switch(direction){

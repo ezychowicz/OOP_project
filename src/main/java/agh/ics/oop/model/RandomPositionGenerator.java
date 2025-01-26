@@ -29,20 +29,6 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
     }
 
 
-//    private String nonClassicalProbabilityRandom(String value1, double prob1, String value2, double prob2){
-//        if (prob1 + prob2 != 1){
-//            throw new IllegalArgumentException();
-//        }
-//        int convertedProb1 = (int) Math.round(100*prob1);
-//        int convertedProb2 = (int) Math.round(100*prob2);
-//
-//        if (convertedProb1 + convertedProb2 != 100){
-//            throw new IllegalArgumentException("given probabilities are unmappable to 0-100 integers");
-//        }
-//
-//        int randomNum = random.nextInt(100);
-//        return randomNum < convertedProb1 ? value1 : value2;
-//    }
     @Override
     public Iterator<Vector2d> iterator() {
         return new Iterator<Vector2d>(){
@@ -55,9 +41,6 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
             public Vector2d next() {
                 if (!hasNext()) {
                     throw new NoSuchElementException("No grasses left to allocate/no positions available");
-//                    if (preferredIdxs.isEmpty() && unPreferredIdxs.isEmpty()) {
-//                        System.out.println("no positions left to allocate...");
-//                    }
                 }
                 count++;
                 List<Integer> idxsToChoose;

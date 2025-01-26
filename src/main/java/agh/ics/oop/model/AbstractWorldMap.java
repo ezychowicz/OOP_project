@@ -112,7 +112,12 @@ public abstract class AbstractWorldMap implements WorldMap{
         );
         return animals.getLast();
     }
-
+    public void addAnimalAtPos(Map<Vector2d, List<Animal>> animals, Animal newAnimal, Vector2d position){
+        if (!animals.containsKey(position)) {
+            animals.put(position, new ArrayList<>());
+        }
+        animals.get(position).add(newAnimal);
+    }
     public UUID getId(){
         return id;
     }

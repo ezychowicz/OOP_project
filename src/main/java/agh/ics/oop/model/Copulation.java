@@ -7,8 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static agh.ics.oop.WorldGUI.BREEDING_THRESHOLD;
-import static agh.ics.oop.WorldGUI.GENOME_LENGTH;
+import static agh.ics.oop.WorldGUI.*;
 
 public class Copulation {
     /*
@@ -29,11 +28,16 @@ public class Copulation {
     private final Vector2d position;
     private final GrassField grassField;
     private final AnimalFamilyTree familyTree;
-
-    public Copulation(Vector2d position, GrassField grassField, AnimalFamilyTree familyTree) {
+    private final Randomizer randomizer;
+    public Copulation(Vector2d position, GrassField grassField, AnimalFamilyTree familyTree, Randomizer randomizer) {
         this.position = position;
         this.grassField = grassField;
         this.familyTree = familyTree;
+        this.randomizer = randomizer;
+    }
+
+    public Copulation(Vector2d position, GrassField grassField, AnimalFamilyTree familyTree) {
+        this(position, grassField, familyTree, new NonDeterministicRandomGenerator());
     }
 
     private List<Animal> pairPartners() {
@@ -57,17 +61,16 @@ public class Copulation {
 
     private Map<Integer, Integer> createMutation() {
         Map<Integer, Integer> mutationRecipe = new HashMap<>();
-        Random random = new Random();
-        int toMutateCnt = random.nextInt(GENOME_LENGTH + 1);
+        int toMutateCnt = randomizer.nextInt(GENOME_LENGTH + 1);
         if (toMutateCnt == 0) {
             return mutationRecipe;
         }
         List<Integer> allIndices = IntStream.range(0, GENOME_LENGTH)
                 .boxed()
                 .collect(Collectors.toList());
-        Collections.shuffle(allIndices);
+        randomizer.shuffle(allIndices);
         for (int i = 0; i < toMutateCnt; i++) {
-            mutationRecipe.put(allIndices.get(i), random.nextInt(8));
+            mutationRecipe.put(allIndices.get(i), randomizer.nextInt(8));
         }
         return mutationRecipe;
     }
@@ -80,8 +83,7 @@ public class Copulation {
             List<Integer> newGenome = new ArrayList<>();
             Animal dominant = partners.getFirst();
             Animal recessive = partners.getLast();
-            Random random = new Random();
-            int leftOrRight = random.nextInt(2);
+            int leftOrRight = randomizer.nextInt(2);
             if (leftOrRight == 0) { //dla dominujacego osobnika bierzemy lewą strone genomu
                 newGenome.addAll(dominant.getGenome().subList(0, crossIdx));
                 newGenome.addAll(recessive.getGenome().subList(crossIdx, GENOME_LENGTH));
@@ -101,6 +103,8 @@ public class Copulation {
             dominant.ChildrenCntIncrement();
             familyTree.registerParentChild(recessive.getId(), newborn.getId());
             recessive.ChildrenCntIncrement();
+            dominant.updateEnergy(-BREEDING_COST);
+            recessive.updateEnergy(-BREEDING_COST);
             return newborn;
         } else {
             throw new CopulationFailedException("Animals do not have enough energy");
