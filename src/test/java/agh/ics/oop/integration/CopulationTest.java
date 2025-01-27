@@ -11,6 +11,7 @@ import static agh.ics.oop.WorldGUI.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.io.IOException;
 import java.util.*;
 
 class CopulationTest {
@@ -24,14 +25,17 @@ class CopulationTest {
 
     @BeforeEach
     void setUp() throws NoSuchFieldException, IllegalAccessException{
-        position = new Vector2d(2, 3); // przykładowa pozycja
-        Config.getInstance().set("GRASSES_AMOUNT", 10);
-        grassField = new NormalGrassField(10,10,10); // przykładowa wielkość
+        Config.resetForTests();
+        Config config = Config.getInstance();
+        config.initialize("copulationtest.properties");
+        try {
+            config.load();
+        } catch (IOException e) {
+            System.err.println("Failed to load configuration: " + e.getMessage());
+        }
+        position = new Vector2d(2, 3);
+        grassField = new NormalGrassField(10,10,10);
         familyTree = new AnimalFamilyTree();
-        Config.getInstance().set("GENOME_LENGTH", 50);
-        Config.getInstance().set("BREEDING_COST", 10);
-        Config.getInstance().set("BREEDING_THRESHOLD",20);
-
         GENOME_LENGTH = Config.getInstance().getInt("GENOME_LENGTH");
         BREEDING_COST = Config.getInstance().getInt("BREEDING_COST");
         BREEDING_THRESHOLD = Config.getInstance().getInt("BREEDING_THRESHOLD");

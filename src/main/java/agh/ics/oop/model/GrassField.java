@@ -5,7 +5,6 @@ import agh.ics.oop.model.util.Config;
 import agh.ics.oop.model.util.Converter;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 import static agh.ics.oop.model.MapDirection.*;
 
@@ -19,6 +18,18 @@ public abstract class GrassField extends AbstractWorldMap{
     private final List<Vector2d> posList;
     protected final List<List<Integer>> availableIdxs;
     public static final List<Vector2d> ADJACENT = Arrays.asList(NORTH_UNIT_VECTOR, SOUTH_UNIT_VECTOR, WEST_UNIT_VECTOR, EAST_UNIT_VECTOR, SOUTHEAST_UNIT_VECTOR, SOUTHWEST_UNIT_VECTOR, NORTHWEST_UNIT_VECTOR, NORTHEAST_UNIT_VECTOR);
+    public static final List<Vector2d> ADJACENT_NORTH;
+    public static final List<Vector2d> ADJACENT_SOUTH;
+    static {
+        ADJACENT_NORTH = new ArrayList<>(ADJACENT);
+        ADJACENT_SOUTH = new ArrayList<>(ADJACENT);
+        ADJACENT_NORTH.remove(NORTH_UNIT_VECTOR);
+        ADJACENT_NORTH.remove(NORTHEAST_UNIT_VECTOR);
+        ADJACENT_NORTH.remove(NORTHWEST_UNIT_VECTOR);
+        ADJACENT_SOUTH.remove(SOUTH_UNIT_VECTOR);
+        ADJACENT_SOUTH.remove(SOUTHWEST_UNIT_VECTOR);
+        ADJACENT_SOUTH.remove(SOUTHEAST_UNIT_VECTOR);
+    }
     protected final CumulativePreferences cumulativePrefs;
     private final Config config = Config.getInstance();
     private final int GRASSES_AMOUNT = config.getInt("GRASSES_AMOUNT");
@@ -135,10 +146,12 @@ public abstract class GrassField extends AbstractWorldMap{
         return new Boundary(new Vector2d(0,0), new Vector2d(width, height));
     }
 
-    public List<Vector2d> getPrefferedPositions(){
+    public List<Vector2d> getPreferredPositions(){
         return preferredSet.stream().map(idx -> Converter.convertFromIdx(idx, MAP_WIDTH)).toList();
     }
-
+    public List<Vector2d> getUnpreferredPositions(){
+        return unpreferredSet.stream().map(idx -> Converter.convertFromIdx(idx, MAP_WIDTH)).toList();
+    }
     public Map<Vector2d, Grass> getGrasses() {
         return grasses;
     }
@@ -167,5 +180,17 @@ public abstract class GrassField extends AbstractWorldMap{
             }
         }
         return freeFields;
+    }
+
+    public List<Vector2d> getAdjacent(Vector2d position){
+        List<Vector2d> adjacent;
+        if (position.getY() == this.getHeight() - 1){
+            adjacent = ADJACENT_NORTH;
+        }else if (position.getY() == 0){
+            adjacent = ADJACENT_SOUTH;
+        }else{
+            adjacent = ADJACENT;
+        }
+        return adjacent;
     }
 }

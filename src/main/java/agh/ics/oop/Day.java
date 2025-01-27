@@ -54,7 +54,7 @@ public class Day {
         }
     }
 
-    public void dayProcedure() throws IncorrectPositionException{
+    public void dayProcedure() throws IncorrectPositionException{ //
         System.out.println("Dzien: " + dayCnt);
         //usuwanie martwych zwierzat z animals i codzienne redukowanie energii
         updateAnimalsState();
@@ -119,7 +119,7 @@ public class Day {
                     animal.setDeathDay(dayCnt);
                 }
                 else{
-                    animal.DaysOldIncrement();
+                    animal.daysOldIncrement();
                 }
             }
 
@@ -141,7 +141,7 @@ public class Day {
     }
 
 
-    private Map<Vector2d,List<Animal>> updateAnimalsPositions(AnimalBehaviour behaviour) throws IncorrectPositionException{
+    private Map<Vector2d,List<Animal>> updateAnimalsPositions(AnimalBehaviour behaviour){
         Map<Vector2d,List<Animal>> newAnimals =  new HashMap<>();
         for (List<Animal> animalsAtPos : animals.values()){
             for (Animal animal : animalsAtPos){

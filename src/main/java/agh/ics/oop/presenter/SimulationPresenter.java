@@ -25,7 +25,6 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
@@ -481,7 +480,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
             averageEnergyLabel.setText(String.format("%.2f", day.getAverageEnergy()));
             averageLifespanLabel.setText(String.format("%.2f", day.getAverageLifespan()));
             averageChildrenLabel.setText(String.format("%.2f", day.getAverageChildren()));
-            toColorPos = new HashSet<>(((GrassField) worldMap).getPrefferedPositions());
+            toColorPos = new HashSet<>(((GrassField) worldMap).getPreferredPositions());
         });
     }
 

@@ -90,9 +90,9 @@ public class Copulation {
 
             Animal newborn = new Animal(position, dominant, recessive, newGenome);
             familyTree.registerParentChild(dominant.getId(), newborn.getId());
-            dominant.ChildrenCntIncrement();
+            dominant.childrenCntIncrement();
             familyTree.registerParentChild(recessive.getId(), newborn.getId());
-            recessive.ChildrenCntIncrement();
+            recessive.childrenCntIncrement();
             dominant.updateEnergy(-BREEDING_COST);
             recessive.updateEnergy(-BREEDING_COST);
             return newborn;

@@ -173,11 +173,11 @@ public boolean moveForward(MapDirection direction,MoveValidator validator) throw
         return id;
     }
 
-    public void DaysOldIncrement(){
+    public void daysOldIncrement(){
         daysOld++;
     }
 
-    public void ChildrenCntIncrement(){
+    public void childrenCntIncrement(){
         childrenCnt++;
     }
 
@@ -185,7 +185,7 @@ public boolean moveForward(MapDirection direction,MoveValidator validator) throw
         return eatenGrassCnt;
     }
 
-    public void EatenGrassCntIncrement(){
+    public void eatenGrassCntIncrement(){
         eatenGrassCnt++;
     }
 
