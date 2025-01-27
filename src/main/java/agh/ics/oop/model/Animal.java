@@ -58,7 +58,7 @@ public class Animal implements WorldElement{
         this.childrenCnt = 0;
         this.id = idCounter++;
         this.genome = genome;
-        this.genomeIdx = 0;
+        this.genomeIdx = -1;
         this.eatenGrassCnt = 0;
         this.descendantsCnt = 0;
     }

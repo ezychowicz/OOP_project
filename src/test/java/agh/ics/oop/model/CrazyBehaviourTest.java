@@ -60,6 +60,6 @@ public class CrazyBehaviourTest {
         }
 
         // Then
-        assertEquals(List.of(1,1,1,1,1,1), indices);
+        assertEquals(List.of(0,0,0,0,0,0), indices);
     }
 }

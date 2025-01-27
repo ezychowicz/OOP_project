@@ -101,7 +101,7 @@ public class Day {
 
     }
 
-    private void updateAnimalsState() {
+     void updateAnimalsState() {
         List<Vector2d> positionsToRemove = new ArrayList<>();
 
         // wczesniej animalsy byly usuwane w trakcie iterowania, ale to nie dziala - trzeba stworzyc liste "do usuniecia" i dopiero potem je usunac
@@ -141,7 +141,7 @@ public class Day {
     }
 
 
-    private Map<Vector2d,List<Animal>> updateAnimalsPositions(AnimalBehaviour behaviour){
+    Map<Vector2d,List<Animal>> updateAnimalsPositions(AnimalBehaviour behaviour){
         Map<Vector2d,List<Animal>> newAnimals =  new HashMap<>();
         for (List<Animal> animalsAtPos : animals.values()){
             for (Animal animal : animalsAtPos){
