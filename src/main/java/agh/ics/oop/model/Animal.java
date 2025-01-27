@@ -93,7 +93,7 @@ public class Animal implements WorldElement{
     }
 
 
-public boolean moveForward(MapDirection direction,MoveValidator validator) throws IncorrectPositionException{
+    public boolean moveForward(MapDirection direction,MoveValidator validator) throws IncorrectPositionException{
         Vector2d move;
         switch (direction) {
             case NORTH -> move =  MapDirection.NORTH_UNIT_VECTOR;
