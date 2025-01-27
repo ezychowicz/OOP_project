@@ -110,6 +110,9 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
     public CheckBox coloringCheckbox;
 
     @FXML
+    private CheckBox linkSlidersCheckbox;
+
+    @FXML
     private Label animalsCountLabel;
     @FXML
     private Label grassesCountLabel;
@@ -165,6 +168,10 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         setupSlider(breedingThresholdSlider, breedingThresholdValue);
         setupSlider(breedingCostSlider, breedingCostValue);
         setupSlider(genomeLengthSlider, genomeLengthValue);
+
+        setupBreedingSliders();
+        setupLinkedSliders();
+
     }
 
     @FXML
@@ -172,6 +179,38 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         slider.valueProperty().addListener((observable, oldValue, newValue) -> {
             int intValue = newValue.intValue();
             valueLabel.setText("Current Value: " + intValue);
+        });
+    }
+
+    private void setupBreedingSliders() {
+        // Ensure breedingCostSlider <= breedingThresholdSlider
+        breedingCostSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() > breedingThresholdSlider.getValue()) {
+                breedingCostSlider.setValue(breedingThresholdSlider.getValue());
+            }
+        });
+
+        // Ensure breedingThresholdSlider >= breedingCostSlider
+        breedingThresholdSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() < breedingCostSlider.getValue()) {
+                breedingThresholdSlider.setValue(breedingCostSlider.getValue());
+            }
+        });
+    }
+
+    private void setupLinkedSliders() {
+        // Listener for mapWidthSlider
+        mapWidthSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (linkSlidersCheckbox.isSelected()) {
+                mapHeightSlider.setValue(newValue.doubleValue());
+            }
+        });
+
+        // Listener for mapHeightSlider
+        mapHeightSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (linkSlidersCheckbox.isSelected()) {
+                mapWidthSlider.setValue(newValue.doubleValue());
+            }
         });
     }
 
@@ -269,64 +308,55 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         return 1 + upperRight.getY() - lowerLeft.getY();
     }
 
-    private void constructAxes(){
-//        Label cell = new Label();
-//        GridPane.setHalignment(cell, HPos.CENTER); // Wyrównanie poziome
-//        GridPane.setValignment(cell, VPos.CENTER); // Wyrównanie pionowe
-//        cell.setFont(Font.font("System", FontWeight.BOLD, 14));
-//        mapGrid.add(cell, 0, 0);
+    private void constructAxes() {
         lowerLeft = ((AbstractWorldMap) worldMap).getLowerLeftBoundary();
         upperRight = ((AbstractWorldMap) worldMap).getUpperRightBoundary();
         int cols = calculateColsCnt();
         int rows = calculateRowsCnt();
+
+        double gridWidth = mapGrid.getWidth();
+        double gridHeight = mapGrid.getHeight();
+
+
+        double cellWidthPercentage = gridWidth / cols;
+        double cellHeightPercentage = gridHeight / rows;
+
         for (int i = 0; i < cols; i++) {
             ColumnConstraints colConstraints = new ColumnConstraints();
-            colConstraints.setPercentWidth(80.0 / cols);
+            colConstraints.setPercentWidth(cellWidthPercentage);
             mapGrid.getColumnConstraints().add(colConstraints);
         }
 
         for (int i = 0; i < rows; i++) {
             RowConstraints rowConstraints = new RowConstraints();
-            rowConstraints.setPercentHeight(80.0 / rows);
+            rowConstraints.setPercentHeight(cellHeightPercentage);
             mapGrid.getRowConstraints().add(rowConstraints);
         }
 
-        for (int i = rows - 1; i >= 1; i--) {
-            Label cellR = new Label("%d".formatted(lowerLeft.getY() + (rows - 1 - i)));
-            GridPane.setHalignment(cellR, HPos.CENTER); // Wyrównanie poziome
-            GridPane.setValignment(cellR, VPos.CENTER); // Wyrównanie pionowe
-            cellR.setFont(Font.font("System", FontWeight.BOLD, 14));
-//            mapGrid.add(cellR, 0,  i);
-        }
-        for (int i = 0; i < cols - 1; i++) {
-            Label cellC = new Label("%d".formatted(i + lowerLeft.getX()));
-            GridPane.setHalignment(cellC, HPos.CENTER); // Wyrównanie poziome
-            GridPane.setValignment(cellC, VPos.CENTER); // Wyrównanie pionowe
-            cellC.setFont(Font.font("System", FontWeight.BOLD, 14));
-//            mapGrid.add(cellC, i+1, 0);
-        }
     }
 
     private void fillMapGrid() {
         int cols = calculateColsCnt();
         int rows = calculateRowsCnt();
 
-        // Calculate image size dynamically based on grid size (400px total width/height)
-        double cellWidth = 400.0 / cols;
-        double cellHeight = 400.0 / rows;
+        double gridWidth = mapGrid.getWidth() * 0.9;
+        double gridHeight = mapGrid.getHeight() * 0.9;
+
+        double cellWidth = gridWidth / cols;
+        double cellHeight = gridHeight / rows;
 
         int minX = lowerLeft.getX();
         int minY = lowerLeft.getY();
 
         COLORING = config.getBoolean("COLORING");
 
-        for (int i = minX; i < minX + cols - 1; i++) {
-            for (int j = minY; j < minY + rows - 1; j++) {
+        for (int i = minX; i < minX + cols; i++) {
+            for (int j = minY; j < minY + rows; j++) {
                 Vector2d pos = new Vector2d(i, j);
                 StackPane cellBackground = new StackPane();
+
                 Color groundGreen = Color.LIGHTGOLDENRODYELLOW;
                 cellBackground.setBackground(new Background(new BackgroundFill(groundGreen, null, null)));
-
 
                 if (COLORING) {
                     if (toColorPos.contains(pos)) {
@@ -339,10 +369,16 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
                     }
                 }
 
+                // Add objects to cells
                 if (worldMap.isOccupied(pos)) {
                     Object object = worldMap.objectAt(pos);
                     if (object instanceof Animal) {
-                        ImageView animalImageView = getAnimalImageView((Animal) object, cellWidth, cellHeight);
+                        ImageView animalImageView = getAnimalImageView((Animal) object);
+
+                        animalImageView.setFitWidth(cellWidth * 0.8);
+                        animalImageView.setFitHeight(cellHeight * 0.8);
+                        animalImageView.setPreserveRatio(true);
+
                         GridPane.setHalignment(animalImageView, HPos.CENTER);
                         GridPane.setValignment(animalImageView, VPos.CENTER);
                         cellBackground.getChildren().add(animalImageView);
@@ -357,24 +393,24 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
                         });
                     } else if (object instanceof Grass) {
                         ImageView grassImageView = new ImageView(grassImageResource);
-                        grassImageView.setFitWidth(cellWidth);
-                        grassImageView.setFitHeight(cellHeight);
+
+                        // Limit image size to 80% of the cell size
+                        grassImageView.setFitWidth(cellWidth * 0.8);
+                        grassImageView.setFitHeight(cellHeight * 0.8);
+                        grassImageView.setPreserveRatio(true);
+
                         GridPane.setHalignment(grassImageView, HPos.CENTER);
                         GridPane.setValignment(grassImageView, VPos.CENTER);
                         cellBackground.getChildren().add(grassImageView);
                     }
-
                 }
                 mapGrid.add(cellBackground, i - minX + 1, (rows - 1) - (j - minY));
             }
         }
     }
 
-    // Update the method to accept dynamic width and height for image
-    private ImageView getAnimalImageView(Animal object, double cellWidth, double cellHeight) {
+    private ImageView getAnimalImageView(Animal object) {
         ImageView animalImageView = new ImageView(animalImageResource);
-        animalImageView.setFitWidth(cellWidth);
-        animalImageView.setFitHeight(cellHeight);
         MapDirection direction = object.getDirection();
         double angle = switch (direction) {
             case NORTH -> 0;
@@ -387,6 +423,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
             case SOUTH_WEST -> 225;
         };
         animalImageView.setRotate(angle);
+        animalImageView.preserveRatioProperty().set(true);
         return animalImageView;
     }
 
