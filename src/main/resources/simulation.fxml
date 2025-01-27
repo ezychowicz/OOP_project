@@ -87,7 +87,7 @@
             <VBox.margin>
                <Insets top="-10.0" />
             </VBox.margin></Label>
-            <Slider fx:id="mapWidthSlider" blockIncrement="1" majorTickUnit="10.0" min="5.0" minorTickCount="1" prefHeight="16.0" prefWidth="150.0" showTickMarks="true" snapToTicks="false" value="10">
+            <Slider fx:id="mapWidthSlider" blockIncrement="1" majorTickUnit="10.0" min="5.0" max="80.0" minorTickCount="1" prefHeight="16.0" prefWidth="150.0" showTickMarks="true" snapToTicks="false" value="10">
             <VBox.margin>
                <Insets top="-16.0" />
             </VBox.margin></Slider>
@@ -103,7 +103,7 @@
             <VBox.margin>
                <Insets top="-16.0" />
             </VBox.margin></Label>
-            <Slider fx:id="mapHeightSlider" blockIncrement="1" majorTickUnit="10.0" min="5.0" minorTickCount="1" prefWidth="150.0" showTickMarks="true" snapToTicks="false" value="10">
+            <Slider fx:id="mapHeightSlider" blockIncrement="1" majorTickUnit="10.0" min="5.0" max="80.0" minorTickCount="1" prefWidth="150.0" showTickMarks="true" snapToTicks="false" value="10">
             <VBox.margin>
                <Insets top="-16.0" />
             </VBox.margin></Slider>
@@ -114,6 +114,7 @@
             <VBox.margin>
                <Insets top="-16.0" />
             </VBox.margin></Label>
+            <CheckBox fx:id="linkSlidersCheckbox" text="Link Width and Height" />
          <Label layoutX="10.0" layoutY="117.0" text="Grasses">
             <VBox.margin>
                <Insets top="-16.0" />
@@ -269,18 +270,18 @@
 
     <!-- Center - GridPane for map -->
     <center>
-        <VBox alignment="CENTER" prefHeight="600.0" prefWidth="800.0" maxHeight="600.0" maxWidth="800.0" fillWidth="false">
-            <StackPane maxWidth="400.0" maxHeight="400.0">
+        <VBox alignment="CENTER" prefHeight="600.0" prefWidth="800.0" fillWidth="false">
+            <StackPane>
                 <GridPane fx:id="mapGrid"
                           alignment="CENTER"
                           gridLinesVisible="true"
-                          prefHeight="400.0"
-                          prefWidth="400.0"
-                          maxWidth="400.0"
-                          maxHeight="400.0"
-                          VBox.vgrow="NEVER" />
+                          minHeight="400.0"
+                          minWidth="400.0"
+                          prefHeight="750.0"
+                          prefWidth="900.0"
+                          VBox.vgrow="ALWAYS"
+                          StackPane.alignment="CENTER" />
             </StackPane>
-
             <LineChart fx:id="chart"
                        prefHeight="200.0"
                        prefWidth="800.0">
