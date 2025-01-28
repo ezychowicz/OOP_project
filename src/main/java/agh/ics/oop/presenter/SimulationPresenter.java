@@ -236,7 +236,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
                 config.setProperty("MAP_WIDTH", String.valueOf((int) mapWidthSlider.getValue()));
                 config.setProperty("MAP_HEIGHT", String.valueOf((int) mapHeightSlider.getValue()));
                 config.setProperty("GRASSES_AMOUNT", String.valueOf((int) grassesAmountSlider.getValue()));
-                config.setProperty("ENERGY_ON_CONSUMPTION", String.valueOf((int) energyOnConsumptionSlider.getValue()));
+                config.setProperty("GRASS_ENERGY", String.valueOf((int) energyOnConsumptionSlider.getValue()));
                 config.setProperty("GRASS_GROWTH_EACH_DAY", String.valueOf((int) grassGrowthEachDaySlider.getValue()));
                 config.setProperty("ANIMALS_AMOUNT", String.valueOf((int) animalsAmountSlider.getValue()));
                 config.setProperty("INITIAL_ANIMAL_ENERGY", String.valueOf((int) initialAnimalEnergySlider.getValue()));
@@ -270,7 +270,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
                 mapWidthSlider.setValue(Integer.parseInt(config.getProperty("MAP_WIDTH")));
                 mapHeightSlider.setValue(Integer.parseInt(config.getProperty("MAP_HEIGHT")));
                 grassesAmountSlider.setValue(Integer.parseInt(config.getProperty("GRASSES_AMOUNT")));
-                energyOnConsumptionSlider.setValue(Integer.parseInt(config.getProperty("ENERGY_ON_CONSUMPTION")));
+                energyOnConsumptionSlider.setValue(Integer.parseInt(config.getProperty("GRASS_ENERGY")));
                 grassGrowthEachDaySlider.setValue(Integer.parseInt(config.getProperty("GRASS_GROWTH_EACH_DAY")));
                 animalsAmountSlider.setValue(Integer.parseInt(config.getProperty("ANIMALS_AMOUNT")));
                 initialAnimalEnergySlider.setValue(Integer.parseInt(config.getProperty("INITIAL_ANIMAL_ENERGY")));
