@@ -9,6 +9,7 @@ import agh.ics.oop.model.util.ImportStats;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.chart.LineChart;
@@ -16,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -172,6 +174,8 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         setupBreedingSliders();
         setupLinkedSliders();
 
+        mapGrid.setPadding(new Insets(10, 15, 10, 10));
+
     }
 
     @FXML
@@ -229,20 +233,20 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         if (file != null) {
             try (OutputStream output = new FileOutputStream(file)) {
                 Properties config = new Properties();
-                config.setProperty("mapWidth", String.valueOf(mapWidthSlider.getValue()));
-                config.setProperty("mapHeight", String.valueOf(mapHeightSlider.getValue()));
-                config.setProperty("grassesAmount", String.valueOf(grassesAmountSlider.getValue()));
-                config.setProperty("energyOnConsumption", String.valueOf(energyOnConsumptionSlider.getValue()));
-                config.setProperty("grassGrowthEachDay", String.valueOf(grassGrowthEachDaySlider.getValue()));
-                config.setProperty("animalsAmount", String.valueOf(animalsAmountSlider.getValue()));
-                config.setProperty("initialAnimalEnergy", String.valueOf(initialAnimalEnergySlider.getValue()));
-                config.setProperty("breedingThreshold", String.valueOf(breedingThresholdSlider.getValue()));
-                config.setProperty("breedingCost", String.valueOf(breedingCostSlider.getValue()));
-                config.setProperty("genomeLength", String.valueOf(genomeLengthSlider.getValue()));
-                config.setProperty("saveToCsv", String.valueOf(excelCheckBox.isSelected()));
-                config.setProperty("sprawlingJungle", String.valueOf(sprawlingJungleCheckBox.isSelected()));
-                config.setProperty("aPinchOfInsanity", String.valueOf(aPinchOfInsanityCheckBox.isSelected()));
-                config.setProperty("coloring", String.valueOf(coloringCheckbox.isSelected()));
+                config.setProperty("MAP_WIDTH", String.valueOf((int) mapWidthSlider.getValue()));
+                config.setProperty("MAP_HEIGHT", String.valueOf((int) mapHeightSlider.getValue()));
+                config.setProperty("GRASSES_AMOUNT", String.valueOf((int) grassesAmountSlider.getValue()));
+                config.setProperty("ENERGY_ON_CONSUMPTION", String.valueOf((int) energyOnConsumptionSlider.getValue()));
+                config.setProperty("GRASS_GROWTH_EACH_DAY", String.valueOf((int) grassGrowthEachDaySlider.getValue()));
+                config.setProperty("ANIMALS_AMOUNT", String.valueOf((int) animalsAmountSlider.getValue()));
+                config.setProperty("INITIAL_ANIMAL_ENERGY", String.valueOf((int) initialAnimalEnergySlider.getValue()));
+                config.setProperty("BREEDING_THRESHOLD", String.valueOf((int) breedingThresholdSlider.getValue()));
+                config.setProperty("BREEDING_COST", String.valueOf((int) breedingCostSlider.getValue()));
+                config.setProperty("GENOME_LENGTH", String.valueOf((int) genomeLengthSlider.getValue()));
+                config.setProperty("SAVE_TO_CSV", String.valueOf(excelCheckBox.isSelected()));
+                config.setProperty("A_PINCH_OF_INSANITY", String.valueOf(aPinchOfInsanityCheckBox.isSelected()));
+                config.setProperty("SPRAWLING_JUNGLE", String.valueOf(sprawlingJungleCheckBox.isSelected()));
+                config.setProperty("COLORING", String.valueOf(coloringCheckbox.isSelected()));
 
                 config.store(output, "Simulation Configuration");
             } catch (IOException e) {
@@ -263,20 +267,20 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
                 Properties config = new Properties();
                 config.load(input);
 
-                mapWidthSlider.setValue(Double.parseDouble(config.getProperty("mapWidth", "10")));
-                mapHeightSlider.setValue(Double.parseDouble(config.getProperty("mapHeight", "10")));
-                grassesAmountSlider.setValue(Double.parseDouble(config.getProperty("grassesAmount", "10")));
-                energyOnConsumptionSlider.setValue(Double.parseDouble(config.getProperty("energyOnConsumption", "10")));
-                grassGrowthEachDaySlider.setValue(Double.parseDouble(config.getProperty("grassGrowthEachDay", "10")));
-                animalsAmountSlider.setValue(Double.parseDouble(config.getProperty("animalsAmount", "10")));
-                initialAnimalEnergySlider.setValue(Double.parseDouble(config.getProperty("initialAnimalEnergy", "10")));
-                breedingThresholdSlider.setValue(Double.parseDouble(config.getProperty("breedingThreshold", "10")));
-                breedingCostSlider.setValue(Double.parseDouble(config.getProperty("breedingCost", "10")));
-                genomeLengthSlider.setValue(Double.parseDouble(config.getProperty("genomeLength", "10")));
-                excelCheckBox.setSelected(Boolean.parseBoolean(config.getProperty("saveToCsv", "false")));
-                aPinchOfInsanityCheckBox.setSelected(Boolean.parseBoolean(config.getProperty("aPinchOfInsanity", "false")));
-                sprawlingJungleCheckBox.setSelected(Boolean.parseBoolean(config.getProperty("sprawlingJungle", "false")));
-                coloringCheckbox.setSelected(Boolean.parseBoolean(config.getProperty("coloring", "false")));
+                mapWidthSlider.setValue(Integer.parseInt(config.getProperty("MAP_WIDTH")));
+                mapHeightSlider.setValue(Integer.parseInt(config.getProperty("MAP_HEIGHT")));
+                grassesAmountSlider.setValue(Integer.parseInt(config.getProperty("GRASSES_AMOUNT")));
+                energyOnConsumptionSlider.setValue(Integer.parseInt(config.getProperty("ENERGY_ON_CONSUMPTION")));
+                grassGrowthEachDaySlider.setValue(Integer.parseInt(config.getProperty("GRASS_GROWTH_EACH_DAY")));
+                animalsAmountSlider.setValue(Integer.parseInt(config.getProperty("ANIMALS_AMOUNT")));
+                initialAnimalEnergySlider.setValue(Integer.parseInt(config.getProperty("INITIAL_ANIMAL_ENERGY")));
+                breedingThresholdSlider.setValue(Integer.parseInt(config.getProperty("BREEDING_THRESHOLD")));
+                breedingCostSlider.setValue(Integer.parseInt(config.getProperty("BREEDING_COST")));
+                genomeLengthSlider.setValue(Integer.parseInt(config.getProperty("GENOME_LENGTH")));
+                excelCheckBox.setSelected(Boolean.parseBoolean(config.getProperty("SAVE_TO_CSV")));
+                aPinchOfInsanityCheckBox.setSelected(Boolean.parseBoolean(config.getProperty("A_PINCH_OF_INSANITY")));
+                sprawlingJungleCheckBox.setSelected(Boolean.parseBoolean(config.getProperty("SPRAWLING_JUNGLE")));
+                coloringCheckbox.setSelected(Boolean.parseBoolean(config.getProperty("COLORING")));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -292,7 +296,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         });
     }
 
-    private Vector2d lowerLeft = new Vector2d(-1, -1);
+    private Vector2d lowerLeft = new Vector2d(0, 0);
     private Vector2d upperRight = new Vector2d(MAP_WIDTH, MAP_HEIGHT);
     private Vector2d toColorAnimalPos = new Vector2d(-1, -1);
     private Set<Vector2d> toColorPos = new HashSet<>();
@@ -302,10 +306,10 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
     }
 
     private int calculateColsCnt(){
-        return 1 + upperRight.getX() - lowerLeft.getX();
+        return  upperRight.getX() - lowerLeft.getX();
     }
     private int calculateRowsCnt(){
-        return 1 + upperRight.getY() - lowerLeft.getY();
+        return  upperRight.getY() - lowerLeft.getY();
     }
 
     private void constructAxes() {
@@ -404,7 +408,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
                         cellBackground.getChildren().add(grassImageView);
                     }
                 }
-                mapGrid.add(cellBackground, i - minX + 1, (rows - 1) - (j - minY));
+                mapGrid.add(cellBackground, i - minX, (rows - 1) - (j - minY));
             }
         }
     }
@@ -424,6 +428,14 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         };
         animalImageView.setRotate(angle);
         animalImageView.preserveRatioProperty().set(true);
+        int animalEnergy = object.getEnergy();
+        int initialEnergy = config.getInt("INITIAL_ANIMAL_ENERGY"); // losowe pokazanie ze lowEnergy
+        if (animalEnergy < 0.8 * (initialEnergy)) {
+            ColorAdjust lowEnergyColor = new ColorAdjust();
+            lowEnergyColor.setSaturation(2.0);
+            lowEnergyColor.setHue(-1.0);
+            animalImageView.setEffect(lowEnergyColor);
+        }
         return animalImageView;
     }
 
