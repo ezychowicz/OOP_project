@@ -13,13 +13,13 @@ public class CrazyBehaviour extends NormalBehaviour {
 
     private final double boringProbability;
 
-    public CrazyBehaviour() {
+    public CrazyBehaviour() { // Default constructor
         super();
         this.randomizer = new NonDeterministicRandomGenerator();
         this.boringProbability = 0.8;
     }
 
-    public CrazyBehaviour(Randomizer randomizer, double boringProbability) {
+    public CrazyBehaviour(Randomizer randomizer, double boringProbability) { // Custom constructor
         super();
         this.randomizer = randomizer;
         this.boringProbability = boringProbability;
@@ -35,7 +35,7 @@ public class CrazyBehaviour extends NormalBehaviour {
 
     public int drawNextGene(int currIdx){
         int idx = currIdx;
-        while (idx == currIdx){ //losuj do skutku. zlozonosc i tak lepsza niz robienie tego niederministycznie imo
+        while (idx == currIdx){ // Do until success :)
             idx = randomizer.nextInt(GENOME_LENGTH);
         }
         return idx;

@@ -13,7 +13,6 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
     private final int grassCount;
     private int count;
     private final Random random;
-//    private final List<Integer> availableIndices;
     private final List<Integer> preferredIdxs;
     private final List<Integer> unPreferredIdxs;
     private final GrassField grassField;
@@ -52,7 +51,7 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
                 } else {
                     idxsToChoose = preferredIdxs;
                 }
-                int randomInt = random.nextInt(idxsToChoose.size()); //losuje w zakresie dostepnych pozycji
+                int randomInt = random.nextInt(idxsToChoose.size()); // Choose from available positions
                 Vector2d pos = grassField.getPosList().get(idxsToChoose.get(randomInt));
                 idxsToChoose.remove(randomInt);
                 return pos;

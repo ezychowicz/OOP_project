@@ -30,16 +30,16 @@ public class Copulation {
     public Copulation(Vector2d position, GrassField grassField, AnimalFamilyTree familyTree) {
         this(position, grassField, familyTree, new NonDeterministicRandomGenerator());
     }
-    private List<Animal> pairPartners() {
+    private List<Animal> pairPartners() { // Find the best candidates for copulation
         List<Animal> animalsAtPos = grassField.getAnimalsAt(position);
         Animal winner1 = grassField.resolveConflict(grassField.getAnimalsAt(position));
-        List<Animal> animalsAtPosWithoutWinner = new ArrayList<>(animalsAtPos); // Kopia listy
+        List<Animal> animalsAtPosWithoutWinner = new ArrayList<>(animalsAtPos);
         animalsAtPosWithoutWinner.remove(winner1);
-        Animal winner2 = grassField.resolveConflict(animalsAtPosWithoutWinner); // przesada dziadek.. godzine szukalem czemu to nie dzialalo
+        Animal winner2 = grassField.resolveConflict(animalsAtPosWithoutWinner);
         return List.of(winner1, winner2);
     }
 
-    public int findCrossoverIndex(int energyParent1, int energyParent2) {
+    public int findCrossoverIndex(int energyParent1, int energyParent2) { // Find end index of a left part of new genome
         int totalEnergy = energyParent1 + energyParent2;
         if (totalEnergy == 0) {
             throw new IllegalArgumentException("Energy values cannot both be zero.");
@@ -49,7 +49,7 @@ public class Copulation {
         return Math.min(crossoverIndex, GENOME_LENGTH - 1);
     }
 
-    private Map<Integer, Integer> createMutation() {
+    private Map<Integer, Integer> createMutation() { // Formulate a mutation of genome
         Map<Integer, Integer> mutationRecipe = new HashMap<>();
         int toMutateCnt = randomizer.nextInt(GENOME_LENGTH + 1);
         if (toMutateCnt == 0) {
@@ -66,7 +66,7 @@ public class Copulation {
     }
 
 
-    public Animal copulate() throws CopulationFailedException {
+    public Animal copulate() throws CopulationFailedException { // Main procedure
         List<Animal> partners = pairPartners();
         if (partners.getFirst().getEnergy() > BREEDING_THRESHOLD && partners.getLast().getEnergy() > BREEDING_THRESHOLD) {
             int crossIdx = findCrossoverIndex(partners.getFirst().getEnergy(), partners.getLast().getEnergy());
@@ -74,25 +74,28 @@ public class Copulation {
             Animal dominant = partners.getFirst();
             Animal recessive = partners.getLast();
             int leftOrRight = randomizer.nextInt(2);
-            if (leftOrRight == 0) { //dla dominujacego osobnika bierzemy lewą strone genomu
+            if (leftOrRight == 0) { // if leftOrRight=0: For dominating animal we take left side of genome
                 newGenome.addAll(dominant.getGenome().subList(0, crossIdx));
                 newGenome.addAll(recessive.getGenome().subList(crossIdx, GENOME_LENGTH));
-            } else { //dla dominujacego osobnika bierzemy prawą strone genomu
+            } else { // right side for dominating
                 newGenome.addAll(recessive.getGenome().subList(0, crossIdx));
                 newGenome.addAll(dominant.getGenome().subList(crossIdx, GENOME_LENGTH));
             }
 
-            // mutacje
+            // Mutations
             Map<Integer, Integer> mutationRecipe = createMutation();
             for (Integer gene : mutationRecipe.keySet()) {
                 newGenome.set(gene, mutationRecipe.get(gene));
             }
 
+            // After birth procedure
             Animal newborn = new Animal(position, dominant, recessive, newGenome);
             familyTree.registerParentChild(dominant.getId(), newborn.getId());
             dominant.childrenCntIncrement();
             familyTree.registerParentChild(recessive.getId(), newborn.getId());
             recessive.childrenCntIncrement();
+
+            // Energy cost of copulation
             dominant.updateEnergy(-BREEDING_COST);
             recessive.updateEnergy(-BREEDING_COST);
             return newborn;

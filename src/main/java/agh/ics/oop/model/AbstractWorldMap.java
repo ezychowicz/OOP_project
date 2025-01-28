@@ -98,9 +98,9 @@ public abstract class AbstractWorldMap implements WorldMap{
     }
 
 
-    public Animal resolveConflict(List<Animal> animals) { //rozwiazuje konflikt gdy wiecej niz jedno zwierze na danej pozycji
-        if (animals == null || animals.isEmpty()) { // to sie nigdy nie powinno wydarzyc!
-            return null;
+    public Animal resolveConflict(List<Animal> animals) { // Resolve conflict when there are more than two animals fighting for something
+        if (animals == null || animals.isEmpty()) { // empty animals
+            throw new IllegalArgumentException("No animals found");
         }
         if (animals.size() == 1) {
             return animals.getFirst();

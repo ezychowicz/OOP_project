@@ -56,18 +56,20 @@ public class Day {
 
     public void dayProcedure() throws IncorrectPositionException{ //
         System.out.println("Dzien: " + dayCnt);
-        //usuwanie martwych zwierzat z animals i codzienne redukowanie energii
-        updateAnimalsState();
-        //poruszanie sie zwierzakow
-        animals = updateAnimalsPositions(animalBehaviour);
-        grassField.setAnimals(animals); // sprawdz czy na pewno to jest git
+        // Delete dead animals
 
-        //konsumpcja roslin
+        updateAnimalsState();
+
+        // Animal movement
+        animals = updateAnimalsPositions(animalBehaviour);
+        grassField.setAnimals(animals);
+
+        // Plants consumption
         for (Vector2d position : animals.keySet()) {
             consumption.consume(grassField, position);
         }
 
-        //rozmnazanie
+        // Copulation
         //iterator umozliwia modyfikowanie obiektu iterowanego w trakcie iteracji po nim w sposob bezpieczny
         Iterator<Map.Entry<Vector2d, List<Animal>>> iterator = animals.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -91,10 +93,10 @@ public class Day {
         }
         grassField.setAnimals(animals);
 
-        //wzrost nowych roslin
+        // New plants growth
         grassField.plantingGrasses(GRASS_GROWTH_EACH_DAY);
 
-        //brzydalstwo fuuuu
+        // Stats
         getWatchedAnimal().setDescendantsCnt(getDescendantsCount(watchedAnimalId));
         calculateStats();
         signalObservers(getWatchedAnimal());
@@ -103,8 +105,6 @@ public class Day {
 
      void updateAnimalsState() {
         List<Vector2d> positionsToRemove = new ArrayList<>();
-
-        // wczesniej animalsy byly usuwane w trakcie iterowania, ale to nie dziala - trzeba stworzyc liste "do usuniecia" i dopiero potem je usunac
         for (Map.Entry<Vector2d, List<Animal>> entry : animals.entrySet()) {
             Vector2d pos = entry.getKey();
             List<Animal> animalsAtPos = entry.getValue();
@@ -123,7 +123,7 @@ public class Day {
                 }
             }
 
-            // Remove animals marked for removal
+            // Remove animals marked as dead
             for (int idx = toRemoveIdxs.size() - 1; idx >= 0; idx--) {
                 deadAnimals.add(animalsAtPos.get((int) toRemoveIdxs.get(idx)));
                 animalsAtPos.remove((int) toRemoveIdxs.get(idx));
@@ -134,7 +134,7 @@ public class Day {
             }
         }
 
-        // Remove empty positions from the map
+        // Remove useless keys from animals
         for (Vector2d pos : positionsToRemove) {
             animals.remove(pos);
         }
@@ -145,9 +145,10 @@ public class Day {
         Map<Vector2d,List<Animal>> newAnimals =  new HashMap<>();
         for (List<Animal> animalsAtPos : animals.values()){
             for (Animal animal : animalsAtPos){
-                animal.move(MoveDirection.geneToDirection(animal.getGenomeAtIdx(behaviour.nextGeneIdx(animal))), grassField);
+                int nextIdx = behaviour.nextGeneIdx(animal);
+                animal.move(MoveDirection.geneToDirection(animal.getGenomeAtIdx(nextIdx)), grassField);
+                animal.setGenomeIdx(nextIdx);
                 System.out.println("id zwierzaka: " + animal.getId() + ", energia: " + animal.getEnergy());
-                //to jest okropne. demeter zawiedziona
                 grassField.addAnimalAtPos(newAnimals, animal, animal.getPos());
             }
         }
@@ -201,7 +202,7 @@ public class Day {
                 .sorted((e1, e2) -> Integer.compare(e2.getValue(), e1.getValue()))
                 .limit(3)
                 .forEach(entry -> topGenotypes.append(entry.getKey()).append(", ").append(entry.getValue()).append("\n"));
-        //alez dziadostwo
+
 
         currMostPopularGenotypes = topGenotypes.toString().trim();
         currAverageEnergy = sumEnergy / animalsCnt;

@@ -21,9 +21,9 @@ public class SprawlingJungle extends GrassField{
     @Override
     public void eatenGrassProcedure(Vector2d position){
         /*
-         * metoda obslugujaca dodawanie do preferred i unpreferred na polach na ktorych dopiero zjedzono rosline (nowo zwolnionych)
-         * uruchamiana dopiero po wykonaniu dekrementacji dla sasiadow wszystkich usuwanych traw danego dnia
-         * bo musi byc aktualny stan cumulativePrefs
+         * A method handling adding to preferred and unpreferred on fields where a plant has just been eaten (newly freed).
+         * It is triggered only after decrementing neighbors count in cumulativePrefs of all removed plants on a given day,
+         * because the cumulativePrefs state must be up-to-date.
          */
         grasses.remove(position);
 
@@ -40,7 +40,7 @@ public class SprawlingJungle extends GrassField{
     @Override
     public void plantingGrasses(int grassCount){
         /*
-         * metoda do sadzenia nowych roslin i aktualizowania przy tym preferredSet i unpreferredSet
+         * Method for planting new plants
          */
         RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(this, grassCount);
         for (Vector2d grassPosition : randomPositionGenerator) {

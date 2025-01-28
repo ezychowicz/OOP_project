@@ -30,17 +30,17 @@ public class Animal implements WorldElement{
 
     private List<Integer> initializeGenome() {
         /*
-        tworzy losową wariacje o dlugosci GENOME_LENGTH
+        Create random variation of GENOME_LENGTH length
          */
         Random random = new Random();
         List<Integer> genome = new ArrayList<>();
         for (int i = 0; i < GENOME_LENGTH; i++) {
-            genome.add(random.nextInt(8)); // Losowa liczba z zakresu 0-7
+            genome.add(random.nextInt(8)); // RNG 0-7
         }
         return genome;
     }
 
-    public Animal(Vector2d startPosition){
+    public Animal(Vector2d startPosition){ // Initial animal constructor (arbitrary animals)
         this.direction = MapDirection.NORTH;
         this.pos = startPosition;
         this.energy = INITIAL_ANIMAL_ENERGY;
@@ -50,7 +50,7 @@ public class Animal implements WorldElement{
         this.genome = initializeGenome();
     }
 
-    public Animal(Vector2d startPosition, Animal parent1, Animal parent2, List<Integer> genome){
+    public Animal(Vector2d startPosition, Animal parent1, Animal parent2, List<Integer> genome){ // Animal as a child of two different animals
         this.direction = MapDirection.NORTH;
         this.pos = startPosition;
         this.energy = 2*BREEDING_COST;
@@ -77,6 +77,7 @@ public class Animal implements WorldElement{
             case NORTH_WEST -> "<^";
         };
     }
+
     public boolean isAt(Vector2d pos) {
         return this.pos.equals(pos);
     }
@@ -116,7 +117,7 @@ public class Animal implements WorldElement{
 
     private MapDirection rotate(MoveDirection direction) {
         /*
-        obroc zwierzaka odpowiednia liczbe razy; srednio efektywne
+        Rotates animal a few times (max 8 times)
          */
         int numOfRotations = direction.directionToGene(direction);
         MapDirection newDirection = this.direction;
@@ -130,16 +131,18 @@ public class Animal implements WorldElement{
         try {
             MapDirection newDirection = rotate(direction);
             if (moveForward(newDirection, validator)) {
-                this.direction = newDirection; //zaktualizuj zeby byl skierowany zgodnie z kierunkiem w ktorym sie poruszyl
-                genomeIdx = (genomeIdx + 1) % GENOME_LENGTH; //przesun sie w genomie
-            }else{ //zwierzak chcial wyjsc za biegun
-                this.direction = rotate(BACKWARD); //odwroc zwierzaka
+                this.direction = newDirection; // Update animal's position
+            }else{  // If the move is illegal (on poles)
+                this.direction = rotate(BACKWARD); // Rotate animal backwards
             }
         } catch (IncorrectPositionException e) {
             e.printStackTrace();
         }
     }
 
+    public void setGenomeIdx(int genomeIdx) {
+        this.genomeIdx = genomeIdx;
+    }
 
     public int getEnergy() {
         return energy;

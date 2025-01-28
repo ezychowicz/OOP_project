@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class AnimalFamilyTree {
-    private final Map<Integer, Set<Integer>> descendants = new HashMap<>(); // rodzic -> dzieci
+    private final Map<Integer, Set<Integer>> descendants = new HashMap<>(); // parent -> child
 
     public void registerParentChild(int parentId, int childId) {
         if (parentId == childId){
