@@ -92,14 +92,10 @@ public abstract class GrassField extends AbstractWorldMap{
         return this.posList;
     }
 
-
-
     @Override
     public boolean canMoveTo(Vector2d position) { //validator, nie mozemy wyjsc za biegun
         return position.getY() != height && position.getY() != -1;
     }
-
-
 
     @Override
     public boolean isOccupied(Vector2d position) {
@@ -138,8 +134,6 @@ public abstract class GrassField extends AbstractWorldMap{
         }
         return currLowerLeft;
     }
-
-
 
     @Override
     public Boundary getCurrentBounds(){

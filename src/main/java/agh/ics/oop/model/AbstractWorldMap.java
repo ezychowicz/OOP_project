@@ -31,7 +31,7 @@ public abstract class AbstractWorldMap implements WorldMap{
         }
     }
 
-    public boolean isOccupied(Vector2d position){ //jakies dziadostwo
+    public boolean isOccupied(Vector2d position){
         if (animals.containsKey(position)) {
             return !animals.get(position).isEmpty();
         }
@@ -51,7 +51,6 @@ public abstract class AbstractWorldMap implements WorldMap{
         return animals;
     }
 
-
     @Override
     public boolean place(Animal animal) throws IncorrectPositionException {
         if (canMoveTo(animal.getPos())) {
@@ -68,18 +67,16 @@ public abstract class AbstractWorldMap implements WorldMap{
     public void move(Animal animal, MoveDirection direction) {
         if (animals.containsKey(animal.getPos()) && animals.get(animal.getPos()).contains(animal)) {
             Vector2d initialPos = animal.getPos();
-            animals.get(initialPos).remove(animal);  // remove the animal from the current position
-            animal.move(direction, this); // move the animal
-            animals.computeIfAbsent(animal.getPos(), k -> new ArrayList<>()).add(animal); // add the animal to the new position
-            if (!Objects.equals(initialPos, animal.getPos())) { // if the animal actually moved
+            animals.get(initialPos).remove(animal);  // usun animala z obecnej pozycji
+            animal.move(direction, this); // przesun go
+            animals.computeIfAbsent(animal.getPos(), k -> new ArrayList<>()).add(animal); // dodaj do nowej pozycji
+            if (!Objects.equals(initialPos, animal.getPos())) { // jesli zwierzak serio sie ruszyl
                 mapChanged("%s moved %s to %s".formatted(ANIMAL_STRING, direction, animal.getPos()));
             } else if (direction == MoveDirection.RIGHT || direction == MoveDirection.LEFT) {
                 mapChanged("%s on %s turned %s".formatted(ANIMAL_STRING, initialPos, direction));
             }
         }
     }
-
-
 
     public Vector2d getUpperRightBoundary(){
         return getCurrentBounds().upperRightBound();
@@ -97,9 +94,8 @@ public abstract class AbstractWorldMap implements WorldMap{
         return mapVis.draw(lowerLeftBoundary, upperRightBoundary);
     }
 
-
-    public Animal resolveConflict(List<Animal> animals) { // Resolve conflict when there are more than two animals fighting for something
-        if (animals == null || animals.isEmpty()) { // empty animals
+    public Animal resolveConflict(List<Animal> animals) {
+        if (animals == null || animals.isEmpty()) { // puste animale, to nie powinno sie wydarzyc!
             throw new IllegalArgumentException("No animals found");
         }
         if (animals.size() == 1) {
@@ -112,12 +108,14 @@ public abstract class AbstractWorldMap implements WorldMap{
         );
         return animals.getLast();
     }
+
     public void addAnimalAtPos(Map<Vector2d, List<Animal>> animals, Animal newAnimal, Vector2d position){
         if (!animals.containsKey(position)) {
             animals.put(position, new ArrayList<>());
         }
         animals.get(position).add(newAnimal);
     }
+
     public UUID getId(){
         return id;
     }

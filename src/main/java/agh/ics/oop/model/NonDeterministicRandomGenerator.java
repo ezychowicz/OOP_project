@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public class NonDeterministicRandomGenerator implements Randomizer {
-    private Random random = new Random();
+    private final Random random = new Random();
 
     @Override
     public int nextInt(int bound) {

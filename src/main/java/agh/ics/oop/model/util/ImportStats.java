@@ -4,8 +4,6 @@ import agh.ics.oop.Day;
 import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.DayObserver;
 
-
-
 public class ImportStats implements DayObserver{
     public static final String ANIMAL_COUNT_STRING = "Animal Number";
     public static final String GRASS_COUNT_STRING = "Grass Number";

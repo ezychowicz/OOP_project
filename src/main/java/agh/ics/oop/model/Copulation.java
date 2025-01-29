@@ -3,12 +3,9 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.exceptions.CopulationFailedException;
 import agh.ics.oop.model.util.Config;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static agh.ics.oop.WorldGUI.*;
 
 public class Copulation {
     private final Vector2d position;
@@ -30,7 +27,7 @@ public class Copulation {
     public Copulation(Vector2d position, GrassField grassField, AnimalFamilyTree familyTree) {
         this(position, grassField, familyTree, new NonDeterministicRandomGenerator());
     }
-    private List<Animal> pairPartners() { // Find the best candidates for copulation
+    private List<Animal> pairPartners() { // znajdz najlepszych partnerow do kopulacji
         List<Animal> animalsAtPos = grassField.getAnimalsAt(position);
         Animal winner1 = grassField.resolveConflict(grassField.getAnimalsAt(position));
         List<Animal> animalsAtPosWithoutWinner = new ArrayList<>(animalsAtPos);
@@ -39,7 +36,7 @@ public class Copulation {
         return List.of(winner1, winner2);
     }
 
-    public int findCrossoverIndex(int energyParent1, int energyParent2) { // Find end index of a left part of new genome
+    public int findCrossoverIndex(int energyParent1, int energyParent2) { // znajdz indeks koncowy lewej czesci genomu
         int totalEnergy = energyParent1 + energyParent2;
         if (totalEnergy == 0) {
             throw new IllegalArgumentException("Energy values cannot both be zero.");
@@ -49,7 +46,7 @@ public class Copulation {
         return Math.min(crossoverIndex, GENOME_LENGTH - 1);
     }
 
-    private Map<Integer, Integer> createMutation() { // Formulate a mutation of genome
+    private Map<Integer, Integer> createMutation() { // mutacja genomu
         Map<Integer, Integer> mutationRecipe = new HashMap<>();
         int toMutateCnt = randomizer.nextInt(GENOME_LENGTH + 1);
         if (toMutateCnt == 0) {
@@ -66,7 +63,7 @@ public class Copulation {
     }
 
 
-    public Animal copulate() throws CopulationFailedException { // Main procedure
+    public Animal copulate() throws CopulationFailedException { // glowna akcja kopulacja
         List<Animal> partners = pairPartners();
         if (partners.getFirst().getEnergy() > BREEDING_THRESHOLD && partners.getLast().getEnergy() > BREEDING_THRESHOLD) {
             int crossIdx = findCrossoverIndex(partners.getFirst().getEnergy(), partners.getLast().getEnergy());
@@ -82,20 +79,17 @@ public class Copulation {
                 newGenome.addAll(dominant.getGenome().subList(crossIdx, GENOME_LENGTH));
             }
 
-            // Mutations
             Map<Integer, Integer> mutationRecipe = createMutation();
             for (Integer gene : mutationRecipe.keySet()) {
                 newGenome.set(gene, mutationRecipe.get(gene));
             }
 
-            // After birth procedure
-            Animal newborn = new Animal(position, dominant, recessive, newGenome);
+            Animal newborn = new Animal(position,newGenome);
             familyTree.registerParentChild(dominant.getId(), newborn.getId());
             dominant.childrenCntIncrement();
             familyTree.registerParentChild(recessive.getId(), newborn.getId());
             recessive.childrenCntIncrement();
 
-            // Energy cost of copulation
             dominant.updateEnergy(-BREEDING_COST);
             recessive.updateEnergy(-BREEDING_COST);
             return newborn;

@@ -5,8 +5,6 @@ import agh.ics.oop.model.util.MathUtils;
 
 import java.util.Random;
 
-
-
 public class CrazyBehaviour extends NormalBehaviour {
     private final int GENOME_LENGTH = Config.getInstance().getInt("GENOME_LENGTH");
     private final Randomizer randomizer;
@@ -19,11 +17,12 @@ public class CrazyBehaviour extends NormalBehaviour {
         this.boringProbability = 0.8;
     }
 
-    public CrazyBehaviour(Randomizer randomizer, double boringProbability) { // Custom constructor
+    public CrazyBehaviour(Randomizer randomizer, double boringProbability) {
         super();
         this.randomizer = randomizer;
         this.boringProbability = boringProbability;
     }
+
     @Override
     public int nextGeneIdx(Animal animal) {
         String behaviour = MathUtils.nonClassicalProbabilityRandom("boring", boringProbability,"crazy",1 - boringProbability);

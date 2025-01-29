@@ -31,12 +31,12 @@ public class SimulationTest {
             System.err.println("Failed to load configuration: " + e.getMessage());
         }
         grassField = new NormalGrassField(10,10,10);
-        Animal upper = new Animal(new Vector2d(5,7), null, null, List.of(4, 0,0,0,0,0,0));
+        Animal upper = new Animal(new Vector2d(5,7),List.of(4, 0,0,0,0,0,0));
         upper.updateEnergy(100);
-        Animal lower = new Animal(new Vector2d(5,3), null, null, List.of(0, 0,0,0,0,0,0));
+        Animal lower = new Animal(new Vector2d(5,3),List.of(0, 0,0,0,0,0,0));
         lower.updateEnergy(100);
-        Animal right = new Animal(new Vector2d(7,5), null, null, List.of(6, 0,0,0,0,0,0));
-        Animal left = new Animal(new Vector2d(3,5), null, null, List.of(2, 0,0,0,0,0,0));
+        Animal right = new Animal(new Vector2d(7,5),List.of(6, 0,0,0,0,0,0));
+        Animal left = new Animal(new Vector2d(3,5),List.of(2, 0,0,0,0,0,0));
         grassField.addAnimalAtPos(grassField.getAnimals(), upper, new Vector2d(5,7));
         grassField.addAnimalAtPos(grassField.getAnimals(), lower, new Vector2d(5,3));
         grassField.addAnimalAtPos(grassField.getAnimals(), right, new Vector2d(7,5));
