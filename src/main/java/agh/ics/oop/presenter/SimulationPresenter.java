@@ -4,28 +4,39 @@ import agh.ics.oop.ChartUpdater;
 import agh.ics.oop.Day;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
+import agh.ics.oop.model.util.Config;
 import agh.ics.oop.model.util.ImportStats;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.chart.LineChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
-import java.io.File;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 import static agh.ics.oop.WorldGUI.*;
 
 public class SimulationPresenter implements MapChangeListener, DayObserver {
+
+    private final Image animalImageResource = new Image(Objects.requireNonNull(getClass().getResource("/icons/rat2.png")).toExternalForm());
+    private final Image grassImageResource = new Image(Objects.requireNonNull(getClass().getResource("/icons/bush.png")).toExternalForm());
+
+    public Button saveConfigButton;
+    public Button loadConfigButton;
 
     private WorldMap worldMap;
     private SimulationEngine simEngine;
@@ -34,7 +45,6 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
     private GridPane mapGrid;
 
     private static SimulationPresenter instance;
-    // Static reference to the controller instance
 
     @FXML
     public Slider mapWidthSlider;
@@ -96,6 +106,12 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
     public CheckBox excelCheckBox;
 
     @FXML
+    public CheckBox coloringCheckbox;
+
+    @FXML
+    private CheckBox linkSlidersCheckbox;
+
+    @FXML
     private Label animalsCountLabel;
     @FXML
     private Label grassesCountLabel;
@@ -134,7 +150,6 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
     private ChartUpdater chartUpdater;
     private Day day;
 
-    // Getter for the instance
     public static SimulationPresenter getInstance() {
         return instance;
     }
@@ -152,6 +167,12 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         setupSlider(breedingThresholdSlider, breedingThresholdValue);
         setupSlider(breedingCostSlider, breedingCostValue);
         setupSlider(genomeLengthSlider, genomeLengthValue);
+
+        setupBreedingSliders();
+        setupLinkedSliders();
+
+        mapGrid.setPadding(new Insets(10, 15, 10, 10));
+
     }
 
     @FXML
@@ -162,83 +183,246 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         });
     }
 
-    @Override
-    public void mapChanged(WorldMap map, String message) {
-        this.setWorldMap(map);
-        Platform.runLater(() -> {
-            drawMap();
+    private void setupBreedingSliders() { // zeby nie dalo sie ustawic breedingCost wiekszego niz breedingThreshold
+        breedingCostSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() > breedingThresholdSlider.getValue()) {
+                breedingCostSlider.setValue(breedingThresholdSlider.getValue());
+            }
+        });
+
+        breedingThresholdSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() < breedingCostSlider.getValue()) {
+                breedingThresholdSlider.setValue(breedingCostSlider.getValue());
+            }
         });
     }
 
-    private Vector2d lowerLeft;
-    private Vector2d upperRight;
+    private void setupLinkedSliders() {
+        mapWidthSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (linkSlidersCheckbox.isSelected()) {
+                mapHeightSlider.setValue(newValue.doubleValue());
+            }
+        });
+
+        mapHeightSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (linkSlidersCheckbox.isSelected()) {
+                mapWidthSlider.setValue(newValue.doubleValue());
+            }
+        });
+    }
+
+    private final Config config = Config.getInstance();
+    int MAP_WIDTH = config.getInt("MAP_WIDTH");
+    int MAP_HEIGHT = config.getInt("MAP_HEIGHT");
+    boolean COLORING = config.getBoolean("COLORING");
+
+    public void handleSaveConfig() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Configuration");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Properties Files", "*.properties"));
+        File file = fileChooser.showSaveDialog(new Stage());
+
+        if (file != null) {
+            try (OutputStream output = new FileOutputStream(file)) {
+                Properties config = new Properties();
+                config.setProperty("MAP_WIDTH", String.valueOf((int) mapWidthSlider.getValue()));
+                config.setProperty("MAP_HEIGHT", String.valueOf((int) mapHeightSlider.getValue()));
+                config.setProperty("GRASSES_AMOUNT", String.valueOf((int) grassesAmountSlider.getValue()));
+                config.setProperty("GRASS_ENERGY", String.valueOf((int) energyOnConsumptionSlider.getValue()));
+                config.setProperty("GRASS_GROWTH_EACH_DAY", String.valueOf((int) grassGrowthEachDaySlider.getValue()));
+                config.setProperty("ANIMALS_AMOUNT", String.valueOf((int) animalsAmountSlider.getValue()));
+                config.setProperty("INITIAL_ANIMAL_ENERGY", String.valueOf((int) initialAnimalEnergySlider.getValue()));
+                config.setProperty("BREEDING_THRESHOLD", String.valueOf((int) breedingThresholdSlider.getValue()));
+                config.setProperty("BREEDING_COST", String.valueOf((int) breedingCostSlider.getValue()));
+                config.setProperty("GENOME_LENGTH", String.valueOf((int) genomeLengthSlider.getValue()));
+                config.setProperty("SAVE_TO_CSV", String.valueOf(excelCheckBox.isSelected()));
+                config.setProperty("A_PINCH_OF_INSANITY", String.valueOf(aPinchOfInsanityCheckBox.isSelected()));
+                config.setProperty("SPRAWLING_JUNGLE", String.valueOf(sprawlingJungleCheckBox.isSelected()));
+                config.setProperty("COLORING", String.valueOf(coloringCheckbox.isSelected()));
+
+                config.store(output, "Simulation Configuration");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void handleLoadConfig() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load Configuration");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Properties Files", "*.properties"));
+        File file = fileChooser.showOpenDialog(new Stage());
+
+        if (file != null) {
+            try (InputStream input = new FileInputStream(file)) {
+                Properties config = new Properties();
+                config.load(input);
+
+                mapWidthSlider.setValue(Integer.parseInt(config.getProperty("MAP_WIDTH")));
+                mapHeightSlider.setValue(Integer.parseInt(config.getProperty("MAP_HEIGHT")));
+                grassesAmountSlider.setValue(Integer.parseInt(config.getProperty("GRASSES_AMOUNT")));
+                energyOnConsumptionSlider.setValue(Integer.parseInt(config.getProperty("GRASS_ENERGY")));
+                grassGrowthEachDaySlider.setValue(Integer.parseInt(config.getProperty("GRASS_GROWTH_EACH_DAY")));
+                animalsAmountSlider.setValue(Integer.parseInt(config.getProperty("ANIMALS_AMOUNT")));
+                initialAnimalEnergySlider.setValue(Integer.parseInt(config.getProperty("INITIAL_ANIMAL_ENERGY")));
+                breedingThresholdSlider.setValue(Integer.parseInt(config.getProperty("BREEDING_THRESHOLD")));
+                breedingCostSlider.setValue(Integer.parseInt(config.getProperty("BREEDING_COST")));
+                genomeLengthSlider.setValue(Integer.parseInt(config.getProperty("GENOME_LENGTH")));
+                excelCheckBox.setSelected(Boolean.parseBoolean(config.getProperty("SAVE_TO_CSV")));
+                aPinchOfInsanityCheckBox.setSelected(Boolean.parseBoolean(config.getProperty("A_PINCH_OF_INSANITY")));
+                sprawlingJungleCheckBox.setSelected(Boolean.parseBoolean(config.getProperty("SPRAWLING_JUNGLE")));
+                coloringCheckbox.setSelected(Boolean.parseBoolean(config.getProperty("COLORING")));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void mapChanged(WorldMap map, String message) {
+        this.setWorldMap(map);
+        Platform.runLater(this::drawMap);
+    }
+
+    private Vector2d lowerLeft = new Vector2d(0, 0);
+    private Vector2d upperRight = new Vector2d(MAP_WIDTH, MAP_HEIGHT);
+    private Vector2d toColorAnimalPos = new Vector2d(-1, -1);
+    private Set<Vector2d> toColorPos = new HashSet<>();
 
     public void setWorldMap(WorldMap worldMap) {
         this.worldMap = worldMap;
     }
 
     private int calculateColsCnt(){
-        return 1 + upperRight.getX() - lowerLeft.getX();
+        return  upperRight.getX() - lowerLeft.getX();
     }
     private int calculateRowsCnt(){
-        return 1 + upperRight.getY() - lowerLeft.getY();
+        return  upperRight.getY() - lowerLeft.getY();
     }
 
-    private void constructAxes(){
-        Label cell = new Label("y/x");
-        GridPane.setHalignment(cell, HPos.CENTER); // Wyrównanie poziome
-        GridPane.setValignment(cell, VPos.CENTER); // Wyrównanie pionowe
-        cell.setFont(Font.font("System", FontWeight.BOLD, 14));
-        mapGrid.add(cell, 0, 0);
+    private void constructAxes() {
         lowerLeft = ((AbstractWorldMap) worldMap).getLowerLeftBoundary();
         upperRight = ((AbstractWorldMap) worldMap).getUpperRightBoundary();
         int cols = calculateColsCnt();
         int rows = calculateRowsCnt();
+
+        double gridWidth = mapGrid.getWidth();
+        double gridHeight = mapGrid.getHeight();
+
+
+        double cellWidthPercentage = gridWidth / cols;
+        double cellHeightPercentage = gridHeight / rows;
+
         for (int i = 0; i < cols; i++) {
             ColumnConstraints colConstraints = new ColumnConstraints();
-            colConstraints.setPercentWidth(80.0 / cols);
+            colConstraints.setPercentWidth(cellWidthPercentage);
             mapGrid.getColumnConstraints().add(colConstraints);
         }
 
         for (int i = 0; i < rows; i++) {
             RowConstraints rowConstraints = new RowConstraints();
-            rowConstraints.setPercentHeight(80.0 / rows);
+            rowConstraints.setPercentHeight(cellHeightPercentage);
             mapGrid.getRowConstraints().add(rowConstraints);
         }
 
-        for (int i = rows - 1; i >= 1; i--) {
-            Label cellR = new Label("%d".formatted(lowerLeft.getY() + (rows - 1 - i)));
-            GridPane.setHalignment(cellR, HPos.CENTER); // Wyrównanie poziome
-            GridPane.setValignment(cellR, VPos.CENTER); // Wyrównanie pionowe
-            cellR.setFont(Font.font("System", FontWeight.BOLD, 14));
-            mapGrid.add(cellR, 0,  i);
-        }
-        for (int i = 0; i < cols - 1; i++) {
-            Label cellC = new Label("%d".formatted(i + lowerLeft.getX()));
-            GridPane.setHalignment(cellC, HPos.CENTER); // Wyrównanie poziome
-            GridPane.setValignment(cellC, VPos.CENTER); // Wyrównanie pionowe
-            cellC.setFont(Font.font("System", FontWeight.BOLD, 14));
-            mapGrid.add(cellC, i+1, 0);
+    }
+
+    private void fillMapGrid() {
+        int cols = calculateColsCnt();
+        int rows = calculateRowsCnt();
+
+        double gridWidth = mapGrid.getWidth() * 0.9;
+        double gridHeight = mapGrid.getHeight() * 0.9;
+
+        double cellWidth = gridWidth / cols;
+        double cellHeight = gridHeight / rows;
+
+        int minX = lowerLeft.getX();
+        int minY = lowerLeft.getY();
+
+        COLORING = config.getBoolean("COLORING");
+
+        for (int i = minX; i < minX + cols; i++) {
+            for (int j = minY; j < minY + rows; j++) {
+                Vector2d pos = new Vector2d(i, j);
+                StackPane cellBackground = new StackPane();
+
+                Color groundGreen = Color.LIGHTGOLDENRODYELLOW;
+                cellBackground.setBackground(new Background(new BackgroundFill(groundGreen, null, null)));
+
+                if (COLORING) {
+                    if (toColorPos.contains(pos)) {
+                        Color lessIntenseColor = Color.LIGHTBLUE.deriveColor(0, 1, 1, 0.5);
+                        cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor, null, null)));
+                    }
+                    if (toColorAnimalPos != null && toColorAnimalPos.equals(pos)) {
+                        Color lessIntenseColor = Color.LIGHTGREEN.deriveColor(0, 1, 1, 0.5);
+                        cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor, null, null)));
+                    }
+                }
+
+                // Add objects to cells
+                if (worldMap.isOccupied(pos)) {
+                    Object object = worldMap.objectAt(pos);
+                    if (object instanceof Animal) {
+                        ImageView animalImageView = getAnimalImageView((Animal) object);
+
+                        mySetGrassImageView(cellWidth,cellHeight,cellBackground,animalImageView);
+
+                        animalImageView.setOnMouseClicked(event -> {
+                            day.setWatchedAnimalId(((Animal) object).getId());
+                            updateAnimalInfo((Animal) object);
+                            if (COLORING) {
+                                Color lessIntenseColor = Color.LIGHTGREEN.deriveColor(0, 1, 1, 0.5);
+                                cellBackground.setBackground(new Background(new BackgroundFill(lessIntenseColor, null, null)));
+                            }
+                        });
+                    } else if (object instanceof Grass) {
+                        ImageView grassImageView = new ImageView(grassImageResource);
+
+                        mySetGrassImageView(cellWidth,cellHeight,cellBackground,grassImageView);
+                    }
+                }
+                mapGrid.add(cellBackground, i - minX, (rows - 1) - (j - minY));
+            }
         }
     }
 
-    private void fillMapGrid(){
-        int cols = calculateColsCnt();
-        int rows = calculateRowsCnt();
-        int minX = lowerLeft.getX();
-        int minY = lowerLeft.getY();
-        for (int i = minX; i < minX + cols - 1; i++) {
-            for (int j = minY; j < minY + rows - 1; j++) {
-                Vector2d pos = new Vector2d(i, j);
-                if (worldMap.isOccupied(pos)){
-                    Label cell = new Label(worldMap.objectAt(pos).toString());
-                    GridPane.setHalignment(cell, HPos.CENTER); // Wyrównanie poziome
-                    GridPane.setValignment(cell, VPos.CENTER); // Wyrównanie pionowe
-                    cell.setFont(Font.font("System", FontWeight.BOLD, 30));
-                    mapGrid.add(cell, i - minX + 1, (rows - 1) - (j - minY));
-                }
-            }
+    private void mySetGrassImageView(double cellWidth,double cellHeight,StackPane cellBackground,ImageView grassImageView){
+        grassImageView.setFitWidth(cellWidth * 0.8);
+        grassImageView.setFitHeight(cellHeight * 0.8);
+        grassImageView.setPreserveRatio(true);
+
+        GridPane.setHalignment(grassImageView, HPos.CENTER);
+        GridPane.setValignment(grassImageView, VPos.CENTER);
+        cellBackground.getChildren().add(grassImageView);
+    }
+
+    private ImageView getAnimalImageView(Animal object) {
+        ImageView animalImageView = new ImageView(animalImageResource);
+        MapDirection direction = object.getDirection();
+        double angle = switch (direction) {
+            case NORTH -> 0;
+            case EAST -> 90;
+            case SOUTH -> 180;
+            case WEST -> 270;
+            case NORTH_EAST -> 45;
+            case NORTH_WEST -> 315;
+            case SOUTH_EAST -> 135;
+            case SOUTH_WEST -> 225;
+        };
+        animalImageView.setRotate(angle);
+        animalImageView.preserveRatioProperty().set(true);
+        int animalEnergy = object.getEnergy();
+        int initialEnergy = config.getInt("INITIAL_ANIMAL_ENERGY"); // losowe pokazanie ze lowEnergy
+        if (animalEnergy < 0.8 * (initialEnergy)) {
+            ColorAdjust lowEnergyColor = new ColorAdjust();
+            lowEnergyColor.setSaturation(2.0);
+            lowEnergyColor.setHue(-1.0);
+            animalImageView.setEffect(lowEnergyColor);
         }
+        return animalImageView;
     }
 
     @FXML
@@ -246,7 +430,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         clearGrid();
         constructAxes();
         fillMapGrid();
-        mapGrid.setGridLinesVisible(true);
+        mapGrid.setGridLinesVisible(false);
     }
 
     private void clearGrid() {
@@ -270,9 +454,9 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         }
     }
 
-    // Zacznij nowa symulacje - zamiast initializesim - nie wiem czy mozemy usunac initializeSim, tu to jest troche inaczej zrobione
+    // Zacznij nowa symulacje
     @FXML
-    public void startNewSim() {
+    public void startNewSim() throws IOException{
         // jesli trzeba - zatrzymaj symulacje
         if (simEngine != null) {
             simEngine.pause();  // zatrzymaj symulacje
@@ -280,6 +464,13 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         }
 
         initializeConstants(); // zczytaj statiki
+        int MAP_WIDTH = config.getInt("MAP_WIDTH");
+        int MAP_HEIGHT = config.getInt("MAP_HEIGHT");
+        int GRASSES_AMOUNT = config.getInt("GRASSES_AMOUNT");
+        boolean A_PINCH_OF_INSANITY = config.getBoolean("A_PINCH_OF_INSANITY");
+        boolean SPRAWLING_JUNGLE = config.getBoolean("SPRAWLING_JUNGLE");
+        boolean SAVE_TO_CSV = config.getBoolean("SAVE_TO_CSV");
+
         GrassField grassF;
         if (SPRAWLING_JUNGLE) {
             grassF = new SprawlingJungle(GRASSES_AMOUNT, MAP_WIDTH, MAP_HEIGHT);
@@ -308,6 +499,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         simEngine = new SimulationEngine(List.of(newSim));
         newSim.setSimulationEngine(simEngine);
         chartUpdater = new ChartUpdater(chart, day);
+
         simEngine.runAsync();
     }
 
@@ -323,7 +515,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
             averageEnergyLabel.setText(String.format("%.2f", day.getAverageEnergy()));
             averageLifespanLabel.setText(String.format("%.2f", day.getAverageLifespan()));
             averageChildrenLabel.setText(String.format("%.2f", day.getAverageChildren()));
-
+            toColorPos = new HashSet<>(((GrassField) worldMap).getPreferredPositions());
         });
     }
 
@@ -341,6 +533,11 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
             animalIdLabel.setText(String.valueOf(animal.getId()));
             chartUpdater.updateData(animal);
             chartUpdater.drawChart();
+            if (animal.getDeathDay() == -1) { //is alive
+                toColorAnimalPos = animal.getPos();
+            } else {
+                toColorAnimalPos = null;
+            }
         });
     }
 }

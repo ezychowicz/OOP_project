@@ -4,45 +4,23 @@ import agh.ics.oop.model.util.MathUtils;
 
 import java.util.*;
 
-import static java.lang.Math.round;
-
 public class RandomPositionGenerator implements Iterable<Vector2d> {
-    private final int maxWidth;
-    private final int maxHeight;
     private final int grassCount;
     private int count;
     private final Random random;
-//    private final List<Integer> availableIndices;
     private final List<Integer> preferredIdxs;
     private final List<Integer> unPreferredIdxs;
     private final GrassField grassField;
-    public RandomPositionGenerator(GrassField grassField, int grassCount) {
 
+    public RandomPositionGenerator(GrassField grassField, int grassCount) {
         this.grassField = grassField;
-        this.maxWidth = grassField.getCurrentBounds().upperRightBound().getX();
-        this.maxHeight = grassField.getCurrentBounds().upperRightBound().getY();
         this.grassCount = grassCount;
-        this.preferredIdxs = grassField.getAvailableIdxs().getFirst();
-        this.unPreferredIdxs = grassField.getAvailableIdxs().getLast();
+        this.preferredIdxs = grassField.getAvailableIdxs().get(0);
+        this.unPreferredIdxs = grassField.getAvailableIdxs().get(1);
         this.count = 0;
         this.random = new Random();
     }
 
-
-//    private String nonClassicalProbabilityRandom(String value1, double prob1, String value2, double prob2){
-//        if (prob1 + prob2 != 1){
-//            throw new IllegalArgumentException();
-//        }
-//        int convertedProb1 = (int) Math.round(100*prob1);
-//        int convertedProb2 = (int) Math.round(100*prob2);
-//
-//        if (convertedProb1 + convertedProb2 != 100){
-//            throw new IllegalArgumentException("given probabilities are unmappable to 0-100 integers");
-//        }
-//
-//        int randomNum = random.nextInt(100);
-//        return randomNum < convertedProb1 ? value1 : value2;
-//    }
     @Override
     public Iterator<Vector2d> iterator() {
         return new Iterator<Vector2d>(){
@@ -55,9 +33,6 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
             public Vector2d next() {
                 if (!hasNext()) {
                     throw new NoSuchElementException("No grasses left to allocate/no positions available");
-//                    if (preferredIdxs.isEmpty() && unPreferredIdxs.isEmpty()) {
-//                        System.out.println("no positions left to allocate...");
-//                    }
                 }
                 count++;
                 List<Integer> idxsToChoose;
@@ -68,7 +43,7 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
                 } else {
                     idxsToChoose = preferredIdxs;
                 }
-                int randomInt = random.nextInt(idxsToChoose.size()); //losuje w zakresie dostepnych pozycji
+                int randomInt = random.nextInt(idxsToChoose.size()); // wybierz z dostepnych pozycji
                 Vector2d pos = grassField.getPosList().get(idxsToChoose.get(randomInt));
                 idxsToChoose.remove(randomInt);
                 return pos;

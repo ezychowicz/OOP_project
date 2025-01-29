@@ -12,7 +12,6 @@ import java.util.List;
 public class ChartUpdater {
     private final LineChart<Number, Number> chart;
     private List<List<Integer>> currData = new LinkedList<>();
-    private int dataSize = 0; //dla zlozonosci
     private final Day day;
     private final XYChart.Series<Number, Number> series;
     private int followedAnimalId = -1;
@@ -41,24 +40,24 @@ public class ChartUpdater {
             followedAnimalId = animal.getId();
         }
 
-        if (dataSize > 100){ //tylko dodaj dane
-            currData.removeFirst();
-            dataSize--;
-        }
+//        if (dataSize > 100){ // jesli za duzo danych to usuwamy najstarsze
+//            currData.removeFirst();
+//            dataSize--;
+//        }
         currData.add(List.of(day.getDayCnt(), animal.getEnergy()));
-        dataSize++;
     }
 
     public void drawChart() {
-        // Usuwamy stare dane z serii (czyścimy serię)
         series.getData().clear();
-        // Dodajemy nowe punkty do serii
+
+
         for (List<Integer> point : currData) {
             XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(point.getFirst(), point.getLast());
             dataPoint.setNode(null);
             series.getData().add(dataPoint);
 
         }
+
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         int firstDay = Math.max(day.getDayCnt() - 40, 0);
         xAxis.setLowerBound(firstDay);

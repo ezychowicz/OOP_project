@@ -3,11 +3,11 @@ package agh.ics.oop;
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.exceptions.CopulationFailedException;
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.util.Config;
 import agh.ics.oop.presenter.SimulationPresenter;
 
 import java.util.*;
 
-import static agh.ics.oop.WorldGUI.*;
 
 
 public class Day {
@@ -31,12 +31,17 @@ public class Day {
     private List<Animal> deadAnimals = new ArrayList<>();
     private final List<DayObserver> observers = new ArrayList<>();
     private int watchedAnimalId = 0;
+    private final Consumption consumption = new Consumption();
+
+    private final Config config = Config.getInstance();
+    private final int GRASS_GROWTH_EACH_DAY = config.getInt("GRASS_GROWTH_EACH_DAY");
 
     public Day(GrassField grassField, AnimalBehaviour animalBehaviour) {
         this.grassField = grassField;
         this.animals = grassField.getAnimals(); //pozycje zwierzakow
         this.animalBehaviour = animalBehaviour;
     }
+
 
     public void addObserver(DayObserver observer) {
         observers.add(observer);
@@ -49,20 +54,22 @@ public class Day {
         }
     }
 
-    public void dayProcedure() throws IncorrectPositionException{
+    public void dayProcedure() throws IncorrectPositionException{ //
         System.out.println("Dzien: " + dayCnt);
-        //usuwanie martwych zwierzat z animals i codzienne redukowanie energii
-        updateAnimalsState();
-        //poruszanie sie zwierzakow
-        animals = updateAnimalsPositions(animalBehaviour);
-        grassField.setAnimals(animals); // sprawdz czy na pewno to jest git
+        // Delete dead animals
 
-        //konsumpcja roslin
+        updateAnimalsState();
+
+        // Animal movement
+        animals = updateAnimalsPositions(animalBehaviour);
+        grassField.setAnimals(animals);
+
+        // Plants consumption
         for (Vector2d position : animals.keySet()) {
-            Consumption.consume(grassField, position);
+            consumption.consume(grassField, position);
         }
 
-        //rozmnazanie
+        // Copulation
         //iterator umozliwia modyfikowanie obiektu iterowanego w trakcie iteracji po nim w sposob bezpieczny
         Iterator<Map.Entry<Vector2d, List<Animal>>> iterator = animals.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -86,20 +93,18 @@ public class Day {
         }
         grassField.setAnimals(animals);
 
-        //wzrost nowych roslin
+        // New plants growth
         grassField.plantingGrasses(GRASS_GROWTH_EACH_DAY);
 
-        //brzydalstwo fuuuu
+        // Stats
         getWatchedAnimal().setDescendantsCnt(getDescendantsCount(watchedAnimalId));
         calculateStats();
         signalObservers(getWatchedAnimal());
 
     }
 
-    private void updateAnimalsState() {
+     void updateAnimalsState() {
         List<Vector2d> positionsToRemove = new ArrayList<>();
-
-        // wczesniej animalsy byly usuwane w trakcie iterowania, ale to nie dziala - trzeba stworzyc liste "do usuniecia" i dopiero potem je usunac
         for (Map.Entry<Vector2d, List<Animal>> entry : animals.entrySet()) {
             Vector2d pos = entry.getKey();
             List<Animal> animalsAtPos = entry.getValue();
@@ -114,11 +119,11 @@ public class Day {
                     animal.setDeathDay(dayCnt);
                 }
                 else{
-                    animal.DaysOldIncrement();
+                    animal.daysOldIncrement();
                 }
             }
 
-            // Remove animals marked for removal
+            // Remove animals marked as dead
             for (int idx = toRemoveIdxs.size() - 1; idx >= 0; idx--) {
                 deadAnimals.add(animalsAtPos.get((int) toRemoveIdxs.get(idx)));
                 animalsAtPos.remove((int) toRemoveIdxs.get(idx));
@@ -129,27 +134,22 @@ public class Day {
             }
         }
 
-        // Remove empty positions from the map
+        // Remove useless keys from animals
         for (Vector2d pos : positionsToRemove) {
             animals.remove(pos);
         }
     }
 
-    private void addAnimalAtPos(Map<Vector2d, List<Animal>> animals, Animal newAnimal, Vector2d position){
-        if (!animals.containsKey(position)) {
-            animals.put(position, new ArrayList<>());
-        }
-        animals.get(position).add(newAnimal);
 
-    }
-    private Map<Vector2d,List<Animal>> updateAnimalsPositions(AnimalBehaviour behaviour) throws IncorrectPositionException{
+    Map<Vector2d,List<Animal>> updateAnimalsPositions(AnimalBehaviour behaviour){
         Map<Vector2d,List<Animal>> newAnimals =  new HashMap<>();
         for (List<Animal> animalsAtPos : animals.values()){
             for (Animal animal : animalsAtPos){
-                animal.move(MoveDirection.geneToDirection(animal.getGenomeAtIdx(behaviour.nextGeneIdx(animal))), grassField);
+                int nextIdx = behaviour.nextGeneIdx(animal);
+                animal.move(MoveDirection.geneToDirection(animal.getGenomeAtIdx(nextIdx)), grassField);
+                animal.setGenomeIdx(nextIdx);
                 System.out.println("id zwierzaka: " + animal.getId() + ", energia: " + animal.getEnergy());
-                //to jest okropne. demeter zawiedziona
-                addAnimalAtPos(newAnimals, animal, animal.getPos());
+                grassField.addAnimalAtPos(newAnimals, animal, animal.getPos());
             }
         }
         return newAnimals;
@@ -202,7 +202,7 @@ public class Day {
                 .sorted((e1, e2) -> Integer.compare(e2.getValue(), e1.getValue()))
                 .limit(3)
                 .forEach(entry -> topGenotypes.append(entry.getKey()).append(", ").append(entry.getValue()).append("\n"));
-        //alez dziadostwo
+
 
         currMostPopularGenotypes = topGenotypes.toString().trim();
         currAverageEnergy = sumEnergy / animalsCnt;

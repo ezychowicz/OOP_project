@@ -1,10 +1,10 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.exceptions.IncorrectPositionException;
+import agh.ics.oop.model.util.Config;
 
 import java.util.*;
 
-import static agh.ics.oop.WorldGUI.*;
 import static agh.ics.oop.model.MoveDirection.BACKWARD;
 import static agh.ics.oop.Simulation.idCounter;
 
@@ -21,20 +21,25 @@ public class Animal implements WorldElement{
     private int deathDay = -1;
     private final int id;
 
+    private final Config config = Config.getInstance();
+    private final int INITIAL_ANIMAL_ENERGY = config.getInt("INITIAL_ANIMAL_ENERGY");
+    private final int BREEDING_COST = config.getInt("BREEDING_COST");
+    private final int GENOME_LENGTH = config.getInt("GENOME_LENGTH");
+    private final int MAP_WIDTH = config.getInt("MAP_WIDTH");
+
     private List<Integer> initializeGenome() {
         /*
-        na razie po prostu tworzy losową wariacje o dlugosci GENOME_LENGTH
+        Create random variation of GENOME_LENGTH length
          */
         Random random = new Random();
         List<Integer> genome = new ArrayList<>();
         for (int i = 0; i < GENOME_LENGTH; i++) {
-            genome.add(random.nextInt(8)); // Losowa liczba z zakresu 0-7
+            genome.add(random.nextInt(8)); // RNG 0-7
         }
         return genome;
     }
 
-    //nowy konstruktor docelowo ten pierwszy zostanie usuniety ale zeby nie zepsuc wszystkiego na razie jest tak
-    public Animal(Vector2d startPosition){
+    public Animal(Vector2d startPosition){ // zwierzak startowy
         this.direction = MapDirection.NORTH;
         this.pos = startPosition;
         this.energy = INITIAL_ANIMAL_ENERGY;
@@ -44,7 +49,7 @@ public class Animal implements WorldElement{
         this.genome = initializeGenome();
     }
 
-    public Animal(Vector2d startPosition, Animal parent1, Animal parent2, List<Integer> genome){
+    public Animal(Vector2d startPosition, List<Integer> genome){ // zwierzak dziecko
         this.direction = MapDirection.NORTH;
         this.pos = startPosition;
         this.energy = 2*BREEDING_COST;
@@ -52,14 +57,12 @@ public class Animal implements WorldElement{
         this.childrenCnt = 0;
         this.id = idCounter++;
         this.genome = genome;
-        this.genomeIdx = 0;
+        this.genomeIdx = -1;
         this.eatenGrassCnt = 0;
         this.descendantsCnt = 0;
     }
 
-    public Animal() {
-        this(new Vector2d(2,2));
-    }
+
     @Override
     public String toString() {
         return switch(direction){
@@ -73,6 +76,7 @@ public class Animal implements WorldElement{
             case NORTH_WEST -> "<^";
         };
     }
+
     public boolean isAt(Vector2d pos) {
         return this.pos.equals(pos);
     }
@@ -88,8 +92,7 @@ public class Animal implements WorldElement{
         this.direction = direction;
     }
 
-
-public boolean moveForward(MapDirection direction,MoveValidator validator) throws IncorrectPositionException{
+    public boolean moveForward(MapDirection direction,MoveValidator validator) throws IncorrectPositionException{
         Vector2d move;
         switch (direction) {
             case NORTH -> move =  MapDirection.NORTH_UNIT_VECTOR;
@@ -112,7 +115,7 @@ public boolean moveForward(MapDirection direction,MoveValidator validator) throw
 
     private MapDirection rotate(MoveDirection direction) {
         /*
-        obroc zwierzaka odpowiednia liczbe razy; srednio efektywne
+        kreci zwierzorem (max 8 razy)
          */
         int numOfRotations = direction.directionToGene(direction);
         MapDirection newDirection = this.direction;
@@ -126,16 +129,20 @@ public boolean moveForward(MapDirection direction,MoveValidator validator) throw
         try {
             MapDirection newDirection = rotate(direction);
             if (moveForward(newDirection, validator)) {
-                this.direction = newDirection; //zaktualizuj zeby byl skierowany zgodnie z kierunkiem w ktorym sie poruszyl
-                genomeIdx = (genomeIdx + 1) % GENOME_LENGTH; //przesun sie w genomie
-            }else{ //zwierzak chcial wyjsc za biegun
-                this.direction = rotate(BACKWARD); //odwroc zwierzaka
+                this.direction = newDirection; // Update animal's position
+            }else{  // If the move is illegal (on poles)
+                this.direction = rotate(BACKWARD); // Rotate animal backwards
             }
         } catch (IncorrectPositionException e) {
             e.printStackTrace();
         }
     }
 
+    //gettery do statystyk etc
+
+    public void setGenomeIdx(int genomeIdx) {
+        this.genomeIdx = genomeIdx;
+    }
 
     public int getEnergy() {
         return energy;
@@ -169,11 +176,11 @@ public boolean moveForward(MapDirection direction,MoveValidator validator) throw
         return id;
     }
 
-    public void DaysOldIncrement(){
+    public void daysOldIncrement(){
         daysOld++;
     }
 
-    public void ChildrenCntIncrement(){
+    public void childrenCntIncrement(){
         childrenCnt++;
     }
 
@@ -181,7 +188,7 @@ public boolean moveForward(MapDirection direction,MoveValidator validator) throw
         return eatenGrassCnt;
     }
 
-    public void EatenGrassCntIncrement(){
+    public void eatenGrassCntIncrement(){
         eatenGrassCnt++;
     }
 

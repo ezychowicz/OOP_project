@@ -7,18 +7,30 @@ import java.util.ArrayList;
 public class SprawlingJungle extends GrassField{
     public SprawlingJungle(int grassCount, int width, int height) {
         super(grassCount, width, height);
+        initializeUnpreferred();
+    }
+
+    private void initializeUnpreferred() {
+        for (int x = 0; x <width; x++){
+            for (int y = 0; y < height; y++){
+                unpreferredSet.add(Converter.convertToIdx(new Vector2d(x, y), width));
+            }
+        }
     }
 
     @Override
     public void eatenGrassProcedure(Vector2d position){
         /*
-         * metoda obslugujaca dodawanie do preferred i unpreferred na polach na ktorych dopiero zjedzono rosline (nowo zwolnionych)
-         * uruchamiana dopiero po wykonaniu dekrementacji dla sasiadow wszystkich usuwanych traw danego dnia
-         * bo musi byc aktualny stan cumulativePrefs
+         * Metoda obsługująca dodawanie do preferowanych i niepreferowanych na polach,
+         * gdzie roślina została właśnie zjedzona (nowo zwolnione).
+         * Jest wywoływana tylko po zmniejszeniu liczby sąsiadów w cumulativePrefs
+         * dla wszystkich usuniętych roślin danego dnia,
+         * ponieważ stan cumulativePrefs musi być aktualny.
          */
         grasses.remove(position);
 
         int idx = Converter.convertToIdx(position, width);
+        cumulativePrefs.decrementAdjacentTo(position);
         if (cumulativePrefs.getPreferenceScoreAtPos(position) == 0){
             unpreferredSet.add(idx);
         } else {
@@ -29,9 +41,6 @@ public class SprawlingJungle extends GrassField{
 
     @Override
     public void plantingGrasses(int grassCount){
-        /*
-         * metoda do sadzenia nowych roslin i aktualizowania przy tym preferredSet i unpreferredSet
-         */
         RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(this, grassCount);
         for (Vector2d grassPosition : randomPositionGenerator) {
             grasses.put(grassPosition, new Grass(grassPosition));

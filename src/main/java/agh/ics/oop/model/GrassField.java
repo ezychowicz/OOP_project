@@ -1,25 +1,40 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.util.Boundary;
+import agh.ics.oop.model.util.Config;
 import agh.ics.oop.model.util.Converter;
 
 import java.util.*;
 
-import static agh.ics.oop.WorldGUI.GRASSES_AMOUNT;
 import static agh.ics.oop.model.MapDirection.*;
-import static agh.ics.oop.WorldGUI.GRASS_GROWTH_EACH_DAY;
 
 public abstract class GrassField extends AbstractWorldMap{
     protected final Map<Vector2d, Grass> grasses;
     protected final int width;
     protected final int height;
     private final int grassCount;
-    protected final Set<Integer> preferredSet = new HashSet<>();
+    protected final Set<Integer> preferredSet = new HashSet<>(); //na indeksach zeby wydobyc wspolrzedne mozna uzywac Converter
     protected final Set<Integer> unpreferredSet = new HashSet<>();
     private final List<Vector2d> posList;
     protected final List<List<Integer>> availableIdxs;
     public static final List<Vector2d> ADJACENT = Arrays.asList(NORTH_UNIT_VECTOR, SOUTH_UNIT_VECTOR, WEST_UNIT_VECTOR, EAST_UNIT_VECTOR, SOUTHEAST_UNIT_VECTOR, SOUTHWEST_UNIT_VECTOR, NORTHWEST_UNIT_VECTOR, NORTHEAST_UNIT_VECTOR);
+    public static final List<Vector2d> ADJACENT_NORTH;
+    public static final List<Vector2d> ADJACENT_SOUTH;
+    static {
+        ADJACENT_NORTH = new ArrayList<>(ADJACENT);
+        ADJACENT_SOUTH = new ArrayList<>(ADJACENT);
+        ADJACENT_NORTH.remove(NORTH_UNIT_VECTOR);
+        ADJACENT_NORTH.remove(NORTHEAST_UNIT_VECTOR);
+        ADJACENT_NORTH.remove(NORTHWEST_UNIT_VECTOR);
+        ADJACENT_SOUTH.remove(SOUTH_UNIT_VECTOR);
+        ADJACENT_SOUTH.remove(SOUTHWEST_UNIT_VECTOR);
+        ADJACENT_SOUTH.remove(SOUTHEAST_UNIT_VECTOR);
+    }
     protected final CumulativePreferences cumulativePrefs;
+    private final Config config = Config.getInstance();
+    private final int GRASSES_AMOUNT = config.getInt("GRASSES_AMOUNT");
+    private final int MAP_WIDTH = config.getInt("MAP_WIDTH");
+
 
     public GrassField(int grassCount, int width, int height) {
         this.grasses = new HashMap<Vector2d, Grass>();
@@ -28,26 +43,12 @@ public abstract class GrassField extends AbstractWorldMap{
         this.height = height;
         this.posList = this.createPosList();
         this.cumulativePrefs = new CumulativePreferences(this);
-        initializeEquator();
-        this.availableIdxs = new ArrayList<List<Integer>>(); //lista list: preferred, unpreferred. pomocnicze - tylko dla randomPositionGenerator
+        this.availableIdxs = new ArrayList<>(); //lista list: preferred, unpreferred. pomocnicze - tylko dla randomPositionGenerator
         availableIdxs.add(0, new ArrayList<Integer> (preferredSet));
         availableIdxs.add(1, new ArrayList<Integer> (unpreferredSet));
         plantingGrasses(GRASSES_AMOUNT);
     }
 
-    private void initializeEquator(){
-        int equatorY = height/2;
-        for (int x = 0; x < width; x++){
-            preferredSet.add(Converter.convertToIdx(new Vector2d(x, equatorY),width));
-        }
-        for (int x = 0; x <width; x++){
-            for (int y = 0; y < height; y++){
-                if (y != equatorY) {
-                    unpreferredSet.add(Converter.convertToIdx(new Vector2d(x, y), width));
-                }
-            }
-        }
-    }
 
     private List<Vector2d> createPosList(){
         List<Vector2d> posList = new ArrayList<Vector2d>();
@@ -91,14 +92,10 @@ public abstract class GrassField extends AbstractWorldMap{
         return this.posList;
     }
 
-
-
     @Override
     public boolean canMoveTo(Vector2d position) { //validator, nie mozemy wyjsc za biegun
         return position.getY() != height && position.getY() != -1;
     }
-
-
 
     @Override
     public boolean isOccupied(Vector2d position) {
@@ -138,14 +135,17 @@ public abstract class GrassField extends AbstractWorldMap{
         return currLowerLeft;
     }
 
-
-
     @Override
     public Boundary getCurrentBounds(){
         return new Boundary(new Vector2d(0,0), new Vector2d(width, height));
     }
 
-
+    public List<Vector2d> getPreferredPositions(){
+        return preferredSet.stream().map(idx -> Converter.convertFromIdx(idx, MAP_WIDTH)).toList();
+    }
+    public List<Vector2d> getUnpreferredPositions(){
+        return unpreferredSet.stream().map(idx -> Converter.convertFromIdx(idx, MAP_WIDTH)).toList();
+    }
     public Map<Vector2d, Grass> getGrasses() {
         return grasses;
     }
@@ -174,5 +174,17 @@ public abstract class GrassField extends AbstractWorldMap{
             }
         }
         return freeFields;
+    }
+
+    public List<Vector2d> getAdjacent(Vector2d position){
+        List<Vector2d> adjacent;
+        if (position.getY() == this.getHeight() - 1){
+            adjacent = ADJACENT_NORTH;
+        }else if (position.getY() == 0){
+            adjacent = ADJACENT_SOUTH;
+        }else{
+            adjacent = ADJACENT;
+        }
+        return adjacent;
     }
 }

@@ -1,17 +1,32 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.util.Config;
 import agh.ics.oop.model.util.MathUtils;
 
 import java.util.Random;
 
-import static agh.ics.oop.WorldGUI.GENOME_LENGTH;
-
 public class CrazyBehaviour extends NormalBehaviour {
+    private final int GENOME_LENGTH = Config.getInstance().getInt("GENOME_LENGTH");
+    private final Randomizer randomizer;
+
+    private final double boringProbability;
+
+    public CrazyBehaviour() { // Default constructor
+        super();
+        this.randomizer = new NonDeterministicRandomGenerator();
+        this.boringProbability = 0.8;
+    }
+
+    public CrazyBehaviour(Randomizer randomizer, double boringProbability) {
+        super();
+        this.randomizer = randomizer;
+        this.boringProbability = boringProbability;
+    }
+
     @Override
     public int nextGeneIdx(Animal animal) {
-        String behaviour = MathUtils.nonClassicalProbabilityRandom("boring", 0.8,"crazy",0.2);
+        String behaviour = MathUtils.nonClassicalProbabilityRandom("boring", boringProbability,"crazy",1 - boringProbability);
         if (behaviour.equals("crazy")){
-            Random random = new Random();
             return drawNextGene(animal.getGenomeIdx());
         }
         return super.nextGeneIdx(animal);
@@ -19,9 +34,8 @@ public class CrazyBehaviour extends NormalBehaviour {
 
     public int drawNextGene(int currIdx){
         int idx = currIdx;
-        Random random = new Random();
-        while (idx == currIdx){ //losuj do skutku. zlozonosc i tak lepsza niz robienie tego niederministycznie imo
-            idx = random.nextInt(GENOME_LENGTH);
+        while (idx == currIdx){ // Do until success :)
+            idx = randomizer.nextInt(GENOME_LENGTH);
         }
         return idx;
     }

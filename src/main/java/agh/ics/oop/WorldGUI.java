@@ -1,42 +1,42 @@
 package agh.ics.oop;
 
+import agh.ics.oop.model.util.Config;
 import javafx.application.Application;
 import agh.ics.oop.presenter.SimulationPresenter;
 
-public class WorldGUI {
-    public static int MAP_WIDTH;
-    public static int MAP_HEIGHT;
-    public static int GRASSES_AMOUNT;
-    public static int GRASS_ENERGY;
-    public static int GRASS_GROWTH_EACH_DAY;
-    public static int ANIMALS_AMOUNT;
-    public static int INITIAL_ANIMAL_ENERGY;
-    public static int BREEDING_THRESHOLD;
-    public static int BREEDING_COST;
-    public static int GENOME_LENGTH;
-    public static boolean A_PINCH_OF_INSANITY;
-    public static boolean SPRAWLING_JUNGLE;
-    public static boolean SAVE_TO_CSV;
-    public static int SIMULATION_SPEED = 500;
+import java.io.IOException;
 
-    public static void initializeConstants() {
+public class WorldGUI {
+    public static void initializeConstants() throws IOException{
         SimulationPresenter presenter = SimulationPresenter.getInstance();
-        MAP_WIDTH = (int) presenter.mapWidthSlider.getValue();
-        MAP_HEIGHT = (int) presenter.mapHeightSlider.getValue();
-        GRASSES_AMOUNT = (int) presenter.grassesAmountSlider.getValue();
-        GRASS_ENERGY = (int) presenter.energyOnConsumptionSlider.getValue();
-        GRASS_GROWTH_EACH_DAY = (int) presenter.grassGrowthEachDaySlider.getValue();
-        ANIMALS_AMOUNT = (int) presenter.animalsAmountSlider.getValue();
-        INITIAL_ANIMAL_ENERGY = (int) presenter.initialAnimalEnergySlider.getValue();
-        BREEDING_THRESHOLD = (int) presenter.breedingThresholdSlider.getValue();
-        BREEDING_COST = (int) presenter.breedingCostSlider.getValue();
-        GENOME_LENGTH = (int) presenter.genomeLengthSlider.getValue();
-        A_PINCH_OF_INSANITY = presenter.aPinchOfInsanityCheckBox.isSelected();
-        SPRAWLING_JUNGLE = presenter.sprawlingJungleCheckBox.isSelected();
-        SAVE_TO_CSV = presenter.excelCheckBox.isSelected();
+        Config config = Config.getInstance();
+        config.set("MAP_WIDTH", (int) presenter.mapWidthSlider.getValue());
+        config.set("MAP_HEIGHT", (int) presenter.mapHeightSlider.getValue());
+        config.set("GRASSES_AMOUNT", (int) presenter.grassesAmountSlider.getValue());
+        config.set("GRASS_ENERGY", (int) presenter.energyOnConsumptionSlider.getValue());
+        config.set("GRASS_GROWTH_EACH_DAY", (int) presenter.grassGrowthEachDaySlider.getValue());
+        config.set("ANIMALS_AMOUNT", (int) presenter.animalsAmountSlider.getValue());
+        config.set("INITIAL_ANIMAL_ENERGY", (int) presenter.initialAnimalEnergySlider.getValue());
+        config.set("BREEDING_THRESHOLD", (int) presenter.breedingThresholdSlider.getValue());
+        config.set("BREEDING_COST", (int) presenter.breedingCostSlider.getValue());
+        config.set("GENOME_LENGTH", (int) presenter.genomeLengthSlider.getValue());
+        config.set("A_PINCH_OF_INSANITY", presenter.aPinchOfInsanityCheckBox.isSelected());
+        config.set("SPRAWLING_JUNGLE", presenter.sprawlingJungleCheckBox.isSelected());
+        config.set("SAVE_TO_CSV", presenter.excelCheckBox.isSelected());
+        config.set("COLORING", presenter.coloringCheckbox.isSelected());
+
+        config.save();
+        config.load();
     }
 
     public static void main(String[] args) {
+        try {
+            Config config = Config.getInstance();
+            config.initialize("config.properties");
+            config.load();
+        } catch (IOException e) {
+            System.err.println("Failed to load configuration: " + e.getMessage());
+        }
         Application.launch(SimulationApp.class, args);
     }
 }

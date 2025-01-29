@@ -1,51 +1,42 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.exceptions.CopulationFailedException;
+import agh.ics.oop.model.util.Config;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static agh.ics.oop.WorldGUI.BREEDING_THRESHOLD;
-import static agh.ics.oop.WorldGUI.GENOME_LENGTH;
-
 public class Copulation {
-    /*
-    Rozmnażanie jest zwykle najciekawszą częścią każdej symulacji ze zwierzakami. Zdrowe młode może mieć
-    tylko zdrowa para rodziców, dlatego nasze zwierzaki będą się rozmnażać tylko jeśli mają odpowiednią ilość energii.
-    Przy reprodukcji rodzice tracą na rzecz młodego pewną część swojej energii - ta energia będzie rónocześnie stanowić
-    startową energię ich potomka.
-    Urodzone zwierzę otrzymuje genotyp będący krzyżówką genotypów rodziców. Udział genów jest proporcjonalny do
-    energii rodziców i wyznacza miejsce podziału genotypu. Przykładowo, jeśli jeden rodzic ma 50, a drugi 150
-    punktów energii, to dziecko otrzyma 25% genów pierwszego oraz 75% genów drugiego rodzica. Udział ten określa
-    miejsce przecięcia genotypu, przyjmując, że geny są uporządkowane. W pierwszym kroku losowana jest strona
-    genotypu, z której zostanie wzięta część osobnika silniejszego, np. prawa. W tym przypadku dziecko
-    otrzymałoby odcinek obejmujący 25% lewych genów pierwszego rodzica oraz 75% prawych genów drugiego rodzica.
-    Jeśli jednak wylosowana byłaby strona lewa, to dziecko otrzymałoby 75% lewych genów silniejszego osobnika oraz
-    25% prawych genów. Na koniec mają zaś miejsce mutacje: losowa liczba (wybranych również losowo) genów potomka
-    zmienia swoje wartości na zupełnie nowe.
-    * */
     private final Vector2d position;
     private final GrassField grassField;
     private final AnimalFamilyTree familyTree;
+    private final Randomizer randomizer;
 
-    public Copulation(Vector2d position, GrassField grassField, AnimalFamilyTree familyTree) {
+    Config config = Config.getInstance();
+    private final int GENOME_LENGTH = config.getInt("GENOME_LENGTH");
+    private final int BREEDING_THRESHOLD = config.getInt("BREEDING_THRESHOLD");
+    private final int BREEDING_COST = config.getInt("BREEDING_COST");
+    public Copulation(Vector2d position, GrassField grassField, AnimalFamilyTree familyTree, Randomizer randomizer) {
         this.position = position;
         this.grassField = grassField;
         this.familyTree = familyTree;
+        this.randomizer = randomizer;
     }
 
-    private List<Animal> pairPartners() {
+    public Copulation(Vector2d position, GrassField grassField, AnimalFamilyTree familyTree) {
+        this(position, grassField, familyTree, new NonDeterministicRandomGenerator());
+    }
+    private List<Animal> pairPartners() { // znajdz najlepszych partnerow do kopulacji
         List<Animal> animalsAtPos = grassField.getAnimalsAt(position);
         Animal winner1 = grassField.resolveConflict(grassField.getAnimalsAt(position));
-        List<Animal> animalsAtPosWithoutWinner = new ArrayList<>(animalsAtPos); // Kopia listy
+        List<Animal> animalsAtPosWithoutWinner = new ArrayList<>(animalsAtPos);
         animalsAtPosWithoutWinner.remove(winner1);
-        Animal winner2 = grassField.resolveConflict(animalsAtPosWithoutWinner); // przesada dziadek.. godzine szukalem czemu to nie dzialalo
+        Animal winner2 = grassField.resolveConflict(animalsAtPosWithoutWinner);
         return List.of(winner1, winner2);
     }
 
-    public static int findCrossoverIndex(int energyParent1, int energyParent2) {
+    public int findCrossoverIndex(int energyParent1, int energyParent2) { // znajdz indeks koncowy lewej czesci genomu
         int totalEnergy = energyParent1 + energyParent2;
         if (totalEnergy == 0) {
             throw new IllegalArgumentException("Energy values cannot both be zero.");
@@ -55,52 +46,52 @@ public class Copulation {
         return Math.min(crossoverIndex, GENOME_LENGTH - 1);
     }
 
-    private Map<Integer, Integer> createMutation() {
+    private Map<Integer, Integer> createMutation() { // mutacja genomu
         Map<Integer, Integer> mutationRecipe = new HashMap<>();
-        Random random = new Random();
-        int toMutateCnt = random.nextInt(GENOME_LENGTH + 1);
+        int toMutateCnt = randomizer.nextInt(GENOME_LENGTH + 1);
         if (toMutateCnt == 0) {
             return mutationRecipe;
         }
         List<Integer> allIndices = IntStream.range(0, GENOME_LENGTH)
                 .boxed()
                 .collect(Collectors.toList());
-        Collections.shuffle(allIndices);
+        randomizer.shuffle(allIndices);
         for (int i = 0; i < toMutateCnt; i++) {
-            mutationRecipe.put(allIndices.get(i), random.nextInt(8));
+            mutationRecipe.put(allIndices.get(i), randomizer.nextInt(8));
         }
         return mutationRecipe;
     }
 
 
-    public Animal copulate() throws CopulationFailedException {
+    public Animal copulate() throws CopulationFailedException { // glowna akcja kopulacja
         List<Animal> partners = pairPartners();
         if (partners.getFirst().getEnergy() > BREEDING_THRESHOLD && partners.getLast().getEnergy() > BREEDING_THRESHOLD) {
             int crossIdx = findCrossoverIndex(partners.getFirst().getEnergy(), partners.getLast().getEnergy());
             List<Integer> newGenome = new ArrayList<>();
             Animal dominant = partners.getFirst();
             Animal recessive = partners.getLast();
-            Random random = new Random();
-            int leftOrRight = random.nextInt(2);
-            if (leftOrRight == 0) { //dla dominujacego osobnika bierzemy lewą strone genomu
+            int leftOrRight = randomizer.nextInt(2);
+            if (leftOrRight == 0) { // if leftOrRight=0: For dominating animal we take left side of genome
                 newGenome.addAll(dominant.getGenome().subList(0, crossIdx));
                 newGenome.addAll(recessive.getGenome().subList(crossIdx, GENOME_LENGTH));
-            } else { //dla dominujacego osobnika bierzemy prawą strone genomu
+            } else { // right side for dominating
                 newGenome.addAll(recessive.getGenome().subList(0, crossIdx));
                 newGenome.addAll(dominant.getGenome().subList(crossIdx, GENOME_LENGTH));
             }
 
-            // mutacje
             Map<Integer, Integer> mutationRecipe = createMutation();
             for (Integer gene : mutationRecipe.keySet()) {
                 newGenome.set(gene, mutationRecipe.get(gene));
             }
 
-            Animal newborn = new Animal(position, dominant, recessive, newGenome);
+            Animal newborn = new Animal(position,newGenome);
             familyTree.registerParentChild(dominant.getId(), newborn.getId());
-            dominant.ChildrenCntIncrement();
+            dominant.childrenCntIncrement();
             familyTree.registerParentChild(recessive.getId(), newborn.getId());
-            recessive.ChildrenCntIncrement();
+            recessive.childrenCntIncrement();
+
+            dominant.updateEnergy(-BREEDING_COST);
+            recessive.updateEnergy(-BREEDING_COST);
             return newborn;
         } else {
             throw new CopulationFailedException("Animals do not have enough energy");
