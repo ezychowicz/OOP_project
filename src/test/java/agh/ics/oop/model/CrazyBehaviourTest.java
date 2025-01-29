@@ -25,7 +25,7 @@ public class CrazyBehaviourTest {
         } catch (IOException e) {
             System.err.println("Failed to load configuration: " + e.getMessage());
         }
-        animal = new Animal(new Vector2d(2, 3), null, null, List.of(0, 1, 2, 3, 4, 5));
+        animal = new Animal(new Vector2d(2, 3),List.of(0, 1, 2, 3, 4, 5));
     }
 
     @Test

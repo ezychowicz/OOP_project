@@ -7,9 +7,7 @@ import agh.ics.oop.model.util.Config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static agh.ics.oop.WorldGUI.*;
 import static org.junit.jupiter.api.Assertions.*;
-
 
 import java.io.IOException;
 import java.util.*;

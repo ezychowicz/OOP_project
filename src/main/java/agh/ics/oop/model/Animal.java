@@ -5,7 +5,6 @@ import agh.ics.oop.model.util.Config;
 
 import java.util.*;
 
-import static agh.ics.oop.WorldGUI.*;
 import static agh.ics.oop.model.MoveDirection.BACKWARD;
 import static agh.ics.oop.Simulation.idCounter;
 
@@ -40,7 +39,7 @@ public class Animal implements WorldElement{
         return genome;
     }
 
-    public Animal(Vector2d startPosition){ // Initial animal constructor (arbitrary animals)
+    public Animal(Vector2d startPosition){ // zwierzak startowy
         this.direction = MapDirection.NORTH;
         this.pos = startPosition;
         this.energy = INITIAL_ANIMAL_ENERGY;
@@ -50,7 +49,7 @@ public class Animal implements WorldElement{
         this.genome = initializeGenome();
     }
 
-    public Animal(Vector2d startPosition, Animal parent1, Animal parent2, List<Integer> genome){ // Animal as a child of two different animals
+    public Animal(Vector2d startPosition, List<Integer> genome){ // zwierzak dziecko
         this.direction = MapDirection.NORTH;
         this.pos = startPosition;
         this.energy = 2*BREEDING_COST;
@@ -93,7 +92,6 @@ public class Animal implements WorldElement{
         this.direction = direction;
     }
 
-
     public boolean moveForward(MapDirection direction,MoveValidator validator) throws IncorrectPositionException{
         Vector2d move;
         switch (direction) {
@@ -117,7 +115,7 @@ public class Animal implements WorldElement{
 
     private MapDirection rotate(MoveDirection direction) {
         /*
-        Rotates animal a few times (max 8 times)
+        kreci zwierzorem (max 8 razy)
          */
         int numOfRotations = direction.directionToGene(direction);
         MapDirection newDirection = this.direction;
@@ -139,6 +137,8 @@ public class Animal implements WorldElement{
             e.printStackTrace();
         }
     }
+
+    //gettery do statystyk etc
 
     public void setGenomeIdx(int genomeIdx) {
         this.genomeIdx = genomeIdx;

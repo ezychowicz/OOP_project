@@ -3,9 +3,7 @@ package agh.ics.oop.model.util;
 import java.io.*;
 import java.util.Properties;
 
-
-
-public class Config {
+public class Config { // klasa pozwalająca na wczytywanie i zapisywanie konfiguracji symulacji z pliku
     private static Config instance;
     private final Properties properties;
     private String configFile;
@@ -14,7 +12,7 @@ public class Config {
         properties = new Properties();
     }
 
-    public static Config getInstance() {
+    public static Config getInstance() { // wzorzec singleton
         if (instance == null) {
             instance = new Config();
         }

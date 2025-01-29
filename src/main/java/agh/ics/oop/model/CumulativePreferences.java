@@ -1,10 +1,6 @@
 package agh.ics.oop.model;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static agh.ics.oop.model.GrassField.*;
-import static agh.ics.oop.model.MapDirection.*;
 
 public class CumulativePreferences{
     private final GrassField grassField;
@@ -14,6 +10,7 @@ public class CumulativePreferences{
         this.grassField = grassField;
         this.preferences = new int[grassField.getCurrentBounds().upperRightBound().getX()][grassField.getCurrentBounds().upperRightBound().getY()];
     }
+
     public void incrementAdjacentTo(Vector2d position){
         List<Vector2d> adjacent = grassField.getAdjacent(position);
         for (Vector2d adj : adjacent){
@@ -40,7 +37,6 @@ public class CumulativePreferences{
             }
         }
     }
-
 
     public int getPreferenceScoreAtPos(Vector2d position){
         return preferences[position.getX()][position.getY()];

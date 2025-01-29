@@ -1,7 +1,5 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.*;
-import agh.ics.oop.model.exceptions.IllegalMoveSpecificationException;
 import agh.ics.oop.presenter.SimulationPresenter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -9,11 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-
-public class SimulationApp extends Application { //do usuniecia?
+public class SimulationApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();

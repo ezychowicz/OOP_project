@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class AnimalFamilyTree {
-    private final Map<Integer, Set<Integer>> descendants = new HashMap<>(); // parent -> child
+    private final Map<Integer, Set<Integer>> descendants = new HashMap<>(); // zamysl jest taki ze klucz to id rodzica, a wartosc to zbior id dzieci, drzewo genealogiczne to taki troche dag
 
     public void registerParentChild(int parentId, int childId) {
         if (parentId == childId){

@@ -55,7 +55,7 @@ public class SimulationEngine {
         }
         executor.shutdown();
         if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
-            System.out.println("%s (%d s)".formatted(EXECUTOR_TIMEOUT, 10));
+            System.out.printf("%s (%d s)%n",EXECUTOR_TIMEOUT, 10);
             executor.shutdownNow();
         }
     }

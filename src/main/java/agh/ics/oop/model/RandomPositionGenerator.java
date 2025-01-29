@@ -1,33 +1,25 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.Config;
 import agh.ics.oop.model.util.MathUtils;
 
 import java.util.*;
 
-import static java.lang.Math.round;
-
 public class RandomPositionGenerator implements Iterable<Vector2d> {
-    private final int maxWidth;
-    private final int maxHeight;
     private final int grassCount;
     private int count;
     private final Random random;
     private final List<Integer> preferredIdxs;
     private final List<Integer> unPreferredIdxs;
     private final GrassField grassField;
-    public RandomPositionGenerator(GrassField grassField, int grassCount) {
 
+    public RandomPositionGenerator(GrassField grassField, int grassCount) {
         this.grassField = grassField;
-        this.maxWidth = grassField.getWidth();
-        this.maxHeight = grassField.getHeight();
         this.grassCount = grassCount;
         this.preferredIdxs = grassField.getAvailableIdxs().get(0);
         this.unPreferredIdxs = grassField.getAvailableIdxs().get(1);
         this.count = 0;
         this.random = new Random();
     }
-
 
     @Override
     public Iterator<Vector2d> iterator() {
@@ -51,7 +43,7 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
                 } else {
                     idxsToChoose = preferredIdxs;
                 }
-                int randomInt = random.nextInt(idxsToChoose.size()); // Choose from available positions
+                int randomInt = random.nextInt(idxsToChoose.size()); // wybierz z dostepnych pozycji
                 Vector2d pos = grassField.getPosList().get(idxsToChoose.get(randomInt));
                 idxsToChoose.remove(randomInt);
                 return pos;

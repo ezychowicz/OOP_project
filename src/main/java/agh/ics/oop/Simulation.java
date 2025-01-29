@@ -73,32 +73,4 @@ public class Simulation implements Runnable {
             positions.remove(idx);
         }
     }
-
-    public int getAnimalsCount(){
-        return day.currAnimalsCnt;
-    }
-
-    public int getPlantsCount(){
-        return day.currPlantsCnt;
-    }
-
-    public int getFreeFieldsCount(){
-        return day.currFreeFieldsCnt;
-    }
-
-    public String getMostPopularGenotypes(){
-        return day.getMostPopularGenotypes();
-    }
-
-    public float getAverageEnergy(){
-        return day.getAverageEnergy();
-    }
-
-    public float getAverageLifespan(){
-        return day.getAverageLifespan();
-    }
-
-    public float getAverageChildren(){
-        return day.getAverageChildren();
-    }
 }

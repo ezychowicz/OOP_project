@@ -5,22 +5,17 @@ import agh.ics.oop.model.util.Config;
 import java.util.*;
 
 public class AnimalGenerator{
-    private final int genomeLength;
-    private final int initialEnergy;
     private final int animalsAmount;
     private final Config config = Config.getInstance();
-    private final int GENOME_LENGTH = config.getInt("GENOME_LENGTH");
-    private final int INITIAL_ANIMAL_ENERGY = config.getInt("INITIAL_ANIMAL_ENERGY");
-    private final int ANIMALS_AMOUNT = config.getInt("ANIMALS_AMOUNT");
+
     private final int MAP_WIDTH = config.getInt("MAP_WIDTH");
     private final int MAP_HEIGHT = config.getInt("MAP_HEIGHT");
+
     public AnimalGenerator(){
-        this.genomeLength = GENOME_LENGTH;
-        this.initialEnergy = INITIAL_ANIMAL_ENERGY;
-        this.animalsAmount = ANIMALS_AMOUNT;
+        this.animalsAmount = config.getInt("ANIMALS_AMOUNT");
     }
 
-    private Vector2d randomInitialPosition(){
+    private Vector2d randomInitialPosition(){ // losowo ale gdzies blizej srodka
         return new Vector2d((int)(Math.random() * MAP_WIDTH/2 + MAP_WIDTH/4), (int)(Math.random() * MAP_HEIGHT/2 + MAP_HEIGHT/4));
     }
 

@@ -22,8 +22,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -36,9 +34,9 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
 
     private final Image animalImageResource = new Image(Objects.requireNonNull(getClass().getResource("/icons/rat2.png")).toExternalForm());
     private final Image grassImageResource = new Image(Objects.requireNonNull(getClass().getResource("/icons/bush.png")).toExternalForm());
+
     public Button saveConfigButton;
     public Button loadConfigButton;
-
 
     private WorldMap worldMap;
     private SimulationEngine simEngine;
@@ -47,7 +45,6 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
     private GridPane mapGrid;
 
     private static SimulationPresenter instance;
-    // Static reference to the controller instance
 
     @FXML
     public Slider mapWidthSlider;
@@ -152,7 +149,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
 
     private ChartUpdater chartUpdater;
     private Day day;
-    // Getter for the instance
+
     public static SimulationPresenter getInstance() {
         return instance;
     }
@@ -186,15 +183,13 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         });
     }
 
-    private void setupBreedingSliders() {
-        // Ensure breedingCostSlider <= breedingThresholdSlider
+    private void setupBreedingSliders() { // zeby nie dalo sie ustawic breedingCost wiekszego niz breedingThreshold
         breedingCostSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() > breedingThresholdSlider.getValue()) {
                 breedingCostSlider.setValue(breedingThresholdSlider.getValue());
             }
         });
 
-        // Ensure breedingThresholdSlider >= breedingCostSlider
         breedingThresholdSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() < breedingCostSlider.getValue()) {
                 breedingThresholdSlider.setValue(breedingCostSlider.getValue());
@@ -203,14 +198,12 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
     }
 
     private void setupLinkedSliders() {
-        // Listener for mapWidthSlider
         mapWidthSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (linkSlidersCheckbox.isSelected()) {
                 mapHeightSlider.setValue(newValue.doubleValue());
             }
         });
 
-        // Listener for mapHeightSlider
         mapHeightSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (linkSlidersCheckbox.isSelected()) {
                 mapWidthSlider.setValue(newValue.doubleValue());
@@ -223,7 +216,6 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
     int MAP_HEIGHT = config.getInt("MAP_HEIGHT");
     boolean COLORING = config.getBoolean("COLORING");
 
-    // Save Configurations to File
     public void handleSaveConfig() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Configuration");
@@ -255,7 +247,6 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         }
     }
 
-    // Load Configurations from File
     public void handleLoadConfig() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load Configuration");
@@ -291,9 +282,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
     @Override
     public void mapChanged(WorldMap map, String message) {
         this.setWorldMap(map);
-        Platform.runLater(() -> {
-            drawMap();
-        });
+        Platform.runLater(this::drawMap);
     }
 
     private Vector2d lowerLeft = new Vector2d(0, 0);
@@ -379,13 +368,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
                     if (object instanceof Animal) {
                         ImageView animalImageView = getAnimalImageView((Animal) object);
 
-                        animalImageView.setFitWidth(cellWidth * 0.8);
-                        animalImageView.setFitHeight(cellHeight * 0.8);
-                        animalImageView.setPreserveRatio(true);
-
-                        GridPane.setHalignment(animalImageView, HPos.CENTER);
-                        GridPane.setValignment(animalImageView, VPos.CENTER);
-                        cellBackground.getChildren().add(animalImageView);
+                        mySetGrassImageView(cellWidth,cellHeight,cellBackground,animalImageView);
 
                         animalImageView.setOnMouseClicked(event -> {
                             day.setWatchedAnimalId(((Animal) object).getId());
@@ -398,19 +381,22 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
                     } else if (object instanceof Grass) {
                         ImageView grassImageView = new ImageView(grassImageResource);
 
-                        // Limit image size to 80% of the cell size
-                        grassImageView.setFitWidth(cellWidth * 0.8);
-                        grassImageView.setFitHeight(cellHeight * 0.8);
-                        grassImageView.setPreserveRatio(true);
-
-                        GridPane.setHalignment(grassImageView, HPos.CENTER);
-                        GridPane.setValignment(grassImageView, VPos.CENTER);
-                        cellBackground.getChildren().add(grassImageView);
+                        mySetGrassImageView(cellWidth,cellHeight,cellBackground,grassImageView);
                     }
                 }
                 mapGrid.add(cellBackground, i - minX, (rows - 1) - (j - minY));
             }
         }
+    }
+
+    private void mySetGrassImageView(double cellWidth,double cellHeight,StackPane cellBackground,ImageView grassImageView){
+        grassImageView.setFitWidth(cellWidth * 0.8);
+        grassImageView.setFitHeight(cellHeight * 0.8);
+        grassImageView.setPreserveRatio(true);
+
+        GridPane.setHalignment(grassImageView, HPos.CENTER);
+        GridPane.setValignment(grassImageView, VPos.CENTER);
+        cellBackground.getChildren().add(grassImageView);
     }
 
     private ImageView getAnimalImageView(Animal object) {
@@ -468,7 +454,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         }
     }
 
-    // Zacznij nowa symulacje - zamiast initializesim - nie wiem czy mozemy usunac initializeSim, tu to jest troche inaczej zrobione
+    // Zacznij nowa symulacje
     @FXML
     public void startNewSim() throws IOException{
         // jesli trzeba - zatrzymaj symulacje
@@ -484,7 +470,7 @@ public class SimulationPresenter implements MapChangeListener, DayObserver {
         boolean A_PINCH_OF_INSANITY = config.getBoolean("A_PINCH_OF_INSANITY");
         boolean SPRAWLING_JUNGLE = config.getBoolean("SPRAWLING_JUNGLE");
         boolean SAVE_TO_CSV = config.getBoolean("SAVE_TO_CSV");
-        boolean COLORING = config.getBoolean("COLORING");
+
         GrassField grassF;
         if (SPRAWLING_JUNGLE) {
             grassF = new SprawlingJungle(GRASSES_AMOUNT, MAP_WIDTH, MAP_HEIGHT);
