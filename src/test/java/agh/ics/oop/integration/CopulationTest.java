@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static agh.ics.oop.WorldGUI.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+
 
 import java.io.IOException;
 import java.util.*;
