@@ -11,29 +11,31 @@ The simulation is highly customizable, allowing users to adjust various paramete
 [Full description](https://github.com/Ki3mONo/DarwinWorldSimulator/blob/main/Tresc_zadania/Readme.md) 
 
 ## Key Features
-1. Simulation Cycle – Each day in the simulation includes:
-- removing dead animals
-- stochastic grass growth
-- animal movement based on genetic traits
-- animal reproduction (if conditions are met)
-- energy consumption and regeneration through food
-- Fertile Lands Variant – A map variation where grass has a higher probability of growing near existing plants, simulating fertile zones.
+1. **Simulation Cycle** – Each day in the simulation includes:
+- removing dead animals,
+- stochastic grass growth,
+- animal movement based on genetic traits,
+- animal reproduction (if conditions are met),
+- energy consumption and regeneration through food.
+2. **Fertile Lands Variant** – A map variation where grass has a higher probability of growing near existing plants, simulating fertile zones.
+3. **Reproduction System** – Animals that meet specific energy requirements can reproduce when they share the same position.
+4. **Grass Consumption** – Eating grass increases an animal’s energy, allowing it to survive longer and reproduce.
 Key features are tested in unit/integration tests.
 ## Functionality
-- detailed simulation statistics – Track both overall ecosystem metrics and individual animal statistics
-- map & genetics variants – Experiment with different mutation settings and map configurations
-- fertility visualization – Highlight regions where grass is more likely to grow
-- CSV data export – Save simulation statistics for further analysis
-- JavaFX-Based UI – Interactive graphical interface for enhanced user experience
-- reproduction system – Animals that meet specific energy requirements can reproduce when they share the same position
-- grass consumption – Eating grass increases an animal’s energy, allowing it to survive longer and reproduce.
+- **detailed simulation statistics** – Track both overall ecosystem metrics and individual animal statistics,
+- **map & genetics variants** – Experiment with different mutation settings and map configurations,
+- **fertility visualization** – Highlight regions where grass is more likely to grow,
+- **CSV data export** – Save simulation statistics for further analysis,
+- **JavaFX-Based UI** – Interactive graphical interface for enhanced user experience,
+- **reproduction system** – Animals that meet specific energy requirements can reproduce when they share the same position,
+- **grass consumption** – Eating grass increases an animal’s energy, allowing it to survive longer and reproduce.
 
 ## Interface Features
-- animal Tracking – Click on an animal to follow its individual statistics.
-- customizable Simulation Parameters – Adjust map size, energy levels, grass growth rate, and other settings.
-- energy Graphs – View real-time energy fluctuations of a chosen animal.
-- simulation Control – Pause and resume the simulation at any time.
+- **animal tracking** – Click on an animal to follow its individual statistics,
+- **customizable simulation parameters** – Adjust map size, energy levels, grass growth rate, and other settings,
+- **energy graph** – View real-time energy fluctuations of a chosen animal,
+- **simulation control** – Pause and resume the simulation at any time.
 
 ## Technologies Used
-- Java – Core language for simulation logic and backend.
+- Java – Core language for simulation logic and backend,
 - JavaFX – Used for building the graphical interface.
