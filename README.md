@@ -1,4 +1,5 @@
 # Darwin World
+![Simulation interface](assets/simulation.gif)
 
 ## Authors
 - Emil Żychowicz
